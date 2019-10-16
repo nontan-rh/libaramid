@@ -1,0 +1,12 @@
+{
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "chromedriver": "80.0.1",
+    "selenium-webdriver": "3.6.0",
+    "yargs": "^15.3.0"
+  },
+  "private": true
+}

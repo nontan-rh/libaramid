@@ -1,0 +1,28 @@
+name: Build CI Image
+
+on:
+  push:
+    tags:
+      - ci_image_*
+
+jobs:
+  Build:
+    if: github.actor == 'nontan-rh'
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |-
+          set -euxo pipefail
+          tag=$(git tag --points-at HEAD | perl -ne 'if ($_ =~ /^ci_image_(\d{4}_\d{2}_\d{2}_[1-9][0-9]*)$/) { print "$1"; exit; }')
+          if [ "$tag" = "" ]; then
+            echo "No valid tag to build docker images for CI"
+            git tag --points-at HEAD
+            exit 1
+          fi
+          printenv DOCKER_HUB_ACCESS_TOKEN | docker login --username "$DOCKER_HUB_USERNAME" --password-stdin
+          scripts/build_ci_images.sh $tag true
+        shell: bash
+        env:
+          DOCKER_HUB_USERNAME: nontanrh
+          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}

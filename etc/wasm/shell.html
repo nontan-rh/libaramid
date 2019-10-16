@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<body style="background-color: black;">
+    <p id="output" style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace!important; font-size: 8pt; line-height: 1.2; color: white;" />
+    <div id="status" style="position: fixed; top:0; right: 0; width: auto; height: auto; font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace!important; font-size: 8pt; line-height: 1.2; background-color: lightgray; color: black;">Running</div>
+		<script>
+      const output = document.getElementById('output');
+      const status = document.getElementById('status');
+      function print(text) {
+        output.innerHTML += text + '<br/>';
+        window.scrollTo(0, document.body.scrollHeight);
+      }
+      function onExit(result) {
+        status.innerHTML = `exit: ${result}`;
+        if (result === 0) {
+          status.style['background-color'] = 'lime';
+        } else {
+          status.style['background-color'] = 'red';
+        }
+      }
+      function onAbort(result) {
+        status.innerHTML = `abort: ${result}`;
+        status.style['background-color'] = 'red';
+      }
+			var Module = {
+				print: print,
+        printErr: print,
+        onExit: onExit,
+        onAbort: onAbort,
+			};
+		</script>
+    {{{ SCRIPT }}}
+	</body>
+</html>
