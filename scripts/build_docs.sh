@@ -22,18 +22,6 @@ trap cleanup_temp_dir EXIT
 cp -rT "$proj_dir"/doxygen_html "$temp_dir"
 cp .gitattributes "$temp_dir"
 
-orig_user_email=$(git config --local user.email)
-orig_user_name=$(git config --local user.name)
-
-cleanup_git_user_config() {
-    git config --local user.email "$orig_user_email"
-    git config --local user.name "$orig_user_name"
-}
-trap cleanup_git_user_config EXIT
-
-git config --local user.email "libaramid-githubactions@nontan.dev"
-git config --local user.name "libaramid GitHub Actions Bot"
-
 git fetch
 git reset --hard
 git clean -xdf
@@ -45,5 +33,9 @@ touch .nojekyll
 cp -rT "$temp_dir" "$proj_dir"
 
 git add .
-git commit --allow-empty -m "Build documentation for $GITHUB_SHA"
+
+git_user_email="libaramid-githubactions@nontan.dev"
+git_user_name="libaramid GitHub Actions Bot"
+git commit --allow-empty -m "Build documentation for $GITHUB_SHA" --author="$git_user_name <$git_user_email>"
+
 git push -f
