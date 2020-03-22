@@ -93,8 +93,8 @@ Open `etc/ios/libaramid/libaramid.xcodeproj` with Xcode
 
 Build scripts or test drivers in this repository include some third-party software.
 
-| OS                     | License      | URL                                              |
-| ---------------------- | :----------: | ------------------------------------------------ |
+| Project                | License      | URL                                              |
+| ---------------------- | ------------ | ------------------------------------------------ |
 | ios-cmake              | BSD-3-Clause | https://github.com/leetal/ios-cmake              |
 | googletest             | BSD-3-Clause | https://github.com/google/googletest             |
 | google-toolbox-for-mac | Apache-2.0   | https://github.com/google/google-toolbox-for-mac |
