@@ -8,7 +8,7 @@ jobs:
   Android:
     if: github.actor == 'nontan-rh'
     runs-on: ubuntu-18.04
-    container: nontanrh/libaramid-ci-android:2020_03_22_1
+    container: nontanrh/libaramid-ci-android:2020_03_22_2
     steps:
       - uses: actions/checkout@v2
       - name: Build debug
