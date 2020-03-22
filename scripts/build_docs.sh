@@ -22,6 +22,31 @@ trap cleanup_temp_dir EXIT
 cp -rT "$proj_dir"/doxygen_html "$temp_dir"
 cp .gitattributes "$temp_dir"
 
+set +e
+orig_user_email=$(git config --local user.email)
+orig_user_email_status=$?
+orig_user_name=$(git config --local user.name)
+orig_user_name_status=$?
+set -e
+
+cleanup_git_user_config() {
+    if [ "$orig_user_email_status" = "0" ]; then
+        git config user.email "$orig_user_email"
+    else
+        git config --unset user.email
+    fi
+
+    if [ "$orig_user_name_status" = "0" ]; then
+        git config user.name "$orig_user_name"
+    else
+        git config --unset user.name
+    fi
+}
+trap cleanup_git_user_config EXIT
+
+git config user.email "libaramid-githubactions@nontan.dev"
+git config user.name "libaramid GitHub Actions Bot"
+
 git fetch
 git reset --hard
 git clean -xdf
@@ -34,8 +59,6 @@ cp -rT "$temp_dir" "$proj_dir"
 
 git add .
 
-git_user_email="libaramid-githubactions@nontan.dev"
-git_user_name="libaramid GitHub Actions Bot"
-git commit --allow-empty -m "Build documentation for $GITHUB_SHA" --author="$git_user_name <$git_user_email>"
+git commit --allow-empty -m "Build documentation for $GITHUB_SHA"
 
 git push -f
