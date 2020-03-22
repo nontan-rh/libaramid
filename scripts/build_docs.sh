@@ -27,7 +27,7 @@ git reset --hard
 git clean -xdf
 git checkout gh-pages
 git pull
-git rm -rf .
+git rm -rf . || true
 
 touch .nojekyll
 cp -rT "$temp_dir" "$proj_dir"
