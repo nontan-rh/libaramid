@@ -231,7 +231,10 @@ typedef void (*ARMD_PromiseCallbackFunc)(ARMD_Handle handle,
  * reentrant. If you calls any API of libaramid in this callback, a deadlock may
  * occur.
  */
-ARMD_EXTERN_C int armd_add_promise_callback(ARMD_Context *context, ARMD_Handle handle, ARMD_PromiseCallbackFunc promise_callback);
+ARMD_EXTERN_C
+int armd_add_promise_callback(ARMD_Context *context, ARMD_Handle handle,
+                              void *callback_context,
+                              ARMD_PromiseCallbackFunc callback_func);
 
 /**
  * @brief Get the number of executors in the @ref ARMD_Context via @ref

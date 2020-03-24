@@ -417,7 +417,8 @@ ARMD_Handle armd_invoke(ARMD_Context *context, ARMD_Procedure *procedure,
 
     res = armd__mutex_unlock(&context->promise_manager.mutex);
     assert(res == 0);
-    promise_manager_mutex_locked = 0; // NOLINT(clang-analyzer-deadcode.DeadStores)
+    promise_manager_mutex_locked =
+        0; // NOLINT(clang-analyzer-deadcode.DeadStores)
 
     {
         res = armd__mutex_lock(&context->executor_mutex);
@@ -566,6 +567,46 @@ int armd_await(ARMD_Context *context, ARMD_Handle handle) {
         res = armd__condvar_wait(&context->promise_manager.condvar,
                                  &context->promise_manager.mutex);
         assert(res == 0);
+    }
+
+    res = armd__mutex_unlock(&context->promise_manager.mutex);
+    assert(res == 0);
+
+    return 0;
+}
+
+int armd_add_promise_callback(ARMD_Context *context, ARMD_Handle handle,
+                              void *callback_context,
+                              ARMD_PromiseCallbackFunc callback_func) {
+    int res = 0;
+    (void)res;
+
+    res = armd__mutex_lock(&context->promise_manager.mutex);
+    assert(res == 0);
+
+    if (context->promise_manager.handle_counter < handle) {
+        res = armd__mutex_unlock(&context->promise_manager.mutex);
+        assert(res == 0);
+        return -1;
+    }
+
+    ARMD__Promise *promise;
+    if (armd__hash_table_get(context->promise_manager.promises, handle,
+                             (void **)&promise) != 0) {
+        // Promise is already resolved, so invoke callback immediately
+        callback_func(handle, callback_context);
+        res = armd__mutex_unlock(&context->promise_manager.mutex);
+        return 0;
+    }
+
+    ARMD__PromiseCallback promise_callback;
+    promise_callback.func = callback_func;
+    promise_callback.context = callback_context;
+    res = armd__promise_add_promise_callback(promise, &promise_callback);
+    if (res != 0) {
+        res = armd__mutex_unlock(&context->promise_manager.mutex);
+        assert(res == 0);
+        return -1;
     }
 
     res = armd__mutex_unlock(&context->promise_manager.mutex);

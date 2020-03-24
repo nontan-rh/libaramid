@@ -24,15 +24,16 @@ protected:
     void TearDown() override { armd_context_destroy(context); }
 };
 
-// int single_normal_continuation(ARMD_Job *job, const void *constants,
-//                                const void *args, void *frame) {
-//     (void)constants;
+struct CbCtx {
+    bool is_called;
+};
 
-//     // For compilation on windows
-//     fprintf(stderr, "executor: %u, args: %p, frame: %p\n",
-//             (unsigned int)armd_job_get_executor_id(job), args, frame);
-//     return 0;
-// }
+void cb(ARMD_Handle handle, void *callback_context) {
+    (void)handle;
+
+    CbCtx *cbctx = reinterpret_cast<CbCtx *>(callback_context);
+    cbctx->is_called = true;
+}
 
 TEST_F(PromiseTest, ChainEmptyProcedure) {
     int res;
@@ -59,28 +60,100 @@ TEST_F(PromiseTest, ChainEmptyProcedure) {
     ASSERT_EQ(res, 0);
 }
 
-// TEST_F(PromiseTest, ChainSingleNormalProcedure) {
-//     int res;
+TEST_F(PromiseTest, CallbackEmptyProcedure) {
+    int res;
 
-//     ARMD_Procedure *single_normal_procedure;
-//     {
-//         ARMD_ProcedureBuilder *builder =
-//             armd_procedure_builder_create(&memory_allocator, 0, 0);
-//         armd_then_single(builder, single_normal_continuation);
-//         single_normal_procedure =
-//             armd_procedure_builder_build_and_destroy(builder);
-//     }
+    ARMD_Procedure *empty_procedure;
+    {
+        ARMD_ProcedureBuilder *builder =
+            armd_procedure_builder_create(&memory_allocator, 0, 0);
+        empty_procedure = armd_procedure_builder_build_and_destroy(builder);
+    }
 
-//     ARMD_Handle dependencies[1];
-//     ARMD_Handle promise =
-//         armd_invoke(context, single_normal_procedure, nullptr, 0,
-//         dependencies);
-//     ASSERT_NE(promise, 0);
-//     res = armd_await(context, promise);
-//     ASSERT_EQ(res, 0);
+    CbCtx cbctx;
+    cbctx.is_called = false;
 
-//     res = armd_procedure_destroy(single_normal_procedure);
-//     ASSERT_EQ(res, 0);
-// }
+    ARMD_Handle dependencies[1] = {0};
+    ARMD_Handle promise =
+        armd_invoke(context, empty_procedure, nullptr, 0, dependencies);
+    ASSERT_NE(promise, 0u);
+    res = armd_add_promise_callback(context, promise, &cbctx, cb);
+    ASSERT_EQ(res, 0);
+    res = armd_await(context, promise);
+    ASSERT_EQ(res, 0);
+
+    ASSERT_TRUE(cbctx.is_called);
+
+    res = armd_procedure_destroy(empty_procedure);
+    ASSERT_EQ(res, 0);
+}
+
+int single_sleep_continuation(ARMD_Job *job, const void *constants,
+                              const void *args, void *frame) {
+    (void)job;
+    (void)constants;
+    (void)args;
+    (void)frame;
+    usleep(100 * 1000);
+    return 0;
+}
+
+TEST_F(PromiseTest, CallbackSleepProcedureBeforeAwait) {
+    int res;
+
+    ARMD_Procedure *sleep_procedure;
+    {
+        ARMD_ProcedureBuilder *builder =
+            armd_procedure_builder_create(&memory_allocator, 0, 0);
+        armd_then_single(builder, single_sleep_continuation);
+        sleep_procedure = armd_procedure_builder_build_and_destroy(builder);
+    }
+
+    CbCtx cbctx;
+    cbctx.is_called = false;
+
+    ARMD_Handle dependencies[1] = {0};
+    ARMD_Handle promise =
+        armd_invoke(context, sleep_procedure, nullptr, 0, dependencies);
+    ASSERT_NE(promise, 0u);
+    res = armd_add_promise_callback(context, promise, &cbctx, cb);
+    ASSERT_EQ(res, 0);
+    res = armd_await(context, promise);
+    ASSERT_EQ(res, 0);
+
+    ASSERT_TRUE(cbctx.is_called);
+
+    res = armd_procedure_destroy(sleep_procedure);
+    ASSERT_EQ(res, 0);
+}
+
+TEST_F(PromiseTest, CallbackSleepProcedureAfterAwait) {
+    int res;
+
+    ARMD_Procedure *sleep_procedure;
+    {
+        ARMD_ProcedureBuilder *builder =
+            armd_procedure_builder_create(&memory_allocator, 0, 0);
+        armd_then_single(builder, single_sleep_continuation);
+        sleep_procedure = armd_procedure_builder_build_and_destroy(builder);
+    }
+
+    CbCtx cbctx;
+    cbctx.is_called = false;
+
+    ARMD_Handle dependencies[1] = {0};
+    ARMD_Handle promise =
+        armd_invoke(context, sleep_procedure, nullptr, 0, dependencies);
+    ASSERT_NE(promise, 0u);
+    res = armd_await(context, promise);
+    ASSERT_EQ(res, 0);
+    res = armd_add_promise_callback(context, promise, &cbctx, cb);
+    ASSERT_EQ(res, 0);
+
+    ASSERT_TRUE(cbctx.is_called);
+
+    res = armd_procedure_destroy(sleep_procedure);
+    ASSERT_EQ(res, 0);
+}
 
 } // namespace
