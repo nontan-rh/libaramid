@@ -482,7 +482,7 @@ int armd__context_complete_promise(ARMD_Context *context,
     for (ARMD_Size i = 0; i < promise->num_promise_callbacks; i++) {
         ARMD__PromiseCallback *promise_callback =
             &promise->promise_callbacks[i];
-        promise_callback->func(promise_callback->context, promise_handle);
+        promise_callback->func(promise_handle, promise_callback->context);
     }
 
     for (ARMD_Size i = 0; i < promise->num_continuation_promises; i++) {
