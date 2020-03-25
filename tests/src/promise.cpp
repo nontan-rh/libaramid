@@ -5,6 +5,15 @@
 
 #include <aramid/aramid.h>
 
+#if defined(ARAMID_USE_PTHREAD)
+#include <pthread.h>
+#elif defined(ARAMID_USE_WIN32THREAD)
+#include <windows.h>
+#elif defined(ARAMID_EDITOR)
+#else
+#error Thread implementation is not specified
+#endif
+
 namespace {
 
 class PromiseTest : public ::testing::Test {
@@ -88,13 +97,45 @@ TEST_F(PromiseTest, CallbackEmptyProcedure) {
     ASSERT_EQ(res, 0);
 }
 
+#if defined(ARAMID_USE_PTHREAD)
+
+static void sleep_microsecond(unsigned long us) {
+    usleep(us);
+}
+
+#elif defined(ARAMID_USE_WIN32THREAD)
+
+static void sleep_microsecond(unsigned long us) {
+	HANDLE timer;
+	LARGE_INTEGER ft;
+
+	ft.QuadPart = -(LONGLONG)(10 * usec);
+
+	timer = CreateWaitableTimer(NULL, TRUE, NULL);
+	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
+	WaitForSingleObject(timer, INFINITE);
+	CloseHandle(timer);
+}
+
+#elif defined(ARAMID_EDITOR)
+
+static void sleep_microsecond(unsigned long us) {
+    assert(0);
+}
+
+#else
+
+#error Thread implementation is not specified
+
+#endif
+
 int single_sleep_continuation(ARMD_Job *job, const void *constants,
                               const void *args, void *frame) {
     (void)job;
     (void)constants;
     (void)args;
     (void)frame;
-    usleep(100 * 1000);
+    sleep_microsecond(100 * 1000);
     return 0;
 }
 
