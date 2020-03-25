@@ -107,7 +107,7 @@ static void sleep_microsecond(unsigned long us) {
 	HANDLE timer;
 	LARGE_INTEGER ft;
 
-	ft.QuadPart = -(LONGLONG)(10 * usec);
+	ft.QuadPart = -(LONGLONG)(10 * us);
 
 	timer = CreateWaitableTimer(NULL, TRUE, NULL);
 	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
