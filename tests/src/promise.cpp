@@ -33,15 +33,13 @@ protected:
     void TearDown() override { armd_context_destroy(context); }
 };
 
-struct CbCtx {
+struct CallbackContext {
     bool is_called;
 };
 
 void cb(ARMD_Handle handle, void *callback_context) {
     (void)handle;
-
-    CbCtx *cbctx = reinterpret_cast<CbCtx *>(callback_context);
-    cbctx->is_called = true;
+    reinterpret_cast<CallbackContext *>(callback_context)->is_called = true;
 }
 
 TEST_F(PromiseTest, ChainEmptyProcedure) {
@@ -79,19 +77,19 @@ TEST_F(PromiseTest, CallbackEmptyProcedure) {
         empty_procedure = armd_procedure_builder_build_and_destroy(builder);
     }
 
-    CbCtx cbctx;
-    cbctx.is_called = false;
+    CallbackContext callback_context;
+    callback_context.is_called = false;
 
     ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
         armd_invoke(context, empty_procedure, nullptr, 0, dependencies);
     ASSERT_NE(promise, 0u);
-    res = armd_add_promise_callback(context, promise, &cbctx, cb);
+    res = armd_add_promise_callback(context, promise, &callback_context, cb);
     ASSERT_EQ(res, 0);
     res = armd_await(context, promise);
     ASSERT_EQ(res, 0);
 
-    ASSERT_TRUE(cbctx.is_called);
+    ASSERT_TRUE(callback_context.is_called);
 
     res = armd_procedure_destroy(empty_procedure);
     ASSERT_EQ(res, 0);
@@ -150,19 +148,19 @@ TEST_F(PromiseTest, CallbackSleepProcedureBeforeAwait) {
         sleep_procedure = armd_procedure_builder_build_and_destroy(builder);
     }
 
-    CbCtx cbctx;
-    cbctx.is_called = false;
+    CallbackContext callback_context;
+    callback_context.is_called = false;
 
     ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
         armd_invoke(context, sleep_procedure, nullptr, 0, dependencies);
     ASSERT_NE(promise, 0u);
-    res = armd_add_promise_callback(context, promise, &cbctx, cb);
+    res = armd_add_promise_callback(context, promise, &callback_context, cb);
     ASSERT_EQ(res, 0);
     res = armd_await(context, promise);
     ASSERT_EQ(res, 0);
 
-    ASSERT_TRUE(cbctx.is_called);
+    ASSERT_TRUE(callback_context.is_called);
 
     res = armd_procedure_destroy(sleep_procedure);
     ASSERT_EQ(res, 0);
@@ -179,8 +177,8 @@ TEST_F(PromiseTest, CallbackSleepProcedureAfterAwait) {
         sleep_procedure = armd_procedure_builder_build_and_destroy(builder);
     }
 
-    CbCtx cbctx;
-    cbctx.is_called = false;
+    CallbackContext callback_context;
+    callback_context.is_called = false;
 
     ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
@@ -188,10 +186,10 @@ TEST_F(PromiseTest, CallbackSleepProcedureAfterAwait) {
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_EQ(res, 0);
-    res = armd_add_promise_callback(context, promise, &cbctx, cb);
+    res = armd_add_promise_callback(context, promise, &callback_context, cb);
     ASSERT_EQ(res, 0);
 
-    ASSERT_TRUE(cbctx.is_called);
+    ASSERT_TRUE(callback_context.is_called);
 
     res = armd_procedure_destroy(sleep_procedure);
     ASSERT_EQ(res, 0);
