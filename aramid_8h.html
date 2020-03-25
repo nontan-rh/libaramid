@@ -186,9 +186,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1d2bca6ad9df4ea6e91740b66b24fb05"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a1d2bca6ad9df4ea6e91740b66b24fb05">armd_await</a> (<a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> *context, <a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle)</td></tr>
 <tr class="memdesc:a1d2bca6ad9df4ea6e91740b66b24fb05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Await promise.  <a href="#a1d2bca6ad9df4ea6e91740b66b24fb05">More...</a><br /></td></tr>
 <tr class="separator:a1d2bca6ad9df4ea6e91740b66b24fb05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74eae984e2aab3dbc863ed08ed814d6e"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a74eae984e2aab3dbc863ed08ed814d6e">armd_add_promise_callback</a> (<a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> *context, <a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle, <a class="el" href="aramid_8h.html#ab332ab85aebd96330a5068f0ee9e6c98">ARMD_PromiseCallbackFunc</a> promise_callback)</td></tr>
-<tr class="memdesc:a74eae984e2aab3dbc863ed08ed814d6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add callback to the promise.  <a href="#a74eae984e2aab3dbc863ed08ed814d6e">More...</a><br /></td></tr>
-<tr class="separator:a74eae984e2aab3dbc863ed08ed814d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afde584bd092b40b3069b90a2cad6fef7"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#afde584bd092b40b3069b90a2cad6fef7">armd_add_promise_callback</a> (<a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> *context, <a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle, void *callback_context, <a class="el" href="aramid_8h.html#ab332ab85aebd96330a5068f0ee9e6c98">ARMD_PromiseCallbackFunc</a> callback_func)</td></tr>
+<tr class="memdesc:afde584bd092b40b3069b90a2cad6fef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add callback to the promise.  <a href="#afde584bd092b40b3069b90a2cad6fef7">More...</a><br /></td></tr>
+<tr class="separator:afde584bd092b40b3069b90a2cad6fef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad08814d217412e5e709577b7dd84f509"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#ad08814d217412e5e709577b7dd84f509">armd_job_get_num_executors</a> (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job)</td></tr>
 <tr class="memdesc:ad08814d217412e5e709577b7dd84f509"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of executors in the <a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> via <a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a>.  <a href="#ad08814d217412e5e709577b7dd84f509">More...</a><br /></td></tr>
 <tr class="separator:ad08814d217412e5e709577b7dd84f509"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -443,7 +443,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Promise callback. </p>
-<p>The function called when promise resolved. See <a class="el" href="aramid_8h.html#a74eae984e2aab3dbc863ed08ed814d6e">armd_add_promise_callback</a>. </p>
+<p>The function called when promise resolved. See <a class="el" href="aramid_8h.html#afde584bd092b40b3069b90a2cad6fef7">armd_add_promise_callback</a>. </p>
 
 </div>
 </div>
@@ -499,8 +499,8 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a74eae984e2aab3dbc863ed08ed814d6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74eae984e2aab3dbc863ed08ed814d6e">&#9670;&nbsp;</a></span>armd_add_promise_callback()</h2>
+<a id="afde584bd092b40b3069b90a2cad6fef7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afde584bd092b40b3069b90a2cad6fef7">&#9670;&nbsp;</a></span>armd_add_promise_callback()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -520,8 +520,14 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>callback_context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="aramid_8h.html#ab332ab85aebd96330a5068f0ee9e6c98">ARMD_PromiseCallbackFunc</a>&#160;</td>
-          <td class="paramname"><em>promise_callback</em>&#160;</td>
+          <td class="paramname"><em>callback_func</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
