@@ -313,4 +313,61 @@ TEST_F(ExecutionTest, ExecuteFibonacci) {
     ASSERT_EQ(res, 0);
 }
 
+typedef struct TAG_UnwindArgs {
+    bool *unwind;
+} UnwindArgs;
+
+typedef struct TAG_UnwindFrame {
+} UnwindFrame;
+
+int unwind_continuation(ARMD_Job *job, const void *constants, const void *args,
+                        void *frame) {
+    (void)job;
+    (void)constants;
+    (void)args;
+    (void)frame;
+    return 0;
+}
+
+void unwind_unwind(ARMD_Job *job, const void *constants, void *args,
+                   void *frame) {
+    (void)job;
+    (void)constants;
+    (void)args;
+    (void)frame;
+
+    *((UnwindArgs *)args)->unwind = true;
+}
+
+TEST_F(ExecutionTest, ExecuteUnwind) {
+    int res;
+
+    ARMD_Procedure *unwind_procedure;
+    {
+        ARMD_ProcedureBuilder *builder = armd_procedure_builder_create(
+            &memory_allocator, 0, sizeof(FibonacciFrame));
+        armd_then_single(builder, unwind_continuation);
+        armd_unwind(builder, unwind_unwind);
+        unwind_procedure = armd_procedure_builder_build_and_destroy(builder);
+    }
+
+    UnwindArgs args;
+    bool unwind = false;
+
+    args.unwind = &unwind;
+
+    ARMD_Handle dependencies[1];
+    ARMD_Handle promise =
+        armd_invoke(context, unwind_procedure, &args, 0, dependencies);
+    ASSERT_NE(promise, 0u);
+
+    res = armd_await(context, promise);
+    ASSERT_EQ(res, 0);
+
+    ASSERT_TRUE(unwind);
+
+    res = armd_procedure_destroy(unwind_procedure);
+    ASSERT_EQ(res, 0);
+}
+
 } // namespace

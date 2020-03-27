@@ -40,7 +40,10 @@ armd_procedure_builder_create(const ARMD_MemoryAllocator *memory_allocator,
     if (builder->continuation_buffer == NULL) {
         goto error;
     }
-    continuation_buffer_initialized = 1; // NOLINT(clang-analyzer-deadcode.DeadStores)
+    continuation_buffer_initialized =
+        1; // NOLINT(clang-analyzer-deadcode.DeadStores)
+
+    builder->unwind_func = NULL;
 
     return builder;
 
@@ -168,6 +171,22 @@ armd_then(ARMD_ProcedureBuilder *builder,
     return 0;
 }
 
+int armd_unwind(ARMD_ProcedureBuilder *builder, ARMD_UnwindFunc unwind_func) {
+    assert(builder != NULL);
+
+    if (unwind_func == NULL) {
+        return -1;
+    }
+
+    if (builder->unwind_func != NULL) {
+        return -1;
+    }
+
+    builder->unwind_func = unwind_func;
+
+    return 0;
+}
+
 ARMD_Procedure *
 armd_procedure_builder_build_and_destroy(ARMD_ProcedureBuilder *builder) {
     assert(builder != NULL);
@@ -184,6 +203,7 @@ armd_procedure_builder_build_and_destroy(ARMD_ProcedureBuilder *builder) {
     procedure->frame_size = builder->frame_size;
     procedure->constants = builder->constants;
     procedure->num_continuations = builder->num_continuations;
+    procedure->unwind_func = builder->unwind_func;
 
     armd_memory_allocator_free(&procedure->memory_allocator, builder);
 

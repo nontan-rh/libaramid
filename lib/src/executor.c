@@ -149,6 +149,18 @@ static void *executor_thread_main(void *args) {
                 // Just continue
                 break;
             case ARMD__JobExecuteStepStatus_Ended:
+                // Unwinding
+                {
+                    ARMD_UnwindFunc unwind_func =
+                        executing_job->procedure->unwind_func;
+                    const void *job_constants = executing_job->procedure->constants;
+                    void *job_args = executing_job->args;
+                    void *job_frame = executing_job->frame;
+                    if (unwind_func != NULL) {
+                        unwind_func(executing_job, job_constants, job_args, job_frame);
+                    }
+                }
+
                 switch (executing_job->awaiter.type) {
                 case JobAwaiterType_ParentJob: {
                     ARMD_Job *parent_job =
