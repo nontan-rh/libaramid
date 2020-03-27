@@ -153,11 +153,11 @@ static void *executor_thread_main(void *args) {
                 {
                     ARMD_UnwindFunc unwind_func =
                         executing_job->procedure->unwind_func;
-                    const void *constants = executing_job->procedure->constants;
-                    void *args = executing_job->args;
-                    void *frame = executing_job->frame;
+                    const void *job_constants = executing_job->procedure->constants;
+                    void *job_args = executing_job->args;
+                    void *job_frame = executing_job->frame;
                     if (unwind_func != NULL) {
-                        unwind_func(executing_job, constants, args, frame);
+                        unwind_func(executing_job, job_constants, job_args, job_frame);
                     }
                 }
 
