@@ -18,5 +18,6 @@ var searchData=
   ['armd_5fsequentialforcontinuationfunc',['ARMD_SequentialForContinuationFunc',['../aramid_8h.html#a67d975c59fba310ef8cc66b1b43a69e9',1,'aramid.h']]],
   ['armd_5fsequentialforcountfunc',['ARMD_SequentialForCountFunc',['../aramid_8h.html#aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd',1,'aramid.h']]],
   ['armd_5fsinglecontinuationfunc',['ARMD_SingleContinuationFunc',['../aramid_8h.html#af3b238db30fb3b2a361b2e5db99b5233',1,'aramid.h']]],
-  ['armd_5fsize',['ARMD_Size',['../aramid_8h.html#ab567330e3455809dba02e229d0d7bd41',1,'aramid.h']]]
+  ['armd_5fsize',['ARMD_Size',['../aramid_8h.html#ab567330e3455809dba02e229d0d7bd41',1,'aramid.h']]],
+  ['armd_5funwindfunc',['ARMD_UnwindFunc',['../aramid_8h.html#a936cdd3cc0c13f3f6bfb0c858b2ff7c4',1,'aramid.h']]]
 ];

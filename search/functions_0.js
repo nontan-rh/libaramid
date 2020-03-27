@@ -25,5 +25,6 @@ var searchData=
   ['armd_5fprocedure_5fget_5fconstants',['armd_procedure_get_constants',['../aramid_8h.html#a03bf6dcce0e6525e55a306fd5992f555',1,'aramid.h']]],
   ['armd_5fthen',['armd_then',['../aramid_8h.html#ae29eba41e5fd5b638e9735345d11f59e',1,'aramid.h']]],
   ['armd_5fthen_5fsequential_5ffor',['armd_then_sequential_for',['../aramid_8h.html#a1581476169a19e9281ba2209f224d8a8',1,'aramid.h']]],
-  ['armd_5fthen_5fsingle',['armd_then_single',['../aramid_8h.html#ac52f8673c0cf8a04b55ba8bf5369cd36',1,'aramid.h']]]
+  ['armd_5fthen_5fsingle',['armd_then_single',['../aramid_8h.html#ac52f8673c0cf8a04b55ba8bf5369cd36',1,'aramid.h']]],
+  ['armd_5funwind',['armd_unwind',['../aramid_8h.html#ad3052bf10f5f393ba23c7ed678617c5b',1,'aramid.h']]]
 ];

@@ -146,6 +146,9 @@ typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 <tr class="memitem:a67d975c59fba310ef8cc66b1b43a69e9"><td class="memItemLeft" align="right" valign="top">typedef int(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a67d975c59fba310ef8cc66b1b43a69e9">ARMD_SequentialForContinuationFunc</a>) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, const void *args, void *frame, <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a> index)</td></tr>
 <tr class="memdesc:a67d975c59fba310ef8cc66b1b43a69e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sequential-For Continuation Function.  <a href="#a67d975c59fba310ef8cc66b1b43a69e9">More...</a><br /></td></tr>
 <tr class="separator:a67d975c59fba310ef8cc66b1b43a69e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a936cdd3cc0c13f3f6bfb0c858b2ff7c4"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a936cdd3cc0c13f3f6bfb0c858b2ff7c4">ARMD_UnwindFunc</a>) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, void *args, void *frame)</td></tr>
+<tr class="memdesc:a936cdd3cc0c13f3f6bfb0c858b2ff7c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unwind Function.  <a href="#a936cdd3cc0c13f3f6bfb0c858b2ff7c4">More...</a><br /></td></tr>
+<tr class="separator:a936cdd3cc0c13f3f6bfb0c858b2ff7c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c45f3d01f00e9b9494135d2078663ff"><td class="memItemLeft" align="right" valign="top"><a id="a0c45f3d01f00e9b9494135d2078663ff"></a>
 typedef struct TAG_ARMD_ProcedureBuilder&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a></td></tr>
 <tr class="memdesc:a0c45f3d01f00e9b9494135d2078663ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builder object for <a class="el" href="aramid_8h.html#a6ea50de4b5862d2e2412188eefc31741">ARMD_Procedure</a>. <br /></td></tr>
@@ -225,6 +228,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1581476169a19e9281ba2209f224d8a8"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a1581476169a19e9281ba2209f224d8a8">armd_then_sequential_for</a> (<a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *procedure_builder, <a class="el" href="aramid_8h.html#aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd">ARMD_SequentialForCountFunc</a> sequential_for_count_func, <a class="el" href="aramid_8h.html#a67d975c59fba310ef8cc66b1b43a69e9">ARMD_SequentialForContinuationFunc</a> sequential_for_continuation_func)</td></tr>
 <tr class="memdesc:a1581476169a19e9281ba2209f224d8a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a sequential-for continuation to the procedure.  <a href="#a1581476169a19e9281ba2209f224d8a8">More...</a><br /></td></tr>
 <tr class="separator:a1581476169a19e9281ba2209f224d8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3052bf10f5f393ba23c7ed678617c5b"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#ad3052bf10f5f393ba23c7ed678617c5b">armd_unwind</a> (<a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *procedure_builder, <a class="el" href="aramid_8h.html#a936cdd3cc0c13f3f6bfb0c858b2ff7c4">ARMD_UnwindFunc</a> unwind_func)</td></tr>
+<tr class="memdesc:ad3052bf10f5f393ba23c7ed678617c5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add unwind callback to the procedure.  <a href="#ad3052bf10f5f393ba23c7ed678617c5b">More...</a><br /></td></tr>
+<tr class="separator:ad3052bf10f5f393ba23c7ed678617c5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a017a80ccd2f48309bb709fbc1769b035"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a017a80ccd2f48309bb709fbc1769b035">armd_procedure_destroy</a> (<a class="el" href="aramid_8h.html#a6ea50de4b5862d2e2412188eefc31741">ARMD_Procedure</a> *procedure)</td></tr>
 <tr class="memdesc:a017a80ccd2f48309bb709fbc1769b035"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy <a class="el" href="aramid_8h.html#a6ea50de4b5862d2e2412188eefc31741">ARMD_Procedure</a>.  <a href="#a017a80ccd2f48309bb709fbc1769b035">More...</a><br /></td></tr>
 <tr class="separator:a017a80ccd2f48309bb709fbc1769b035"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -495,6 +501,23 @@ Functions</h2></td></tr>
 
 <p>Single Continuation Function. </p>
 <p>The simplified continuation function to be used in <a class="el" href="aramid_8h.html#ac52f8673c0cf8a04b55ba8bf5369cd36">armd_then_single</a>. It omits continuation_constants, continuation_frame, and the ability to run repeatedly. </p>
+
+</div>
+</div>
+<a id="a936cdd3cc0c13f3f6bfb0c858b2ff7c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a936cdd3cc0c13f3f6bfb0c858b2ff7c4">&#9670;&nbsp;</a></span>ARMD_UnwindFunc</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* ARMD_UnwindFunc) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, void *args, void *frame)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Unwind Function. </p>
+<p>The simplified continuation function to be used in <a class="el" href="aramid_8h.html#a1581476169a19e9281ba2209f224d8a8">armd_then_sequential_for</a>. It omits continuation_constants and continuation_frame and it receives the repetition counter as <a class="el" href="index.html">Public API</a>. </p>
 
 </div>
 </div>
@@ -1406,6 +1429,37 @@ Functions</h2></td></tr>
 
 <p>Appends a single continuation to the procedure. </p>
 <p>Adds a single continuation at last of the continuation sequence in <a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a>. A single continuation is simply called once per invocation. </p>
+
+</div>
+</div>
+<a id="ad3052bf10f5f393ba23c7ed678617c5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3052bf10f5f393ba23c7ed678617c5b">&#9670;&nbsp;</a></span>armd_unwind()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ARMD_EXTERN_C int armd_unwind </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *&#160;</td>
+          <td class="paramname"><em>procedure_builder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="aramid_8h.html#a936cdd3cc0c13f3f6bfb0c858b2ff7c4">ARMD_UnwindFunc</a>&#160;</td>
+          <td class="paramname"><em>unwind_func</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add unwind callback to the procedure. </p>
+<p>Adds the unwind callback to the procedure. The unwind callback is called when procedures exit independent of the execution status. </p>
 
 </div>
 </div>

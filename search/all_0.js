@@ -46,5 +46,7 @@ var searchData=
   ['armd_5fsize',['ARMD_Size',['../aramid_8h.html#ab567330e3455809dba02e229d0d7bd41',1,'aramid.h']]],
   ['armd_5fthen',['armd_then',['../aramid_8h.html#ae29eba41e5fd5b638e9735345d11f59e',1,'aramid.h']]],
   ['armd_5fthen_5fsequential_5ffor',['armd_then_sequential_for',['../aramid_8h.html#a1581476169a19e9281ba2209f224d8a8',1,'aramid.h']]],
-  ['armd_5fthen_5fsingle',['armd_then_single',['../aramid_8h.html#ac52f8673c0cf8a04b55ba8bf5369cd36',1,'aramid.h']]]
+  ['armd_5fthen_5fsingle',['armd_then_single',['../aramid_8h.html#ac52f8673c0cf8a04b55ba8bf5369cd36',1,'aramid.h']]],
+  ['armd_5funwind',['armd_unwind',['../aramid_8h.html#ad3052bf10f5f393ba23c7ed678617c5b',1,'aramid.h']]],
+  ['armd_5funwindfunc',['ARMD_UnwindFunc',['../aramid_8h.html#a936cdd3cc0c13f3f6bfb0c858b2ff7c4',1,'aramid.h']]]
 ];
