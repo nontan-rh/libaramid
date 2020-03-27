@@ -16,6 +16,7 @@ struct TAG_ARMD_ProcedureBuilder {
     ARMD_Size num_continuations;
     ARMD_Size continuation_buffer_size;
     ARMD__Continuation *continuation_buffer;
+    ARMD_UnwindFunc unwind_func;
 };
 
 #endif

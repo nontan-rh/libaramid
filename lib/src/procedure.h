@@ -21,6 +21,8 @@ struct TAG_ARMD_Procedure {
     // continuations
     ARMD_Size num_continuations;
     ARMD__Continuation *continuations;
+    // unwind
+    ARMD_UnwindFunc unwind_func;
 };
 
 #endif // ARAMID__PROCEDURE_H

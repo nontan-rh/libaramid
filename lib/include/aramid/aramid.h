@@ -337,6 +337,15 @@ typedef int (*ARMD_SequentialForContinuationFunc)(ARMD_Job *job,
                                                   ARMD_Size index);
 
 /**
+ * @brief Unwind Function
+ * @details The simplified continuation function to be used in @ref
+ * armd_then_sequential_for. It omits continuation_constants and
+ * continuation_frame and it receives the repetition counter as @ref index.
+ */
+typedef int (*ARMD_UnwindFunc)(ARMD_Job *job, const void *constants, void *args,
+                               void *frame);
+
+/**
  * @brief Builder object for @ref ARMD_Procedure
  */
 typedef struct TAG_ARMD_ProcedureBuilder ARMD_ProcedureBuilder;
@@ -417,6 +426,14 @@ ARMD_EXTERN_C int armd_then_sequential_for(
     ARMD_ProcedureBuilder *procedure_builder,
     ARMD_SequentialForCountFunc sequential_for_count_func,
     ARMD_SequentialForContinuationFunc sequential_for_continuation_func);
+
+/**
+ * @brief Add unwind callback to the procedure
+ * @details Adds the unwind callback to the procedure. The unwind callback is
+ * called when procedures exit independent of the execution status.
+ */
+ARMD_EXTERN_C int armd_unwind(ARMD_ProcedureBuilder *procedure_builder,
+                              ARMD_UnwindFunc unwind_func);
 
 /**
  * @brief Destroy @ref ARMD_Procedure
