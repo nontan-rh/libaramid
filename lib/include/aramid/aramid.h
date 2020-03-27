@@ -342,7 +342,7 @@ typedef int (*ARMD_SequentialForContinuationFunc)(ARMD_Job *job,
  * armd_then_sequential_for. It omits continuation_constants and
  * continuation_frame and it receives the repetition counter as @ref index.
  */
-typedef int (*ARMD_UnwindFunc)(ARMD_Job *job, const void *constants, void *args,
+typedef void (*ARMD_UnwindFunc)(ARMD_Job *job, const void *constants, void *args,
                                void *frame);
 
 /**
