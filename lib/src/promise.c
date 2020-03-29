@@ -19,6 +19,9 @@ armd__promise_create_no_pending_job(ARMD_MemoryRegion *memory_region) {
     }
     promise_initialized = 1;
 
+    promise->reference_count = 1;
+    promise->status = ARMD__PromiseStatus_NotFinished;
+
     promise->memory_region = memory_region;
 
     promise->num_all_waiting_promises = 0;
@@ -39,7 +42,8 @@ armd__promise_create_no_pending_job(ARMD_MemoryRegion *memory_region) {
     if (promise->promise_callbacks == NULL) {
         goto error;
     }
-    promise_callbacks_initialized = 1; // NOLINT(clang-analyzer-deadcode.DeadStores)
+    promise_callbacks_initialized =
+        1; // NOLINT(clang-analyzer-deadcode.DeadStores)
 
     return promise;
 
@@ -79,6 +83,9 @@ armd__promise_create_with_pending_job(ARMD_MemoryRegion *memory_region,
     }
     promise_initialized = 1;
 
+    promise->reference_count = 1;
+    promise->status = ARMD__PromiseStatus_NotFinished;
+
     promise->memory_region = memory_region;
 
     promise->num_all_waiting_promises = num_waiting_promises;
@@ -99,7 +106,8 @@ armd__promise_create_with_pending_job(ARMD_MemoryRegion *memory_region,
     if (promise->promise_callbacks == NULL) {
         goto error;
     }
-    promise_callbacks_initialized = 1; // NOLINT(clang-analyzer-deadcode.DeadStores)
+    promise_callbacks_initialized =
+        1; // NOLINT(clang-analyzer-deadcode.DeadStores)
 
     return promise;
 
@@ -122,6 +130,8 @@ error:
 int armd__promise_destroy(ARMD__Promise *promise) {
     assert(promise != NULL);
 
+    assert(promise->reference_count == 0);
+
     ARMD_MemoryRegion *memory_region = promise->memory_region;
 
     armd_memory_region_free(memory_region, promise->continuation_promises);
@@ -134,6 +144,8 @@ int armd__promise_destroy(ARMD__Promise *promise) {
 int armd__promise_add_continuation_promise(ARMD__Promise *promise,
                                            ARMD_Handle continuation_promise) {
     assert(promise != NULL);
+
+    assert(promise->reference_count >= 1);
 
     ARMD_Size new_num_continuation_promises =
         promise->num_continuation_promises + 1;
@@ -164,6 +176,8 @@ int armd__promise_remove_continuation_promise(
     ARMD__Promise *promise, ARMD_Handle continuation_promise) {
     assert(promise != NULL);
 
+    assert(promise->reference_count >= 1);
+
     for (ARMD_Size i = 0; i < promise->num_continuation_promises; i++) {
         if (promise->continuation_promises[i] == continuation_promise) {
             promise->continuation_promises[i] = 0;
@@ -177,6 +191,8 @@ int armd__promise_add_promise_callback(
     ARMD__Promise *promise, const ARMD__PromiseCallback *promise_callback) {
     assert(promise != NULL);
     assert(promise_callback != NULL);
+
+    assert(promise->reference_count >= 1);
 
     ARMD_Size new_num_promise_callbacks = promise->num_promise_callbacks + 1;
     ARMD__PromiseCallback *new_promise_callbacks = armd_memory_region_allocate(
@@ -198,4 +214,23 @@ int armd__promise_add_promise_callback(
     promise->promise_callbacks = new_promise_callbacks;
 
     return 0;
+}
+
+ARMD_EXTERN_C void
+armd__promise_increment_reference_count(ARMD__Promise *promise) {
+    assert(promise->reference_count >= 1);
+
+    ++promise->reference_count;
+}
+
+ARMD_EXTERN_C int
+armd__promise_decrement_reference_count(ARMD__Promise *promise) {
+    assert(promise->reference_count >= 1);
+
+    --promise->reference_count;
+    if (promise->reference_count == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }

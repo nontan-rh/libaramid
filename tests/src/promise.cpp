@@ -37,8 +37,9 @@ struct CallbackContext {
     bool is_called;
 };
 
-void cb(ARMD_Handle handle, void *callback_context) {
+void cb(ARMD_Handle handle, void *callback_context, int has_error) {
     (void)handle;
+    (void)has_error;
     reinterpret_cast<CallbackContext *>(callback_context)->is_called = true;
 }
 
@@ -97,29 +98,25 @@ TEST_F(PromiseTest, CallbackEmptyProcedure) {
 
 #if defined(ARAMID_USE_PTHREAD)
 
-static void sleep_microsecond(unsigned long us) {
-    usleep(us);
-}
+static void sleep_microsecond(unsigned long us) { usleep(us); }
 
 #elif defined(ARAMID_USE_WIN32THREAD)
 
 static void sleep_microsecond(unsigned long us) {
-	HANDLE timer;
-	LARGE_INTEGER ft;
+    HANDLE timer;
+    LARGE_INTEGER ft;
 
-	ft.QuadPart = -(LONGLONG)(10 * us);
+    ft.QuadPart = -(LONGLONG)(10 * us);
 
-	timer = CreateWaitableTimer(NULL, TRUE, NULL);
-	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
-	WaitForSingleObject(timer, INFINITE);
-	CloseHandle(timer);
+    timer = CreateWaitableTimer(NULL, TRUE, NULL);
+    SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
+    WaitForSingleObject(timer, INFINITE);
+    CloseHandle(timer);
 }
 
 #elif defined(ARAMID_EDITOR)
 
-static void sleep_microsecond(unsigned long us) {
-    assert(0);
-}
+static void sleep_microsecond(unsigned long us) { assert(0); }
 
 #else
 
@@ -187,9 +184,9 @@ TEST_F(PromiseTest, CallbackSleepProcedureAfterAwait) {
     res = armd_await(context, promise);
     ASSERT_EQ(res, 0);
     res = armd_add_promise_callback(context, promise, &callback_context, cb);
-    ASSERT_EQ(res, 0);
+    ASSERT_EQ(res, -1); // This will fail because there's already no promise
 
-    ASSERT_TRUE(callback_context.is_called);
+    ASSERT_FALSE(callback_context.is_called);
 
     res = armd_procedure_destroy(sleep_procedure);
     ASSERT_EQ(res, 0);

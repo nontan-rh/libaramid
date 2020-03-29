@@ -2,7 +2,7 @@
 
 #include "single.h"
 
-static ARMD_Bool continuation_func(ARMD_Job *job, const void *constants,
+static ARMD_ContinuationResult continuation_func(ARMD_Job *job, const void *constants,
                                    const void *args, void *frame,
                                    const void *continuation_constants,
                                    void *continuation_frame) {
@@ -12,7 +12,7 @@ static ARMD_Bool continuation_func(ARMD_Job *job, const void *constants,
         (ARMD__SingleContinuationConstants *)continuation_constants;
     single_continuation_constants->single_continuation_func(job, constants,
                                                             args, frame);
-    return 0;
+    return ARMD_ContinuationResult_Ended;
 }
 
 static void *continuation_frame_creator(ARMD_MemoryRegion *memory_region) {
@@ -40,6 +40,6 @@ int armd_then_single(ARMD_ProcedureBuilder *procedure_builder,
     continuation_constants->single_continuation_func = single_continuation_func;
 
     return armd_then(procedure_builder, continuation_func,
-                     continuation_constants, continuation_frame_creator,
+                     continuation_constants, NULL, continuation_frame_creator,
                      continuation_frame_destroyer);
 }

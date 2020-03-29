@@ -26,6 +26,7 @@ struct TAG_ARMD_Context {
 };
 
 ARMD_EXTERN_C int armd__context_complete_promise(ARMD_Context *context,
-                                                 ARMD_Handle promise_handle);
+                                                 ARMD_Handle promise_handle,
+                                                 int has_error);
 
 #endif // ARAMID__CONTEXT_H

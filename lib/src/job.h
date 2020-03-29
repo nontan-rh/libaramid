@@ -26,6 +26,8 @@ struct TAG_ARMD_Job {
     volatile ARMD_Bool parent_finished;
     volatile ARMD_Size num_all_waiting_jobs;
     volatile ARMD_Size num_ended_waiting_jobs;
+    volatile ARMD_Bool has_error;
+    volatile ARMD_ContinuationResult continuation_result;
     // executor
     ARMD__Executor *executor;
 };
@@ -44,6 +46,10 @@ ARMD_EXTERN_C ARMD_Job *armd__job_create(ARMD_MemoryRegion *memory_region,
                                          void *args);
 ARMD_EXTERN_C int armd__job_destroy(ARMD_Job *job);
 
+ARMD_EXTERN_C void armd__job_cleanup_continuation_frame(ARMD_Job *job);
+ARMD_EXTERN_C void armd__job_increment_continuation_index(ARMD_Job *job);
+ARMD_EXTERN_C ARMD_Bool armd__job_notify_to_parent_and_steal(
+    ARMD_Job *job, ARMD__Executor *executor, ARMD_Job **next_job);
 ARMD_EXTERN_C ARMD__JobExecuteStepStatus
 armd__job_execute_step(ARMD_Job *job, ARMD__Executor *executor);
 
