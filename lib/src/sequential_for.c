@@ -24,8 +24,13 @@ continuation_func(ARMD_Job *job, const void *constants, const void *args,
         return ARMD_ContinuationResult_Ended;
     }
 
-    sequential_for_continuation_constants->sequential_for_continuation_func(
-        job, constants, args, frame, index);
+    int sequential_for_continuation_result =
+        sequential_for_continuation_constants->sequential_for_continuation_func(
+            job, constants, args, frame, index);
+
+    if (sequential_for_continuation_result != 0) {
+        return ARMD_ContinuationResult_Error;
+    }
 
     if (index == sequential_for_continuation_frame->count - 1) {
         return ARMD_ContinuationResult_Ended;
