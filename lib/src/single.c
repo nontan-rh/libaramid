@@ -3,8 +3,8 @@
 #include "single.h"
 
 static ARMD_ContinuationResult
-continuation_func(ARMD_Job *job, const void *constants, const void *args,
-                  void *frame, const void *continuation_constants,
+continuation_func(ARMD_Job *job, const void *constants, void *args, void *frame,
+                  const void *continuation_constants,
                   void *continuation_frame) {
     (void)continuation_frame;
 

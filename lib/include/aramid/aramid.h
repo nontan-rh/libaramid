@@ -308,14 +308,14 @@ typedef enum TAG_ARMD_ContinuationResult {
  * meta infomation to execute in the thread pool.
  */
 typedef ARMD_ContinuationResult (*ARMD_ContinuationFunc)(
-    ARMD_Job *job, const void *constants, const void *args, void *frame,
+    ARMD_Job *job, const void *constants, void *args, void *frame,
     const void *continuation_constants, void *continuation_frame);
 
 /**
  * @brief Error Trap Function
  */
 typedef ARMD_ContinuationResult (*ARMD_ErrorTrapFunc)(
-    ARMD_Job *job, const void *constants, const void *args, void *frame,
+    ARMD_Job *job, const void *constants, void *args, void *frame,
     const void *continuation_constants, void *continuation_frame);
 
 /**
@@ -342,13 +342,13 @@ typedef void (*ARMD_ContinuationFrameDestroyer)(
  * the ability to run repeatedly.
  */
 typedef int (*ARMD_SingleContinuationFunc)(ARMD_Job *job, const void *constants,
-                                           const void *args, void *frame);
+                                           void *args, void *frame);
 
 /**
  * @brief Sequential-For Count Function
  * @details The delegate used to get the number of times to run repeatedly
  */
-typedef ARMD_Size (*ARMD_SequentialForCountFunc)(const void *args, void *frame);
+typedef ARMD_Size (*ARMD_SequentialForCountFunc)(void *args, void *frame);
 /**
  * @brief Sequential-For Continuation Function
  * @details The simplified continuation function to be used in @ref
@@ -357,7 +357,7 @@ typedef ARMD_Size (*ARMD_SequentialForCountFunc)(const void *args, void *frame);
  */
 typedef int (*ARMD_SequentialForContinuationFunc)(ARMD_Job *job,
                                                   const void *constants,
-                                                  const void *args, void *frame,
+                                                  void *args, void *frame,
                                                   ARMD_Size index);
 
 /**

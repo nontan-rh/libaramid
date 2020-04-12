@@ -124,8 +124,8 @@ static void sleep_microsecond(unsigned long us) { assert(0); }
 
 #endif
 
-int single_sleep_continuation(ARMD_Job *job, const void *constants,
-                              const void *args, void *frame) {
+int single_sleep_continuation(ARMD_Job *job, const void *constants, void *args,
+                              void *frame) {
     (void)job;
     (void)constants;
     (void)args;
