@@ -63,6 +63,32 @@ ARMD_ContinuationResult error_continuation(ARMD_Job *job, const void *constants,
     return ARMD_ContinuationResult_Error;
 }
 
+ARMD_ContinuationResult error_trap_recover(ARMD_Job *job, const void *constants,
+                                           void *args, void *frame,
+                                           const void *continuation_constants,
+                                           void *continuation_frame) {
+    (void)job;
+    (void)constants;
+    (void)args;
+    (void)frame;
+    (void)continuation_constants;
+    (void)continuation_frame;
+    return ARMD_ContinuationResult_Ended;
+}
+
+ARMD_ContinuationResult error_trap_rethrow(ARMD_Job *job, const void *constants,
+                                           void *args, void *frame,
+                                           const void *continuation_constants,
+                                           void *continuation_frame) {
+    (void)job;
+    (void)constants;
+    (void)args;
+    (void)frame;
+    (void)continuation_constants;
+    (void)continuation_frame;
+    return ARMD_ContinuationResult_Error;
+}
+
 ARMD_Procedure *
 build_error_procedure(const ARMD_MemoryAllocator *memory_allocator,
                       bool unwind) {
@@ -289,8 +315,8 @@ TEST_F(ErrorTest, SingleErrorChain2Unwind) {
 
     ARMD_Procedure *single_error_procedure =
         build_single_error_procedure(&memory_allocator, true);
-    ARMD_Procedure *single_call_error_procedure = build_caller_procedure(
-        &memory_allocator, single_error_procedure, true);
+    ARMD_Procedure *single_call_error_procedure =
+        build_caller_procedure(&memory_allocator, single_error_procedure, true);
 
     CommonArgs args;
     args.unwind = 0;
@@ -315,8 +341,8 @@ TEST_F(ErrorTest, SingleErrorChain3Unwind) {
     args.unwind = 0;
     ARMD_Procedure *single_error_procedure =
         build_single_error_procedure(&memory_allocator, true);
-    ARMD_Procedure *single_call_error_procedure = build_caller_procedure(
-        &memory_allocator, single_error_procedure, true);
+    ARMD_Procedure *single_call_error_procedure =
+        build_caller_procedure(&memory_allocator, single_error_procedure, true);
     ARMD_Procedure *single_call_error_procedure2 = build_caller_procedure(
         &memory_allocator, single_call_error_procedure, true);
 
@@ -333,6 +359,62 @@ TEST_F(ErrorTest, SingleErrorChain3Unwind) {
     res = armd_procedure_destroy(single_call_error_procedure);
     ASSERT_EQ(res, 0);
     res = armd_procedure_destroy(single_error_procedure);
+    ASSERT_EQ(res, 0);
+}
+
+TEST_F(ErrorTest, ErrorTrapRecover) {
+    int res;
+
+    ARMD_Procedure *error_procedure;
+    {
+        ARMD_ProcedureBuilder *builder =
+            armd_procedure_builder_create(&memory_allocator, 0, 0);
+
+        void *continuation_constants =
+            armd_memory_allocator_allocate(&memory_allocator, 1);
+        armd_then(builder, error_continuation, continuation_constants,
+                  error_trap_recover, error_continuation_frame_creator,
+                  error_continuation_frame_destroyer);
+
+        error_procedure = armd_procedure_builder_build_and_destroy(builder);
+    }
+
+    ARMD_Handle dependencies[1] = {0};
+    ARMD_Handle promise =
+        armd_invoke(context, error_procedure, nullptr, 0, dependencies);
+    ASSERT_NE(promise, 0u);
+    res = armd_await(context, promise);
+    ASSERT_EQ(res, 0);
+
+    res = armd_procedure_destroy(error_procedure);
+    ASSERT_EQ(res, 0);
+}
+
+TEST_F(ErrorTest, ErrorTrapRethrow) {
+    int res;
+
+    ARMD_Procedure *error_procedure;
+    {
+        ARMD_ProcedureBuilder *builder =
+            armd_procedure_builder_create(&memory_allocator, 0, 0);
+
+        void *continuation_constants =
+            armd_memory_allocator_allocate(&memory_allocator, 1);
+        armd_then(builder, error_continuation, continuation_constants,
+                  error_trap_rethrow, error_continuation_frame_creator,
+                  error_continuation_frame_destroyer);
+
+        error_procedure = armd_procedure_builder_build_and_destroy(builder);
+    }
+
+    ARMD_Handle dependencies[1] = {0};
+    ARMD_Handle promise =
+        armd_invoke(context, error_procedure, nullptr, 0, dependencies);
+    ASSERT_NE(promise, 0u);
+    res = armd_await(context, promise);
+    ASSERT_NE(res, 0); // error
+
+    res = armd_procedure_destroy(error_procedure);
     ASSERT_EQ(res, 0);
 }
 
