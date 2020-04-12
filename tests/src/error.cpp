@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include <atomic>
+
 #include <gtest/gtest.h>
 
 #include <aramid/aramid.h>
