@@ -282,6 +282,11 @@ static void cleanup_dependency_graph(ARMD_Context *context,
         assert(promise != NULL);
 
         armd__promise_remove_continuation_promise(promise, target);
+        if (armd__promise_decrement_reference_count(promise)) {
+            armd__hash_table_remove(context->promise_manager.promises,
+                                    dependency);
+            armd__promise_destroy(promise);
+        }
     }
 }
 
@@ -295,20 +300,23 @@ static int check_and_build_dependency_graph(ARMD_Context *context,
 
     for (ARMD_Size i = 0; i < num_dependencies; i++) {
         ARMD_Handle dependency = dependencies[i];
-        // Dependency is newer than latest
-        if (dependency > context->promise_manager.handle_counter) {
-            cleanup_dependency_graph(context, num_dependencies, dependencies,
-                                     target);
-            return -1;
+        if (dependency == 0) {
+            continue;
         }
 
         ARMD__Promise *promise;
         res = armd__hash_table_get(context->promise_manager.promises,
                                    dependency, (void **)&promise);
         if (res != 0) {
-            continue;
+            cleanup_dependency_graph(context, num_dependencies, dependencies,
+                                     target);
+            return -1;
         }
         assert(promise != NULL);
+
+        if (promise->status != ARMD__PromiseStatus_NotFinished) {
+            continue;
+        }
 
         res = armd__promise_add_continuation_promise(promise, target);
         if (res != 0) {
@@ -316,6 +324,7 @@ static int check_and_build_dependency_graph(ARMD_Context *context,
                                      target);
             return -1;
         }
+        armd__promise_increment_reference_count(promise);
 
         ++num_waiting_promises;
     }
@@ -465,9 +474,10 @@ error:
 }
 
 int armd__context_complete_promise(ARMD_Context *context,
-                                   ARMD_Handle promise_handle) {
+                                   ARMD_Handle promise_handle, int has_error) {
     int res = 0;
     int mutex_locked = 0;
+    int promise_to_destroy = 0;
 
     res = armd__mutex_lock(&context->promise_manager.mutex);
     assert(res == 0);
@@ -480,22 +490,31 @@ int armd__context_complete_promise(ARMD_Context *context,
         goto error;
     }
 
+    if (has_error) {
+        promise->status = ARMD__PromiseStatus_Error;
+    } else {
+        promise->status = ARMD__PromiseStatus_Success;
+    }
+
     for (ARMD_Size i = 0; i < promise->num_promise_callbacks; i++) {
         ARMD__PromiseCallback *promise_callback =
             &promise->promise_callbacks[i];
-        promise_callback->func(promise_handle, promise_callback->context);
+        promise_callback->func(promise_handle, promise_callback->context,
+                               has_error);
+        promise_to_destroy |= armd__promise_decrement_reference_count(promise);
     }
 
     for (ARMD_Size i = 0; i < promise->num_continuation_promises; i++) {
         ARMD_Handle continuation_promise_handle =
             promise->continuation_promises[i];
+        if (continuation_promise_handle == 0) {
+            continue;
+        }
         ARMD__Promise *continuation_promise;
         res = armd__hash_table_get(context->promise_manager.promises,
                                    continuation_promise_handle,
                                    (void **)&continuation_promise);
-        if (res != 0) {
-            continue;
-        }
+        assert(res == 0);
 
         assert(continuation_promise->pending_job != NULL);
 
@@ -518,13 +537,31 @@ int armd__context_complete_promise(ARMD_Context *context,
                 assert(0); // FIXME: Handle this error
             }
 
+            {
+                res = armd__mutex_lock(&context->executor_mutex);
+                assert(res == 0);
+
+                ++context->free_job_count;
+                res = armd__condvar_broadcast(&context->executor_condvar);
+                assert(res == 0);
+
+                res = armd__mutex_unlock(&context->executor_mutex);
+                assert(res == 0);
+            }
+
             continuation_promise->pending_job = NULL;
+
+            promise_to_destroy |=
+                armd__promise_decrement_reference_count(promise);
         }
     }
 
-    res = armd__hash_table_remove(context->promise_manager.promises,
-                                  promise_handle);
-    assert(res == 0);
+    if (promise_to_destroy) {
+        res = armd__hash_table_remove(context->promise_manager.promises,
+                                      promise_handle);
+        assert(res == 0);
+        armd__promise_destroy(promise);
+    }
 
     res = armd__condvar_broadcast(&context->promise_manager.condvar);
     assert(res == 0);
@@ -551,22 +588,59 @@ int armd_await(ARMD_Context *context, ARMD_Handle handle) {
     res = armd__mutex_lock(&context->promise_manager.mutex);
     assert(res == 0);
 
-    if (context->promise_manager.handle_counter < handle) {
+    ARMD__Promise *promise;
+    if (armd__hash_table_get(context->promise_manager.promises, handle,
+                             (void **)&promise)) {
         res = armd__mutex_unlock(&context->promise_manager.mutex);
         assert(res == 0);
         return -1;
     }
 
+    ARMD__PromiseStatus status;
     while (1) {
-        ARMD_Bool exists =
-            armd__hash_table_exists(context->promise_manager.promises, handle);
-        if (!exists) {
+        status = promise->status;
+        if (status != ARMD__PromiseStatus_NotFinished) {
             break;
         }
 
         res = armd__condvar_wait(&context->promise_manager.condvar,
                                  &context->promise_manager.mutex);
         assert(res == 0);
+    }
+
+    if (armd__promise_decrement_reference_count(promise)) {
+        armd__hash_table_remove(context->promise_manager.promises, handle);
+        armd__promise_destroy(promise);
+    }
+
+    res = armd__mutex_unlock(&context->promise_manager.mutex);
+    assert(res == 0);
+
+    if (status == ARMD__PromiseStatus_Success) {
+        return 0;
+    } else {
+        return -2;
+    }
+}
+
+int armd_detach(ARMD_Context *context, ARMD_Handle handle) {
+    int res = 0;
+    (void)res;
+
+    res = armd__mutex_lock(&context->promise_manager.mutex);
+    assert(res == 0);
+
+    ARMD__Promise *promise;
+    if (armd__hash_table_get(context->promise_manager.promises, handle,
+                             (void **)&promise)) {
+        res = armd__mutex_unlock(&context->promise_manager.mutex);
+        assert(res == 0);
+        return -1;
+    }
+
+    if (armd__promise_decrement_reference_count(promise)) {
+        armd__hash_table_remove(context->promise_manager.promises, handle);
+        armd__promise_destroy(promise);
     }
 
     res = armd__mutex_unlock(&context->promise_manager.mutex);
@@ -593,20 +667,25 @@ int armd_add_promise_callback(ARMD_Context *context, ARMD_Handle handle,
     ARMD__Promise *promise;
     if (armd__hash_table_get(context->promise_manager.promises, handle,
                              (void **)&promise) != 0) {
-        // Promise is already resolved, so invoke callback immediately
-        callback_func(handle, callback_context);
+        // Promise is not found
         res = armd__mutex_unlock(&context->promise_manager.mutex);
-        return 0;
+        return -1;
     }
 
-    ARMD__PromiseCallback promise_callback;
-    promise_callback.func = callback_func;
-    promise_callback.context = callback_context;
-    res = armd__promise_add_promise_callback(promise, &promise_callback);
-    if (res != 0) {
-        res = armd__mutex_unlock(&context->promise_manager.mutex);
-        assert(res == 0);
-        return -1;
+    if (promise->status == ARMD__PromiseStatus_NotFinished) {
+        ARMD__PromiseCallback promise_callback;
+        promise_callback.func = callback_func;
+        promise_callback.context = callback_context;
+        res = armd__promise_add_promise_callback(promise, &promise_callback);
+        if (res != 0) {
+            res = armd__mutex_unlock(&context->promise_manager.mutex);
+            assert(res == 0);
+            return -1;
+        }
+        armd__promise_increment_reference_count(promise);
+    } else {
+        callback_func(handle, callback_context,
+                      promise->status != ARMD__PromiseStatus_Success);
     }
 
     res = armd__mutex_unlock(&context->promise_manager.mutex);

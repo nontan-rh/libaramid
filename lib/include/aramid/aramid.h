@@ -217,12 +217,21 @@ ARMD_EXTERN_C ARMD_Handle armd_invoke(ARMD_Context *context,
 ARMD_EXTERN_C int armd_await(ARMD_Context *context, ARMD_Handle handle);
 
 /**
+ * @brief Detach promise
+ * @details This function detaches the job.
+ * @param context The @ref ARMD_Context which promise belongs to
+ * @param handle The @ref ARMD_Handle of the promise to be detached
+ * @return Status code, 0 if succeeded, non-zero if otherwise
+ */
+ARMD_EXTERN_C int armd_detach(ARMD_Context *context, ARMD_Handle handle);
+
+/**
  * @brief Promise callback
  * @details The function called when promise resolved. See @ref
  * armd_add_promise_callback.
  */
 typedef void (*ARMD_PromiseCallbackFunc)(ARMD_Handle handle,
-                                         void *callback_context);
+                                         void *callback_context, int has_error);
 /**
  * @brief Add callback to the promise
  * @details Add a function to be called when the promise being resolved.
@@ -284,15 +293,30 @@ ARMD_EXTERN_C int armd_fork_with_id(ARMD_Size executor_id, ARMD_Job *parent_job,
                                     ARMD_Procedure *procedure, void *args);
 
 /**
+ * @brief Continuation Status
+ */
+typedef enum TAG_ARMD_ContinuationResult {
+    ARMD_ContinuationResult_Error,
+    ARMD_ContinuationResult_Ended,
+    ARMD_ContinuationResult_Repeat,
+} ARMD_ContinuationResult;
+
+/**
  * @brief Continuation Function
  * @details This is something like functions but consists of many continuations
  * which are represented with many fragment functions. The procedure also has
  * meta infomation to execute in the thread pool.
  */
-typedef ARMD_Bool (*ARMD_ContinuationFunc)(ARMD_Job *job, const void *constants,
-                                           const void *args, void *frame,
-                                           const void *continuation_constants,
-                                           void *continuation_frame);
+typedef ARMD_ContinuationResult (*ARMD_ContinuationFunc)(
+    ARMD_Job *job, const void *constants, void *args, void *frame,
+    const void *continuation_constants, void *continuation_frame);
+
+/**
+ * @brief Error Trap Function
+ */
+typedef ARMD_ContinuationResult (*ARMD_ErrorTrapFunc)(
+    ARMD_Job *job, const void *constants, void *args, void *frame,
+    const void *continuation_constants, void *continuation_frame);
 
 /**
  * @brief Continuation Frame Creator
@@ -318,13 +342,13 @@ typedef void (*ARMD_ContinuationFrameDestroyer)(
  * the ability to run repeatedly.
  */
 typedef int (*ARMD_SingleContinuationFunc)(ARMD_Job *job, const void *constants,
-                                           const void *args, void *frame);
+                                           void *args, void *frame);
 
 /**
  * @brief Sequential-For Count Function
  * @details The delegate used to get the number of times to run repeatedly
  */
-typedef ARMD_Size (*ARMD_SequentialForCountFunc)(const void *args, void *frame);
+typedef ARMD_Size (*ARMD_SequentialForCountFunc)(void *args, void *frame);
 /**
  * @brief Sequential-For Continuation Function
  * @details The simplified continuation function to be used in @ref
@@ -333,7 +357,7 @@ typedef ARMD_Size (*ARMD_SequentialForCountFunc)(const void *args, void *frame);
  */
 typedef int (*ARMD_SequentialForContinuationFunc)(ARMD_Job *job,
                                                   const void *constants,
-                                                  const void *args, void *frame,
+                                                  void *args, void *frame,
                                                   ARMD_Size index);
 
 /**
@@ -342,8 +366,8 @@ typedef int (*ARMD_SequentialForContinuationFunc)(ARMD_Job *job,
  * armd_then_sequential_for. It omits continuation_constants and
  * continuation_frame and it receives the repetition counter as @ref index.
  */
-typedef void (*ARMD_UnwindFunc)(ARMD_Job *job, const void *constants, void *args,
-                               void *frame);
+typedef void (*ARMD_UnwindFunc)(ARMD_Job *job, const void *constants,
+                                void *args, void *frame);
 
 /**
  * @brief Builder object for @ref ARMD_Procedure
@@ -402,6 +426,7 @@ ARMD_EXTERN_C ARMD_MemoryAllocator armd_procedure_builder_get_memory_allocator(
 ARMD_EXTERN_C int
 armd_then(ARMD_ProcedureBuilder *procedure_builder,
           ARMD_ContinuationFunc continuation_func, void *continuation_constants,
+          ARMD_ErrorTrapFunc error_trap_func,
           ARMD_ContinuationFrameCreator continuation_frame_creator,
           ARMD_ContinuationFrameDestroyer continuation_frame_destroyer);
 

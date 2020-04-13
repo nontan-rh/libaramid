@@ -2,10 +2,10 @@
 
 #include "sequential_for.h"
 
-static ARMD_Bool continuation_func(ARMD_Job *job, const void *constants,
-                                   const void *args, void *frame,
-                                   const void *continuation_constants,
-                                   void *continuation_frame) {
+static ARMD_ContinuationResult
+continuation_func(ARMD_Job *job, const void *constants, void *args, void *frame,
+                  const void *continuation_constants,
+                  void *continuation_frame) {
     ARMD__SequentialForContinuationConstants
         *sequential_for_continuation_constants =
             (ARMD__SequentialForContinuationConstants *)continuation_constants;
@@ -21,17 +21,22 @@ static ARMD_Bool continuation_func(ARMD_Job *job, const void *constants,
 
     ARMD_Size index = sequential_for_continuation_frame->index++;
     if (index >= sequential_for_continuation_frame->count) {
-        return 0;
+        return ARMD_ContinuationResult_Ended;
     }
 
-    sequential_for_continuation_constants->sequential_for_continuation_func(
-        job, constants, args, frame, index);
+    int sequential_for_continuation_result =
+        sequential_for_continuation_constants->sequential_for_continuation_func(
+            job, constants, args, frame, index);
+
+    if (sequential_for_continuation_result != 0) {
+        return ARMD_ContinuationResult_Error;
+    }
 
     if (index == sequential_for_continuation_frame->count - 1) {
-        return 0;
+        return ARMD_ContinuationResult_Ended;
     }
 
-    return 1;
+    return ARMD_ContinuationResult_Repeat;
 }
 
 static void *continuation_frame_creator(ARMD_MemoryRegion *memory_region) {
@@ -77,6 +82,6 @@ int armd_then_sequential_for(
         sequential_for_continuation_func;
 
     return armd_then(procedure_builder, continuation_func,
-                     continuation_constants, continuation_frame_creator,
+                     continuation_constants, NULL, continuation_frame_creator,
                      continuation_frame_destroyer);
 }

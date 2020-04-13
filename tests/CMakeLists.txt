@@ -1,5 +1,6 @@
 
 add_library(aramid_integration_test_object OBJECT
+    src/error.cpp
     src/execution.cpp
     src/promise.cpp
     )

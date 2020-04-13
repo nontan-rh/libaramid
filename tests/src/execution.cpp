@@ -24,8 +24,8 @@ protected:
     void TearDown() override { armd_context_destroy(context); }
 };
 
-int single_normal_continuation(ARMD_Job *job, const void *constants,
-                               const void *args, void *frame) {
+int single_normal_continuation(ARMD_Job *job, const void *constants, void *args,
+                               void *frame) {
     (void)constants;
     // For compilation on windows
     fprintf(stderr, "executor: %u, args: %p, frame: %p\n",
@@ -33,14 +33,14 @@ int single_normal_continuation(ARMD_Job *job, const void *constants,
     return 0;
 }
 
-ARMD_Size single_sequential_for_count(const void *args, void *frame) {
+ARMD_Size single_sequential_for_count(void *args, void *frame) {
     (void)args;
     (void)frame;
     return 10;
 }
 
 int single_sequential_for_continuation(ARMD_Job *job, const void *constants,
-                                       const void *args, void *frame,
+                                       void *args, void *frame,
                                        ARMD_Size index) {
     (void)constants;
     fprintf(stderr, "executor: %u, args: %p, frame: %p, index: %u\n",
@@ -54,8 +54,8 @@ typedef struct TAG_NormalSpawnParentContinuationConstants {
 } NormalSpawnParentContinuationConstants;
 
 int single_normal_spawn_parent_continuation1(ARMD_Job *job,
-                                             const void *constants,
-                                             const void *args, void *frame) {
+                                             const void *constants, void *args,
+                                             void *frame) {
     const NormalSpawnParentContinuationConstants *typed_constants =
         reinterpret_cast<const NormalSpawnParentContinuationConstants *>(
             constants);
@@ -69,8 +69,8 @@ int single_normal_spawn_parent_continuation1(ARMD_Job *job,
 }
 
 int single_normal_spawn_parent_continuation2(ARMD_Job *job,
-                                             const void *constants,
-                                             const void *args, void *frame) {
+                                             const void *constants, void *args,
+                                             void *frame) {
     const NormalSpawnParentContinuationConstants *typed_constants =
         reinterpret_cast<const NormalSpawnParentContinuationConstants *>(
             constants);
@@ -84,7 +84,7 @@ int single_normal_spawn_parent_continuation2(ARMD_Job *job,
 }
 
 int single_normal_spawn_child_continuation(ARMD_Job *job, const void *constants,
-                                           const void *args, void *frame) {
+                                           void *args, void *frame) {
     (void)constants;
     fprintf(stderr, "child - executor: %u, args: %p, frame: %p\n",
             (unsigned int)armd_job_get_executor_id(job), args, frame);
@@ -107,8 +107,8 @@ typedef struct TAG_FibonacciConstants {
     ARMD_Procedure *fibonacci_procedure;
 } FibonacciConstants;
 
-int fibonacci_continuation1(ARMD_Job *job, const void *constants,
-                            const void *args, void *frame) {
+int fibonacci_continuation1(ARMD_Job *job, const void *constants, void *args,
+                            void *frame) {
     const FibonacciConstants *typed_constants =
         reinterpret_cast<const FibonacciConstants *>(constants);
     const FibonacciArgs *typed_args =
@@ -131,8 +131,8 @@ int fibonacci_continuation1(ARMD_Job *job, const void *constants,
     return 0;
 }
 
-int fibonacci_continuation2(ARMD_Job *job, const void *constants,
-                            const void *args, void *frame) {
+int fibonacci_continuation2(ARMD_Job *job, const void *constants, void *args,
+                            void *frame) {
     (void)job;
 
     const FibonacciConstants *typed_constants =
@@ -313,14 +313,14 @@ TEST_F(ExecutionTest, ExecuteFibonacci) {
     ASSERT_EQ(res, 0);
 }
 
-typedef struct TAG_UnwindArgs {
+typedef struct TAG_CommonArgs {
     bool *unwind;
-} UnwindArgs;
+} CommonArgs;
 
-typedef struct TAG_UnwindFrame {
-} UnwindFrame;
+typedef struct TAG_CommonFrame {
+} CommonFrame;
 
-int unwind_continuation(ARMD_Job *job, const void *constants, const void *args,
+int unwind_continuation(ARMD_Job *job, const void *constants, void *args,
                         void *frame) {
     (void)job;
     (void)constants;
@@ -336,7 +336,7 @@ void unwind_unwind(ARMD_Job *job, const void *constants, void *args,
     (void)args;
     (void)frame;
 
-    *((UnwindArgs *)args)->unwind = true;
+    *((CommonArgs *)args)->unwind = true;
 }
 
 TEST_F(ExecutionTest, ExecuteUnwind) {
@@ -351,7 +351,7 @@ TEST_F(ExecutionTest, ExecuteUnwind) {
         unwind_procedure = armd_procedure_builder_build_and_destroy(builder);
     }
 
-    UnwindArgs args;
+    CommonArgs args;
     bool unwind = false;
 
     args.unwind = &unwind;

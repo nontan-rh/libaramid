@@ -93,6 +93,56 @@ ARMD_Size armd_job_get_num_executors(ARMD_Job *job) {
 
 ARMD_Size armd_job_get_executor_id(ARMD_Job *job) { return job->executor->id; }
 
+void armd__job_cleanup_continuation_frame(ARMD_Job *job) {
+    assert(job->continuation_frame != NULL);
+
+    ARMD__Continuation *continuation =
+        &job->procedure->continuations[job->continuation_index];
+
+    continuation->continuation_frame_destroyer(job->memory_region,
+                                               job->continuation_frame);
+    job->continuation_frame = NULL;
+}
+
+void armd__job_increment_continuation_index(ARMD_Job *job) {
+    ++job->continuation_index;
+}
+
+ARMD_Bool armd__job_notify_to_parent_and_steal(ARMD_Job *job,
+                                               ARMD__Executor *executor,
+                                               ARMD_Job **next_job) {
+    int res = 0;
+    (void)res;
+
+    ARMD_Job *parent_job = job->awaiter.body.parent_job.parent_job;
+
+    res = armd__spinlock_lock(&parent_job->lock);
+    assert(res == 0);
+
+    ARMD_Size num_all_waiting_jobs = parent_job->num_all_waiting_jobs;
+    ARMD_Size num_ended_waiting_jobs = ++parent_job->num_ended_waiting_jobs;
+    ARMD_Bool parent_finished = parent_job->parent_finished;
+    assert(num_ended_waiting_jobs <= num_all_waiting_jobs);
+
+    if (job->has_error) {
+        parent_job->has_error = 1;
+    }
+
+    ARMD_Bool parent_enabled =
+        parent_finished && num_ended_waiting_jobs >= num_all_waiting_jobs;
+    if (parent_enabled) {
+        parent_job->executor = executor;
+        *next_job = parent_job;
+    } else {
+        *next_job = NULL;
+    }
+
+    res = armd__spinlock_unlock(&parent_job->lock);
+    assert(res == 0);
+
+    return parent_enabled;
+}
+
 ARMD__JobExecuteStepStatus armd__job_execute_step(ARMD_Job *job,
                                                   ARMD__Executor *executor) {
     (void)executor;
@@ -122,18 +172,17 @@ ARMD__JobExecuteStepStatus armd__job_execute_step(ARMD_Job *job,
         assert(job->continuation_frame != NULL);
     }
 
-    ARMD_Bool repeat = continuation->continuation_func(
+    ARMD_ContinuationResult result = continuation->continuation_func(
         job, job->procedure->constants, job->args, job->frame,
         continuation->continuation_constants, job->continuation_frame);
-    if (!repeat) {
-        ++job->continuation_index;
-        continuation->continuation_frame_destroyer(job->memory_region,
-                                                   job->continuation_frame);
-        job->continuation_frame = NULL;
-    }
 
     res = armd__spinlock_lock(&job->lock);
     assert(res == 0);
+
+    job->continuation_result = result;
+    if (result == ARMD_ContinuationResult_Error) {
+        job->has_error = 1;
+    }
 
     job->parent_finished = 1;
     ARMD_Size num_ended_waiting_jobs = ++job->num_ended_waiting_jobs;
@@ -143,6 +192,7 @@ ARMD__JobExecuteStepStatus armd__job_execute_step(ARMD_Job *job,
     res = armd__spinlock_unlock(&job->lock);
     assert(res == 0);
 
+    assert(num_all_waiting_jobs >= num_ended_waiting_jobs);
     if (num_all_waiting_jobs <= num_ended_waiting_jobs) {
         return ARMD__JobExecuteStepStatus_CanContinue;
     }

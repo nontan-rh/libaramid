@@ -11,6 +11,224 @@
 #include "random.h"
 #include "spinlock.h"
 
+static ARMD_Bool wait_for_context_ready(ARMD_Context *context,
+                                        ARMD__Executor *executor) {
+    int res = 0;
+    (void)res;
+
+    res = armd__mutex_lock(&context->executor_mutex);
+    assert(res == 0);
+
+    while (executor->thread_should_continue_running &&
+           !executor->context_ready) {
+        res = armd__condvar_wait(&context->executor_condvar,
+                                 &context->executor_mutex);
+        assert(res == 0);
+    }
+
+    ARMD_Bool thread_should_continue_running =
+        executor->thread_should_continue_running;
+    assert(executor->context_ready);
+
+    res = armd__mutex_unlock(&context->executor_mutex);
+    assert(res == 0);
+
+    return thread_should_continue_running;
+}
+
+static ARMD_Bool get_free_job(ARMD_Context *context, ARMD__Executor *executor,
+                              ARMD__Random *rand, ARMD_Job **job) {
+    int res = 0;
+    (void)res;
+
+    // Get free job
+    while (1) {
+        if (!executor->thread_should_continue_running) {
+            return 0;
+        }
+
+        // Check local
+        res = armd__spinlock_lock(&executor->lock);
+        assert(res == 0);
+
+        armd__deque_dequeue_forward(executor->deque, job);
+
+        res = armd__spinlock_unlock(&executor->lock);
+        assert(res == 0);
+
+        if (*job != NULL) {
+            res = armd__mutex_lock(&context->executor_mutex);
+            assert(res == 0);
+
+            --executor->context->free_job_count;
+
+            res = armd__mutex_unlock(&context->executor_mutex);
+            assert(res == 0);
+            return 1;
+        }
+
+        if (!executor->thread_should_continue_running) {
+            return 0;
+        }
+
+        // Waiting for job
+        {
+            res = armd__mutex_lock(&context->executor_mutex);
+            assert(res == 0);
+
+            while (context->free_job_count == 0 &&
+                   executor->thread_should_continue_running) {
+                res = armd__condvar_wait(&context->executor_condvar,
+                                         &context->executor_mutex);
+                assert(res == 0);
+            }
+
+            ARMD_Bool thread_should_continue_running =
+                executor->thread_should_continue_running;
+
+            res = armd__mutex_unlock(&context->executor_mutex);
+            assert(res == 0);
+
+            if (!thread_should_continue_running) {
+                return 0;
+            }
+        }
+
+        // There are some free jobs in some executors
+
+        // Steal
+        ARMD_Size victim_index =
+            ((ARMD_Size)armd__random_generate(rand)) % context->num_executors;
+        ARMD__Executor *victim_executor = context->executors[victim_index];
+
+        res = armd__spinlock_lock(&victim_executor->lock);
+        assert(res == 0);
+
+        armd__deque_dequeue_back(victim_executor->deque, job);
+
+        res = armd__spinlock_unlock(&victim_executor->lock);
+        assert(res == 0);
+
+        if (*job != NULL) {
+            (*job)->executor = executor;
+
+            // implicit memory fence
+
+            res = armd__mutex_lock(&context->executor_mutex);
+            assert(res == 0);
+
+            --executor->context->free_job_count;
+
+            res = armd__mutex_unlock(&context->executor_mutex);
+            assert(res == 0);
+
+            return 1;
+        }
+    }
+}
+
+static void unwind(ARMD_Job *job) {
+    ARMD_UnwindFunc unwind_func = job->procedure->unwind_func;
+    const void *job_constants = job->procedure->constants;
+    void *job_args = job->args;
+    void *job_frame = job->frame;
+    if (unwind_func != NULL) {
+        unwind_func(job, job_constants, job_args, job_frame);
+    }
+}
+
+static int move_to_next(ARMD_Job *job) {
+    int res = 0;
+    (void)res;
+
+    res = armd__spinlock_lock(&job->lock);
+    assert(res == 0);
+
+    ARMD__Continuation *continuation =
+        &job->procedure->continuations[job->continuation_index];
+
+    ARMD_ContinuationResult continuation_result;
+    if (job->has_error) {
+        if (continuation->error_trap_func != NULL) {
+            continuation_result = continuation->error_trap_func(
+                job, job->procedure->constants, job->args, job->frame,
+                continuation->continuation_constants, job->continuation_frame);
+        } else {
+            continuation_result = ARMD_ContinuationResult_Error;
+        }
+    } else {
+        continuation_result = job->continuation_result;
+    }
+
+    res = armd__spinlock_unlock(&job->lock);
+    assert(res == 0);
+
+    int should_abort = 0;
+    switch (continuation_result) {
+    case ARMD_ContinuationResult_Error:
+        armd__job_cleanup_continuation_frame(job);
+        should_abort = 1;
+        break;
+    case ARMD_ContinuationResult_Ended:
+        armd__job_cleanup_continuation_frame(job);
+        armd__job_increment_continuation_index(job);
+        should_abort = 0;
+        break;
+    case ARMD_ContinuationResult_Repeat:
+        should_abort = 0;
+        break;
+    default:
+        assert(0);
+        break;
+    }
+
+    return should_abort;
+}
+
+static ARMD_Job *move_to_next_and_propagate_error(ARMD_Context *context,
+                                                  ARMD__Executor *executor,
+                                                  ARMD_Job *job) {
+    int res = 0;
+    (void)res;
+
+    while (job != NULL) {
+        int should_abort = move_to_next(job);
+        if (!should_abort) {
+            break;
+        }
+
+        unwind(job);
+
+        switch (job->awaiter.type) {
+        case JobAwaiterType_ParentJob: {
+            ARMD_Job *next_job;
+            ARMD_Bool stole =
+                armd__job_notify_to_parent_and_steal(job, executor, &next_job);
+            armd__job_destroy(job);
+
+            if (stole) {
+                job = next_job;
+            } else {
+                job = NULL;
+            }
+        } break;
+        case JobAwaiterType_Promise: {
+            ARMD_Handle handle = job->awaiter.body.promise.handle;
+            res = armd__context_complete_promise(context, handle, 1);
+            assert(res == 0);
+
+            armd__job_destroy(job);
+            job = NULL;
+        } break;
+        default:
+            assert(0);
+            break;
+        }
+    }
+
+    return job;
+}
+
 static void *executor_thread_main(void *args) {
     int res = 0;
     (void)res;
@@ -21,181 +239,57 @@ static void *executor_thread_main(void *args) {
     ARMD__Random rand;
     armd__random_init(&rand, (uint32_t)executor->id);
 
-    // Waiting for context ready
-    {
-        res = armd__mutex_lock(&context->executor_mutex);
-        assert(res == 0);
-
-        while (executor->thread_should_continue_running &&
-               !executor->context_ready) {
-            res = armd__condvar_wait(&context->executor_condvar,
-                                     &context->executor_mutex);
-            assert(res == 0);
-        }
-
-        ARMD_Bool thread_should_continue_running =
-            executor->thread_should_continue_running;
-        ARMD_Bool context_ready = executor->context_ready;
-        (void)context_ready;
-
-        res = armd__mutex_unlock(&context->executor_mutex);
-        assert(res == 0);
-
-        if (!thread_should_continue_running) {
-            return NULL;
-        }
-
-        assert(context_ready);
+    if (!wait_for_context_ready(context, executor)) {
+        return NULL;
     }
 
     while (1) {
-        ARMD_Job *job = NULL;
-
-        // Get free job
-        while (1) {
-            if (!executor->thread_should_continue_running) {
-                return NULL;
-            }
-
-            // Check local
-            res = armd__spinlock_lock(&executor->lock);
-            assert(res == 0);
-            armd__deque_dequeue_forward(executor->deque, &job);
-            res = armd__spinlock_unlock(&executor->lock);
-            assert(res == 0);
-
-            if (job != NULL) {
-                res = armd__mutex_lock(&context->executor_mutex);
-                assert(res == 0);
-
-                --executor->context->free_job_count;
-
-                res = armd__mutex_unlock(&context->executor_mutex);
-                assert(res == 0);
-                break;
-            }
-
-            if (!executor->thread_should_continue_running) {
-                return NULL;
-            }
-
-            // Waiting for job
-            {
-                res = armd__mutex_lock(&context->executor_mutex);
-                assert(res == 0);
-
-                while (context->free_job_count == 0 &&
-                       executor->thread_should_continue_running) {
-                    res = armd__condvar_wait(&context->executor_condvar,
-                                             &context->executor_mutex);
-                    assert(res == 0);
-                }
-
-                ARMD_Bool thread_should_continue_running =
-                    executor->thread_should_continue_running;
-
-                res = armd__mutex_unlock(&context->executor_mutex);
-                assert(res == 0);
-
-                if (!thread_should_continue_running) {
-                    return NULL;
-                }
-            }
-
-            // There are some free jobs in some executors
-
-            // Steal
-            ARMD_Size victim_index = ((ARMD_Size)armd__random_generate(&rand)) %
-                                     context->num_executors;
-            ARMD__Executor *victim_executor = context->executors[victim_index];
-
-            res = armd__spinlock_lock(&victim_executor->lock);
-            assert(res == 0);
-            armd__deque_dequeue_back(victim_executor->deque, &job);
-            res = armd__spinlock_unlock(&victim_executor->lock);
-            assert(res == 0);
-
-            if (job != NULL) {
-                job->executor = executor;
-
-                // implicit memory fence
-
-                res = armd__mutex_lock(&context->executor_mutex);
-                assert(res == 0);
-
-                --executor->context->free_job_count;
-
-                res = armd__mutex_unlock(&context->executor_mutex);
-                assert(res == 0);
-                break;
-            }
+        ARMD_Job *job;
+        if (!get_free_job(context, executor, &rand, &job)) {
+            return NULL;
         }
 
         // Execute job
-        ARMD_Job *executing_job = job;
-        while (executing_job != NULL) {
+        while (job != NULL) {
             if (!executor->thread_should_continue_running) {
                 return NULL;
             }
 
             ARMD__JobExecuteStepStatus job_execute_step_status =
-                armd__job_execute_step(executing_job, executor);
+                armd__job_execute_step(job, executor);
             switch (job_execute_step_status) {
             case ARMD__JobExecuteStepStatus_WaitingForOtherJobs:
                 // Cannot continue
-                executing_job = NULL;
+                job = NULL;
                 break;
-            case ARMD__JobExecuteStepStatus_CanContinue:
+            case ARMD__JobExecuteStepStatus_CanContinue: {
                 // Just continue
-                break;
+                job = move_to_next_and_propagate_error(context, executor, job);
+            } break;
             case ARMD__JobExecuteStepStatus_Ended:
-                // Unwinding
-                {
-                    ARMD_UnwindFunc unwind_func =
-                        executing_job->procedure->unwind_func;
-                    const void *job_constants = executing_job->procedure->constants;
-                    void *job_args = executing_job->args;
-                    void *job_frame = executing_job->frame;
-                    if (unwind_func != NULL) {
-                        unwind_func(executing_job, job_constants, job_args, job_frame);
-                    }
-                }
+                unwind(job);
 
-                switch (executing_job->awaiter.type) {
+                switch (job->awaiter.type) {
                 case JobAwaiterType_ParentJob: {
-                    ARMD_Job *parent_job =
-                        executing_job->awaiter.body.parent_job.parent_job;
+                    ARMD_Job *next_job;
+                    ARMD_Bool stole = armd__job_notify_to_parent_and_steal(
+                        job, executor, &next_job);
+                    armd__job_destroy(job);
 
-                    res = armd__spinlock_lock(&parent_job->lock);
-                    assert(res == 0);
-
-                    ARMD_Size num_all_waiting_jobs =
-                        parent_job->num_all_waiting_jobs;
-                    ARMD_Size num_ended_waiting_jobs =
-                        ++parent_job->num_ended_waiting_jobs;
-                    ARMD_Bool parent_finished = parent_job->parent_finished;
-                    assert(num_ended_waiting_jobs <= num_all_waiting_jobs);
-
-                    res = armd__spinlock_unlock(&parent_job->lock);
-                    assert(res == 0);
-
-                    armd__job_destroy(executing_job);
-
-                    if (parent_finished &&
-                        num_ended_waiting_jobs >= num_all_waiting_jobs) {
-                        // parent_job is now enabled, and stealing it
-                        parent_job->executor = executor;
-                        executing_job = parent_job;
+                    if (stole) {
+                        job = move_to_next_and_propagate_error(
+                            context, executor, next_job);
                     } else {
-                        executing_job = NULL;
+                        job = NULL;
                     }
                 } break;
                 case JobAwaiterType_Promise: {
-                    ARMD_Handle handle =
-                        executing_job->awaiter.body.promise.handle;
-                    armd__context_complete_promise(context, handle);
+                    ARMD_Handle handle = job->awaiter.body.promise.handle;
+                    res = armd__context_complete_promise(context, handle, 0);
+                    assert(res == 0);
+                    armd__job_destroy(job);
 
-                    executing_job = NULL;
+                    job = NULL;
                 } break;
                 default:
                     assert(0);
