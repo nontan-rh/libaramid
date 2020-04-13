@@ -211,7 +211,8 @@ static ARMD_Job *move_to_next_and_propagate_error(ARMD_Context *context,
         } break;
         case JobAwaiterType_Promise: {
             ARMD_Handle handle = job->awaiter.body.promise.handle;
-            armd__context_complete_promise(context, handle, 1);
+            int res = armd__context_complete_promise(context, handle, 1);
+            assert(res == 0);
 
             armd__job_destroy(job);
             job = NULL;
@@ -281,7 +282,8 @@ static void *executor_thread_main(void *args) {
                 } break;
                 case JobAwaiterType_Promise: {
                     ARMD_Handle handle = job->awaiter.body.promise.handle;
-                    armd__context_complete_promise(context, handle, 0);
+                    res = armd__context_complete_promise(context, handle, 0);
+                    assert(res == 0);
                     armd__job_destroy(job);
 
                     job = NULL;
