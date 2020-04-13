@@ -21,7 +21,7 @@ Tested platforms and toolchain
 | OS      |  CPU  | Compiler   | Note                                |
 | ------- | :---: | ---------- | ----------------------------------- |
 | Linux   |  x64  | Clang      | Verified using ASAN                 |
-| macOS   |  x64  | AppleClang |                                     |
+| macOS   |  x64  | AppleClang | Verified using ASAN                 |
 | Windows |  x64  | MSVC       |                                     |
 |         |       | MinGW      |                                     |
 | iOS     | ARMv8 | AppleClang | Build only (automatic test planned) |
