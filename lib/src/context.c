@@ -176,6 +176,11 @@ int armd_context_destroy(ARMD_Context *context) {
     armd_memory_allocator_free(&memory_allocator, context->executors);
     context->executors = NULL;
 
+    if (armd__hash_table_get_num_entries(context->promise_manager.promises) !=
+        0) {
+        status = -1;
+    }
+
     res = armd__hash_table_destroy(context->promise_manager.promises);
     assert(res == 0);
 
