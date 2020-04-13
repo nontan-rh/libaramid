@@ -171,8 +171,13 @@ int armd_context_destroy(ARMD_Context *context) {
         if (executor_status) {
             status = -1;
         }
+        context->executors[i] = NULL;
     }
     armd_memory_allocator_free(&memory_allocator, context->executors);
+    context->executors = NULL;
+
+    res = armd__hash_table_destroy(context->promise_manager.promises);
+    assert(res == 0);
 
     res = armd__mutex_deinit(&context->executor_mutex);
     assert(res == 0);
