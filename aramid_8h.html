@@ -67,6 +67,7 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">aramid.h File Reference</div>  </div>
@@ -125,27 +126,35 @@ typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 <tr class="memitem:ad959d8db61728e008f7dad39ba490fa2"><td class="memItemLeft" align="right" valign="top">typedef struct TAG_ARMD_Context&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a></td></tr>
 <tr class="memdesc:ad959d8db61728e008f7dad39ba490fa2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The execution engine.  <a href="#ad959d8db61728e008f7dad39ba490fa2">More...</a><br /></td></tr>
 <tr class="separator:ad959d8db61728e008f7dad39ba490fa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab332ab85aebd96330a5068f0ee9e6c98"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#ab332ab85aebd96330a5068f0ee9e6c98">ARMD_PromiseCallbackFunc</a>) (<a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle, void *callback_context)</td></tr>
-<tr class="memdesc:ab332ab85aebd96330a5068f0ee9e6c98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Promise callback.  <a href="#ab332ab85aebd96330a5068f0ee9e6c98">More...</a><br /></td></tr>
-<tr class="separator:ab332ab85aebd96330a5068f0ee9e6c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7365aa251c6b2aae64f9ffaf006cae90"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="aramid_8h.html#a9fe823805bc775c80c1ddc3782ec5881">ARMD_Bool</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a7365aa251c6b2aae64f9ffaf006cae90">ARMD_ContinuationFunc</a>) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, const void *args, void *frame, const void *continuation_constants, void *continuation_frame)</td></tr>
-<tr class="memdesc:a7365aa251c6b2aae64f9ffaf006cae90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Continuation Function.  <a href="#a7365aa251c6b2aae64f9ffaf006cae90">More...</a><br /></td></tr>
-<tr class="separator:a7365aa251c6b2aae64f9ffaf006cae90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a285d624fe4acb6d5b60948b1b0e3fe4f"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a285d624fe4acb6d5b60948b1b0e3fe4f">ARMD_PromiseCallbackFunc</a>) (<a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle, void *callback_context, int has_error)</td></tr>
+<tr class="memdesc:a285d624fe4acb6d5b60948b1b0e3fe4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Promise callback.  <a href="#a285d624fe4acb6d5b60948b1b0e3fe4f">More...</a><br /></td></tr>
+<tr class="separator:a285d624fe4acb6d5b60948b1b0e3fe4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92d235c895627ab452d754e82074247e"><td class="memItemLeft" align="right" valign="top"><a id="a92d235c895627ab452d754e82074247e"></a>
+typedef enum <a class="el" href="aramid_8h.html#a38fdc113269494eb53d9b49df603cbce">TAG_ARMD_ContinuationResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a92d235c895627ab452d754e82074247e">ARMD_ContinuationResult</a></td></tr>
+<tr class="memdesc:a92d235c895627ab452d754e82074247e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Continuation Status. <br /></td></tr>
+<tr class="separator:a92d235c895627ab452d754e82074247e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af82ce78becd9d13c30afa32c0f6cad4e"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="aramid_8h.html#a92d235c895627ab452d754e82074247e">ARMD_ContinuationResult</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#af82ce78becd9d13c30afa32c0f6cad4e">ARMD_ContinuationFunc</a>) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, void *args, void *frame, const void *continuation_constants, void *continuation_frame)</td></tr>
+<tr class="memdesc:af82ce78becd9d13c30afa32c0f6cad4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Continuation Function.  <a href="#af82ce78becd9d13c30afa32c0f6cad4e">More...</a><br /></td></tr>
+<tr class="separator:af82ce78becd9d13c30afa32c0f6cad4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad819e7a8975228357de3341dfd1a7305"><td class="memItemLeft" align="right" valign="top"><a id="ad819e7a8975228357de3341dfd1a7305"></a>
+typedef <a class="el" href="aramid_8h.html#a92d235c895627ab452d754e82074247e">ARMD_ContinuationResult</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#ad819e7a8975228357de3341dfd1a7305">ARMD_ErrorTrapFunc</a>) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, void *args, void *frame, const void *continuation_constants, void *continuation_frame)</td></tr>
+<tr class="memdesc:ad819e7a8975228357de3341dfd1a7305"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error Trap Function. <br /></td></tr>
+<tr class="separator:ad819e7a8975228357de3341dfd1a7305"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa13582fc4275d4acd0498dc63ad2fbf8"><td class="memItemLeft" align="right" valign="top">typedef void *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#aa13582fc4275d4acd0498dc63ad2fbf8">ARMD_ContinuationFrameCreator</a>) (<a class="el" href="aramid_8h.html#ad68e5396c3bcb10a274388f032b30145">ARMD_MemoryRegion</a> *memory_region)</td></tr>
 <tr class="memdesc:aa13582fc4275d4acd0498dc63ad2fbf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Continuation Frame Creator.  <a href="#aa13582fc4275d4acd0498dc63ad2fbf8">More...</a><br /></td></tr>
 <tr class="separator:aa13582fc4275d4acd0498dc63ad2fbf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b0241566d595e615670b5986f6fbccd"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a0b0241566d595e615670b5986f6fbccd">ARMD_ContinuationFrameDestroyer</a>) (<a class="el" href="aramid_8h.html#ad68e5396c3bcb10a274388f032b30145">ARMD_MemoryRegion</a> *memory_region, void *continuation_frame)</td></tr>
 <tr class="memdesc:a0b0241566d595e615670b5986f6fbccd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Continuation Frame Destroyer.  <a href="#a0b0241566d595e615670b5986f6fbccd">More...</a><br /></td></tr>
 <tr class="separator:a0b0241566d595e615670b5986f6fbccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3b238db30fb3b2a361b2e5db99b5233"><td class="memItemLeft" align="right" valign="top">typedef int(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#af3b238db30fb3b2a361b2e5db99b5233">ARMD_SingleContinuationFunc</a>) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, const void *args, void *frame)</td></tr>
-<tr class="memdesc:af3b238db30fb3b2a361b2e5db99b5233"><td class="mdescLeft">&#160;</td><td class="mdescRight">Single Continuation Function.  <a href="#af3b238db30fb3b2a361b2e5db99b5233">More...</a><br /></td></tr>
-<tr class="separator:af3b238db30fb3b2a361b2e5db99b5233"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd">ARMD_SequentialForCountFunc</a>) (const void *args, void *frame)</td></tr>
-<tr class="memdesc:aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sequential-For Count Function.  <a href="#aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd">More...</a><br /></td></tr>
-<tr class="separator:aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67d975c59fba310ef8cc66b1b43a69e9"><td class="memItemLeft" align="right" valign="top">typedef int(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a67d975c59fba310ef8cc66b1b43a69e9">ARMD_SequentialForContinuationFunc</a>) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, const void *args, void *frame, <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a> index)</td></tr>
-<tr class="memdesc:a67d975c59fba310ef8cc66b1b43a69e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sequential-For Continuation Function.  <a href="#a67d975c59fba310ef8cc66b1b43a69e9">More...</a><br /></td></tr>
-<tr class="separator:a67d975c59fba310ef8cc66b1b43a69e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18b8741a700c03989a5d4e0a47edd009"><td class="memItemLeft" align="right" valign="top">typedef int(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a18b8741a700c03989a5d4e0a47edd009">ARMD_SingleContinuationFunc</a>) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, void *args, void *frame)</td></tr>
+<tr class="memdesc:a18b8741a700c03989a5d4e0a47edd009"><td class="mdescLeft">&#160;</td><td class="mdescRight">Single Continuation Function.  <a href="#a18b8741a700c03989a5d4e0a47edd009">More...</a><br /></td></tr>
+<tr class="separator:a18b8741a700c03989a5d4e0a47edd009"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a618a42c9f38496f3a45ade5993689474"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a618a42c9f38496f3a45ade5993689474">ARMD_SequentialForCountFunc</a>) (void *args, void *frame)</td></tr>
+<tr class="memdesc:a618a42c9f38496f3a45ade5993689474"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sequential-For Count Function.  <a href="#a618a42c9f38496f3a45ade5993689474">More...</a><br /></td></tr>
+<tr class="separator:a618a42c9f38496f3a45ade5993689474"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29accb9b83aab2f2de16c47f2a06cf79"><td class="memItemLeft" align="right" valign="top">typedef int(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a29accb9b83aab2f2de16c47f2a06cf79">ARMD_SequentialForContinuationFunc</a>) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, void *args, void *frame, <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a> index)</td></tr>
+<tr class="memdesc:a29accb9b83aab2f2de16c47f2a06cf79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sequential-For Continuation Function.  <a href="#a29accb9b83aab2f2de16c47f2a06cf79">More...</a><br /></td></tr>
+<tr class="separator:a29accb9b83aab2f2de16c47f2a06cf79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a936cdd3cc0c13f3f6bfb0c858b2ff7c4"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a936cdd3cc0c13f3f6bfb0c858b2ff7c4">ARMD_UnwindFunc</a>) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, void *args, void *frame)</td></tr>
 <tr class="memdesc:a936cdd3cc0c13f3f6bfb0c858b2ff7c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unwind Function.  <a href="#a936cdd3cc0c13f3f6bfb0c858b2ff7c4">More...</a><br /></td></tr>
 <tr class="separator:a936cdd3cc0c13f3f6bfb0c858b2ff7c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,6 +162,15 @@ typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 typedef struct TAG_ARMD_ProcedureBuilder&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a></td></tr>
 <tr class="memdesc:a0c45f3d01f00e9b9494135d2078663ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builder object for <a class="el" href="aramid_8h.html#a6ea50de4b5862d2e2412188eefc31741">ARMD_Procedure</a>. <br /></td></tr>
 <tr class="separator:a0c45f3d01f00e9b9494135d2078663ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a38fdc113269494eb53d9b49df603cbce"><td class="memItemLeft" align="right" valign="top"><a id="a38fdc113269494eb53d9b49df603cbce"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a38fdc113269494eb53d9b49df603cbce">TAG_ARMD_ContinuationResult</a> { <b>ARMD_ContinuationResult_Error</b>, 
+<b>ARMD_ContinuationResult_Ended</b>, 
+<b>ARMD_ContinuationResult_Repeat</b>
+ }<tr class="memdesc:a38fdc113269494eb53d9b49df603cbce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Continuation Status. <br /></td></tr>
+</td></tr>
+<tr class="separator:a38fdc113269494eb53d9b49df603cbce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -189,7 +207,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a1d2bca6ad9df4ea6e91740b66b24fb05"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a1d2bca6ad9df4ea6e91740b66b24fb05">armd_await</a> (<a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> *context, <a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle)</td></tr>
 <tr class="memdesc:a1d2bca6ad9df4ea6e91740b66b24fb05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Await promise.  <a href="#a1d2bca6ad9df4ea6e91740b66b24fb05">More...</a><br /></td></tr>
 <tr class="separator:a1d2bca6ad9df4ea6e91740b66b24fb05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afde584bd092b40b3069b90a2cad6fef7"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#afde584bd092b40b3069b90a2cad6fef7">armd_add_promise_callback</a> (<a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> *context, <a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle, void *callback_context, <a class="el" href="aramid_8h.html#ab332ab85aebd96330a5068f0ee9e6c98">ARMD_PromiseCallbackFunc</a> callback_func)</td></tr>
+<tr class="memitem:a182b3acd05bfea40949310ea443c6ce0"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a182b3acd05bfea40949310ea443c6ce0">armd_detach</a> (<a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> *context, <a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle)</td></tr>
+<tr class="memdesc:a182b3acd05bfea40949310ea443c6ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detach promise.  <a href="#a182b3acd05bfea40949310ea443c6ce0">More...</a><br /></td></tr>
+<tr class="separator:a182b3acd05bfea40949310ea443c6ce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afde584bd092b40b3069b90a2cad6fef7"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#afde584bd092b40b3069b90a2cad6fef7">armd_add_promise_callback</a> (<a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> *context, <a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle, void *callback_context, <a class="el" href="aramid_8h.html#a285d624fe4acb6d5b60948b1b0e3fe4f">ARMD_PromiseCallbackFunc</a> callback_func)</td></tr>
 <tr class="memdesc:afde584bd092b40b3069b90a2cad6fef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add callback to the promise.  <a href="#afde584bd092b40b3069b90a2cad6fef7">More...</a><br /></td></tr>
 <tr class="separator:afde584bd092b40b3069b90a2cad6fef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad08814d217412e5e709577b7dd84f509"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#ad08814d217412e5e709577b7dd84f509">armd_job_get_num_executors</a> (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job)</td></tr>
@@ -219,13 +240,13 @@ Functions</h2></td></tr>
 <tr class="memitem:adfaeffefa66db40be37daf54d812c519"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C <a class="el" href="aramid_8h.html#ad42cd9847f4b6c82434b9cfd08d9dc5d">ARMD_MemoryAllocator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#adfaeffefa66db40be37daf54d812c519">armd_procedure_builder_get_memory_allocator</a> (<a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *procedure_builder)</td></tr>
 <tr class="memdesc:adfaeffefa66db40be37daf54d812c519"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the memory allocator used in <a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a>.  <a href="#adfaeffefa66db40be37daf54d812c519">More...</a><br /></td></tr>
 <tr class="separator:adfaeffefa66db40be37daf54d812c519"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae29eba41e5fd5b638e9735345d11f59e"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#ae29eba41e5fd5b638e9735345d11f59e">armd_then</a> (<a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *procedure_builder, <a class="el" href="aramid_8h.html#a7365aa251c6b2aae64f9ffaf006cae90">ARMD_ContinuationFunc</a> continuation_func, void *continuation_constants, <a class="el" href="aramid_8h.html#aa13582fc4275d4acd0498dc63ad2fbf8">ARMD_ContinuationFrameCreator</a> continuation_frame_creator, <a class="el" href="aramid_8h.html#a0b0241566d595e615670b5986f6fbccd">ARMD_ContinuationFrameDestroyer</a> continuation_frame_destroyer)</td></tr>
-<tr class="memdesc:ae29eba41e5fd5b638e9735345d11f59e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a versatile continuation to the procedure.  <a href="#ae29eba41e5fd5b638e9735345d11f59e">More...</a><br /></td></tr>
-<tr class="separator:ae29eba41e5fd5b638e9735345d11f59e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac52f8673c0cf8a04b55ba8bf5369cd36"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#ac52f8673c0cf8a04b55ba8bf5369cd36">armd_then_single</a> (<a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *procedure_builder, <a class="el" href="aramid_8h.html#af3b238db30fb3b2a361b2e5db99b5233">ARMD_SingleContinuationFunc</a> single_continuation_func)</td></tr>
+<tr class="memitem:a9aa5521162b9f46df901550a785d5a9d"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a9aa5521162b9f46df901550a785d5a9d">armd_then</a> (<a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *procedure_builder, <a class="el" href="aramid_8h.html#af82ce78becd9d13c30afa32c0f6cad4e">ARMD_ContinuationFunc</a> continuation_func, void *continuation_constants, <a class="el" href="aramid_8h.html#ad819e7a8975228357de3341dfd1a7305">ARMD_ErrorTrapFunc</a> error_trap_func, <a class="el" href="aramid_8h.html#aa13582fc4275d4acd0498dc63ad2fbf8">ARMD_ContinuationFrameCreator</a> continuation_frame_creator, <a class="el" href="aramid_8h.html#a0b0241566d595e615670b5986f6fbccd">ARMD_ContinuationFrameDestroyer</a> continuation_frame_destroyer)</td></tr>
+<tr class="memdesc:a9aa5521162b9f46df901550a785d5a9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a versatile continuation to the procedure.  <a href="#a9aa5521162b9f46df901550a785d5a9d">More...</a><br /></td></tr>
+<tr class="separator:a9aa5521162b9f46df901550a785d5a9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac52f8673c0cf8a04b55ba8bf5369cd36"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#ac52f8673c0cf8a04b55ba8bf5369cd36">armd_then_single</a> (<a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *procedure_builder, <a class="el" href="aramid_8h.html#a18b8741a700c03989a5d4e0a47edd009">ARMD_SingleContinuationFunc</a> single_continuation_func)</td></tr>
 <tr class="memdesc:ac52f8673c0cf8a04b55ba8bf5369cd36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a single continuation to the procedure.  <a href="#ac52f8673c0cf8a04b55ba8bf5369cd36">More...</a><br /></td></tr>
 <tr class="separator:ac52f8673c0cf8a04b55ba8bf5369cd36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1581476169a19e9281ba2209f224d8a8"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a1581476169a19e9281ba2209f224d8a8">armd_then_sequential_for</a> (<a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *procedure_builder, <a class="el" href="aramid_8h.html#aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd">ARMD_SequentialForCountFunc</a> sequential_for_count_func, <a class="el" href="aramid_8h.html#a67d975c59fba310ef8cc66b1b43a69e9">ARMD_SequentialForContinuationFunc</a> sequential_for_continuation_func)</td></tr>
+<tr class="memitem:a1581476169a19e9281ba2209f224d8a8"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a1581476169a19e9281ba2209f224d8a8">armd_then_sequential_for</a> (<a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *procedure_builder, <a class="el" href="aramid_8h.html#a618a42c9f38496f3a45ade5993689474">ARMD_SequentialForCountFunc</a> sequential_for_count_func, <a class="el" href="aramid_8h.html#a29accb9b83aab2f2de16c47f2a06cf79">ARMD_SequentialForContinuationFunc</a> sequential_for_continuation_func)</td></tr>
 <tr class="memdesc:a1581476169a19e9281ba2209f224d8a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a sequential-for continuation to the procedure.  <a href="#a1581476169a19e9281ba2209f224d8a8">More...</a><br /></td></tr>
 <tr class="separator:a1581476169a19e9281ba2209f224d8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3052bf10f5f393ba23c7ed678617c5b"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#ad3052bf10f5f393ba23c7ed678617c5b">armd_unwind</a> (<a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a> *procedure_builder, <a class="el" href="aramid_8h.html#a936cdd3cc0c13f3f6bfb0c858b2ff7c4">ARMD_UnwindFunc</a> unwind_func)</td></tr>
@@ -304,14 +325,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7365aa251c6b2aae64f9ffaf006cae90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7365aa251c6b2aae64f9ffaf006cae90">&#9670;&nbsp;</a></span>ARMD_ContinuationFunc</h2>
+<a id="af82ce78becd9d13c30afa32c0f6cad4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af82ce78becd9d13c30afa32c0f6cad4e">&#9670;&nbsp;</a></span>ARMD_ContinuationFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="aramid_8h.html#a9fe823805bc775c80c1ddc3782ec5881">ARMD_Bool</a>(* ARMD_ContinuationFunc) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, const void *args, void *frame, const void *continuation_constants, void *continuation_frame)</td>
+          <td class="memname">typedef <a class="el" href="aramid_8h.html#a92d235c895627ab452d754e82074247e">ARMD_ContinuationResult</a>(* ARMD_ContinuationFunc) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, void *args, void *frame, const void *continuation_constants, void *continuation_frame)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -436,14 +457,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab332ab85aebd96330a5068f0ee9e6c98"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab332ab85aebd96330a5068f0ee9e6c98">&#9670;&nbsp;</a></span>ARMD_PromiseCallbackFunc</h2>
+<a id="a285d624fe4acb6d5b60948b1b0e3fe4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a285d624fe4acb6d5b60948b1b0e3fe4f">&#9670;&nbsp;</a></span>ARMD_PromiseCallbackFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* ARMD_PromiseCallbackFunc) (<a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle, void *callback_context)</td>
+          <td class="memname">typedef void(* ARMD_PromiseCallbackFunc) (<a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> handle, void *callback_context, int has_error)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -453,14 +474,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a67d975c59fba310ef8cc66b1b43a69e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67d975c59fba310ef8cc66b1b43a69e9">&#9670;&nbsp;</a></span>ARMD_SequentialForContinuationFunc</h2>
+<a id="a29accb9b83aab2f2de16c47f2a06cf79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29accb9b83aab2f2de16c47f2a06cf79">&#9670;&nbsp;</a></span>ARMD_SequentialForContinuationFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef int(* ARMD_SequentialForContinuationFunc) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, const void *args, void *frame, <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a> index)</td>
+          <td class="memname">typedef int(* ARMD_SequentialForContinuationFunc) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, void *args, void *frame, <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a> index)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -470,14 +491,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd">&#9670;&nbsp;</a></span>ARMD_SequentialForCountFunc</h2>
+<a id="a618a42c9f38496f3a45ade5993689474"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a618a42c9f38496f3a45ade5993689474">&#9670;&nbsp;</a></span>ARMD_SequentialForCountFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a>(* ARMD_SequentialForCountFunc) (const void *args, void *frame)</td>
+          <td class="memname">typedef <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a>(* ARMD_SequentialForCountFunc) (void *args, void *frame)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -487,14 +508,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af3b238db30fb3b2a361b2e5db99b5233"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3b238db30fb3b2a361b2e5db99b5233">&#9670;&nbsp;</a></span>ARMD_SingleContinuationFunc</h2>
+<a id="a18b8741a700c03989a5d4e0a47edd009"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18b8741a700c03989a5d4e0a47edd009">&#9670;&nbsp;</a></span>ARMD_SingleContinuationFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef int(* ARMD_SingleContinuationFunc) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, const void *args, void *frame)</td>
+          <td class="memname">typedef int(* ARMD_SingleContinuationFunc) (<a class="el" href="aramid_8h.html#a486961d4b263ef8a951e4f510810762b">ARMD_Job</a> *job, const void *constants, void *args, void *frame)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -549,7 +570,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="aramid_8h.html#ab332ab85aebd96330a5068f0ee9e6c98">ARMD_PromiseCallbackFunc</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="aramid_8h.html#a285d624fe4acb6d5b60948b1b0e3fe4f">ARMD_PromiseCallbackFunc</a>&#160;</td>
           <td class="paramname"><em>callback_func</em>&#160;</td>
         </tr>
         <tr>
@@ -661,6 +682,44 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">context</td><td>The <a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> to destroy </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Status code, 0 if succeeded, non-zero if otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a182b3acd05bfea40949310ea443c6ce0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a182b3acd05bfea40949310ea443c6ce0">&#9670;&nbsp;</a></span>armd_detach()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ARMD_EXTERN_C int armd_detach </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a>&#160;</td>
+          <td class="paramname"><em>handle</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Detach promise. </p>
+<p>This function detaches the job. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>The <a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> which promise belongs to </td></tr>
+    <tr><td class="paramname">handle</td><td>The <a class="el" href="aramid_8h.html#ac40bccf8c85f4bb034a98f40ad8e0054">ARMD_Handle</a> of the promise to be detached </td></tr>
   </table>
   </dd>
 </dl>
@@ -1315,8 +1374,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae29eba41e5fd5b638e9735345d11f59e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae29eba41e5fd5b638e9735345d11f59e">&#9670;&nbsp;</a></span>armd_then()</h2>
+<a id="a9aa5521162b9f46df901550a785d5a9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9aa5521162b9f46df901550a785d5a9d">&#9670;&nbsp;</a></span>armd_then()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1330,7 +1389,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="aramid_8h.html#a7365aa251c6b2aae64f9ffaf006cae90">ARMD_ContinuationFunc</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="aramid_8h.html#af82ce78becd9d13c30afa32c0f6cad4e">ARMD_ContinuationFunc</a>&#160;</td>
           <td class="paramname"><em>continuation_func</em>, </td>
         </tr>
         <tr>
@@ -1338,6 +1397,12 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>continuation_constants</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="aramid_8h.html#ad819e7a8975228357de3341dfd1a7305">ARMD_ErrorTrapFunc</a>&#160;</td>
+          <td class="paramname"><em>error_trap_func</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1379,13 +1444,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="aramid_8h.html#aaca6a8cf82c69f0ceaa1ef6ebbf3f7cd">ARMD_SequentialForCountFunc</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="aramid_8h.html#a618a42c9f38496f3a45ade5993689474">ARMD_SequentialForCountFunc</a>&#160;</td>
           <td class="paramname"><em>sequential_for_count_func</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="aramid_8h.html#a67d975c59fba310ef8cc66b1b43a69e9">ARMD_SequentialForContinuationFunc</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="aramid_8h.html#a29accb9b83aab2f2de16c47f2a06cf79">ARMD_SequentialForContinuationFunc</a>&#160;</td>
           <td class="paramname"><em>sequential_for_continuation_func</em>&#160;</td>
         </tr>
         <tr>
@@ -1416,7 +1481,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="aramid_8h.html#af3b238db30fb3b2a361b2e5db99b5233">ARMD_SingleContinuationFunc</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="aramid_8h.html#a18b8741a700c03989a5d4e0a47edd009">ARMD_SingleContinuationFunc</a>&#160;</td>
           <td class="paramname"><em>single_continuation_func</em>&#160;</td>
         </tr>
         <tr>

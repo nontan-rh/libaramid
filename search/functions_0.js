@@ -4,6 +4,7 @@ var searchData=
   ['armd_5fawait',['armd_await',['../aramid_8h.html#a1d2bca6ad9df4ea6e91740b66b24fb05',1,'aramid.h']]],
   ['armd_5fcontext_5fcreate',['armd_context_create',['../aramid_8h.html#a94621573f40d43bf5c7a3b533a2a707b',1,'aramid.h']]],
   ['armd_5fcontext_5fdestroy',['armd_context_destroy',['../aramid_8h.html#ad8759408800809f2e2e6ab412418b635',1,'aramid.h']]],
+  ['armd_5fdetach',['armd_detach',['../aramid_8h.html#a182b3acd05bfea40949310ea443c6ce0',1,'aramid.h']]],
   ['armd_5ffork',['armd_fork',['../aramid_8h.html#a683e5ffa3a99285d3e346c3eb9f351e9',1,'aramid.h']]],
   ['armd_5ffork_5fwith_5fid',['armd_fork_with_id',['../aramid_8h.html#ac967f629f2e17467d2a97a5b522b902a',1,'aramid.h']]],
   ['armd_5finvoke',['armd_invoke',['../aramid_8h.html#ac8f31272dda374ceee19e482181d3e2a',1,'aramid.h']]],
@@ -23,7 +24,7 @@ var searchData=
   ['armd_5fprocedure_5fbuilder_5fget_5fmemory_5fallocator',['armd_procedure_builder_get_memory_allocator',['../aramid_8h.html#adfaeffefa66db40be37daf54d812c519',1,'aramid.h']]],
   ['armd_5fprocedure_5fdestroy',['armd_procedure_destroy',['../aramid_8h.html#a017a80ccd2f48309bb709fbc1769b035',1,'aramid.h']]],
   ['armd_5fprocedure_5fget_5fconstants',['armd_procedure_get_constants',['../aramid_8h.html#a03bf6dcce0e6525e55a306fd5992f555',1,'aramid.h']]],
-  ['armd_5fthen',['armd_then',['../aramid_8h.html#ae29eba41e5fd5b638e9735345d11f59e',1,'aramid.h']]],
+  ['armd_5fthen',['armd_then',['../aramid_8h.html#a9aa5521162b9f46df901550a785d5a9d',1,'aramid.h']]],
   ['armd_5fthen_5fsequential_5ffor',['armd_then_sequential_for',['../aramid_8h.html#a1581476169a19e9281ba2209f224d8a8',1,'aramid.h']]],
   ['armd_5fthen_5fsingle',['armd_then_single',['../aramid_8h.html#ac52f8673c0cf8a04b55ba8bf5369cd36',1,'aramid.h']]],
   ['armd_5funwind',['armd_unwind',['../aramid_8h.html#ad3052bf10f5f393ba23c7ed678617c5b',1,'aramid.h']]]
