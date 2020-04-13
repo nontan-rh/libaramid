@@ -188,6 +188,9 @@ static int move_to_next(ARMD_Job *job) {
 static ARMD_Job *move_to_next_and_propagate_error(ARMD_Context *context,
                                                   ARMD__Executor *executor,
                                                   ARMD_Job *job) {
+    int res = 0;
+    (void)res;
+
     while (job != NULL) {
         int should_abort = move_to_next(job);
         if (!should_abort) {
@@ -211,7 +214,7 @@ static ARMD_Job *move_to_next_and_propagate_error(ARMD_Context *context,
         } break;
         case JobAwaiterType_Promise: {
             ARMD_Handle handle = job->awaiter.body.promise.handle;
-            int res = armd__context_complete_promise(context, handle, 1);
+            res = armd__context_complete_promise(context, handle, 1);
             assert(res == 0);
 
             armd__job_destroy(job);
