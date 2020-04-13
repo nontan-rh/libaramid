@@ -194,12 +194,13 @@ static ARMD_Job *move_to_next_and_propagate_error(ARMD_Context *context,
             break;
         }
 
+        unwind(job);
+
         switch (job->awaiter.type) {
         case JobAwaiterType_ParentJob: {
             ARMD_Job *next_job;
             ARMD_Bool stole =
                 armd__job_notify_to_parent_and_steal(job, executor, &next_job);
-            unwind(job);
             armd__job_destroy(job);
 
             if (stole) {
@@ -212,7 +213,6 @@ static ARMD_Job *move_to_next_and_propagate_error(ARMD_Context *context,
             ARMD_Handle handle = job->awaiter.body.promise.handle;
             armd__context_complete_promise(context, handle, 1);
 
-            unwind(job);
             armd__job_destroy(job);
             job = NULL;
         } break;
