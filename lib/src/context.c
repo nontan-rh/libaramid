@@ -300,20 +300,23 @@ static int check_and_build_dependency_graph(ARMD_Context *context,
 
     for (ARMD_Size i = 0; i < num_dependencies; i++) {
         ARMD_Handle dependency = dependencies[i];
-        // Dependency is newer than latest
-        if (dependency > context->promise_manager.handle_counter) {
-            cleanup_dependency_graph(context, num_dependencies, dependencies,
-                                     target);
-            return -1;
+        if (dependency == 0) {
+            continue;
         }
 
         ARMD__Promise *promise;
         res = armd__hash_table_get(context->promise_manager.promises,
                                    dependency, (void **)&promise);
         if (res != 0) {
-            continue;
+            cleanup_dependency_graph(context, num_dependencies, dependencies,
+                                     target);
+            return -1;
         }
         assert(promise != NULL);
+
+        if (promise->status != ARMD__PromiseStatus_NotFinished) {
+            continue;
+        }
 
         res = armd__promise_add_continuation_promise(promise, target);
         if (res != 0) {
@@ -504,13 +507,14 @@ int armd__context_complete_promise(ARMD_Context *context,
     for (ARMD_Size i = 0; i < promise->num_continuation_promises; i++) {
         ARMD_Handle continuation_promise_handle =
             promise->continuation_promises[i];
+        if (continuation_promise_handle == 0) {
+            continue;
+        }
         ARMD__Promise *continuation_promise;
         res = armd__hash_table_get(context->promise_manager.promises,
                                    continuation_promise_handle,
                                    (void **)&continuation_promise);
-        if (res != 0) {
-            continue;
-        }
+        assert(res == 0);
 
         assert(continuation_promise->pending_job != NULL);
 
@@ -531,6 +535,18 @@ int armd__context_complete_promise(ARMD_Context *context,
 
             if (enqueue_res != 0) {
                 assert(0); // FIXME: Handle this error
+            }
+
+            {
+                res = armd__mutex_lock(&context->executor_mutex);
+                assert(res == 0);
+
+                ++context->free_job_count;
+                res = armd__condvar_broadcast(&context->executor_condvar);
+                assert(res == 0);
+
+                res = armd__mutex_unlock(&context->executor_mutex);
+                assert(res == 0);
             }
 
             continuation_promise->pending_job = NULL;
