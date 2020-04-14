@@ -227,7 +227,7 @@ ARMD_EXTERN_C int armd_detach(ARMD_Context *context, ARMD_Handle handle);
 
 /**
  * @brief Await all promise
- */ 
+ */
 ARMD_EXTERN_C int armd_await_all(ARMD_Context *context);
 
 /**
