@@ -1,7 +1,11 @@
 {
   "version": "0.1",
   "language": "en",
-  "dictionaries": ["cpp", "bash", "java"],
+  "dictionaries": [
+    "cpp",
+    "bash",
+    "java"
+  ],
   "words": [
     "ExternalProject",
     "JNICALL",
@@ -39,11 +43,16 @@
     "nontanrh",
     "nvmrc",
     "stackless",
+    "stoi",
     "toolchain",
     "wasm",
     "webassembly",
     "xcodeproj"
   ],
-  "ignoreRegExpList": ["-D[A-Z_]+", "-f[A-Za-z0-9_-]+", "-W[A-Za-z0-9_-]+"],
+  "ignoreRegExpList": [
+    "-D[A-Z_]+",
+    "-f[A-Za-z0-9_-]+",
+    "-W[A-Za-z0-9_-]+"
+  ],
   "flagWords": []
 }
