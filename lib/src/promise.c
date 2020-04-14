@@ -64,7 +64,7 @@ error:
     return NULL;
 }
 
-ARMD_EXTERN_C ARMD__Promise *
+ARMD__Promise *
 armd__promise_create_with_pending_job(ARMD_MemoryRegion *memory_region,
                                       ARMD_Size num_waiting_promises,
                                       ARMD_Job *pending_job) {
@@ -223,20 +223,20 @@ int armd__promise_add_promise_callback(
     return 0;
 }
 
-ARMD_EXTERN_C void armd__promise_detach(ARMD__Promise *promise) {
+void armd__promise_detach(ARMD__Promise *promise) {
     assert(promise->reference_count >= 1);
 
     promise->detached = 1;
 }
 
-ARMD_EXTERN_C void
+void
 armd__promise_increment_reference_count(ARMD__Promise *promise) {
     assert(promise->reference_count >= 1);
 
     ++promise->reference_count;
 }
 
-ARMD_EXTERN_C int
+int
 armd__promise_decrement_reference_count(ARMD__Promise *promise) {
     assert(promise->reference_count >= 1);
 
