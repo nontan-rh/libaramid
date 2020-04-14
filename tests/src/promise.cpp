@@ -222,10 +222,14 @@ TEST_F(PromiseTest, SynchronizeAfterDetach) {
 
     res = armd_add_promise_callback(context, promise, &callback_context, cb);
     ASSERT_NE(res, 0); // Error
-    dependencies[0] = promise;
-    ARMD_Handle error_handle =
-        armd_invoke(context, sleep_procedure, nullptr, 1, dependencies);
-    ASSERT_EQ(error_handle, 0u); // Error
+
+    {
+        ARMD_Handle error_dependencies[1] = {promise};
+        ARMD_Handle error_handle =
+            armd_invoke(context, sleep_procedure, nullptr, 1, error_dependencies);
+        ASSERT_EQ(error_handle, 0u); // Error
+    }
+
     res = armd_await(context, promise);
     ASSERT_NE(res, 0); // Error
 

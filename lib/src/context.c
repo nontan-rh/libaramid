@@ -291,11 +291,15 @@ static void cleanup_dependency_graph(ARMD_Context *context,
         }
         assert(promise != NULL);
 
-        armd__promise_remove_continuation_promise(promise, target);
-        if (armd__promise_decrement_reference_count(promise)) {
-            armd__hash_table_remove(context->promise_manager.promises,
-                                    dependency);
-            armd__promise_destroy(promise);
+        ARMD_Size num_removed =
+            armd__promise_remove_continuation_promise(promise, target);
+        assert(num_removed <= 1);
+        if (num_removed != 0) {
+            if (armd__promise_decrement_reference_count(promise)) {
+                armd__hash_table_remove(context->promise_manager.promises,
+                                        dependency);
+                armd__promise_destroy(promise);
+            }
         }
     }
 }
@@ -416,6 +420,7 @@ ARMD_Handle armd_invoke(ARMD_Context *context, ARMD_Procedure *procedure,
     promise_initialized = 1;
 
     armd__promise_increment_reference_count(promise); // For internal job
+    // The reference count is 2 here
 
     int insert_res = armd__hash_table_insert(context->promise_manager.promises,
                                              new_handle, promise);

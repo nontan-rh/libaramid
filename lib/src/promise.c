@@ -175,19 +175,22 @@ int armd__promise_add_continuation_promise(ARMD__Promise *promise,
     return 0;
 }
 
-int armd__promise_remove_continuation_promise(
-    ARMD__Promise *promise, ARMD_Handle continuation_promise) {
+ARMD_Size
+armd__promise_remove_continuation_promise(ARMD__Promise *promise,
+                                          ARMD_Handle continuation_promise) {
     assert(promise != NULL);
 
     assert(promise->reference_count >= 1);
 
+    int remove_count = 0;
     for (ARMD_Size i = 0; i < promise->num_continuation_promises; i++) {
         if (promise->continuation_promises[i] == continuation_promise) {
             promise->continuation_promises[i] = 0;
+            ++remove_count;
         }
     }
 
-    return 0;
+    return remove_count;
 }
 
 int armd__promise_add_promise_callback(

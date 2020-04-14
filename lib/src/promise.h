@@ -42,9 +42,8 @@ ARMD_EXTERN_C int armd__promise_destroy(ARMD__Promise *promise);
 ARMD_EXTERN_C int
 armd__promise_add_continuation_promise(ARMD__Promise *promise,
                                        ARMD_Handle continuation_promise);
-ARMD_EXTERN_C int
-armd__promise_remove_continuation_promise(ARMD__Promise *promise,
-                                          ARMD_Handle continuation_promise);
+ARMD_EXTERN_C ARMD_Size armd__promise_remove_continuation_promise(
+    ARMD__Promise *promise, ARMD_Handle continuation_promise);
 
 ARMD_EXTERN_C int armd__promise_add_promise_callback(
     ARMD__Promise *promise, const ARMD__PromiseCallback *promise_callback);
