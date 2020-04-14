@@ -9,4 +9,6 @@ cd "$proj_dir/build"
 
 cmake .. "$@"
 cmake --build .
-ctest --verbose
+ARAMID_TEST_NUM_EXECUTORS=1 ctest --verbose
+ARAMID_TEST_NUM_EXECUTORS=2 ctest --verbose
+ARAMID_TEST_NUM_EXECUTORS=4 ctest --verbose

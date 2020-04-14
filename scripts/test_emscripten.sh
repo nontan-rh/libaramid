@@ -22,11 +22,11 @@ python3 -m http.server 8080 &
 http_server_pid=$!
 cd "$old_pwd"
 
-set +e
-npm start --prefix "$test_driver_dir" -- --no-sandbox
-test_status_code=$?
-set -e
+stop_server() {
+    kill -9 $http_server_pid
+}
+trap stop_server EXIT
 
-kill -9 $http_server_pid
-
-exit $test_status_code
+npm start --prefix "$test_driver_dir" -- --no-sandbox --num_executors=1
+npm start --prefix "$test_driver_dir" -- --no-sandbox --num_executors=2
+npm start --prefix "$test_driver_dir" -- --no-sandbox --num_executors=4

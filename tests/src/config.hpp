@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <iostream>
 
 namespace aramid {
 namespace test {
@@ -13,6 +14,8 @@ inline int get_num_executors() {
         if (num_executors_str == nullptr) {
             return 1;
         }
+
+        std::cout << "ARAMID_TEST_NUM_EXECUTORS: " << num_executors_str << std::endl;
 
         auto num_executors = std::stoi(num_executors_str);
         if (num_executors < 1) {
