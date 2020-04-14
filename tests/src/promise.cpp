@@ -225,8 +225,8 @@ TEST_F(PromiseTest, SynchronizeAfterDetach) {
 
     {
         ARMD_Handle error_dependencies[1] = {promise};
-        ARMD_Handle error_handle =
-            armd_invoke(context, sleep_procedure, nullptr, 1, error_dependencies);
+        ARMD_Handle error_handle = armd_invoke(context, sleep_procedure,
+                                               nullptr, 1, error_dependencies);
         ASSERT_EQ(error_handle, 0u); // Error
     }
 

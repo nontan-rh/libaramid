@@ -229,15 +229,13 @@ void armd__promise_detach(ARMD__Promise *promise) {
     promise->detached = 1;
 }
 
-void
-armd__promise_increment_reference_count(ARMD__Promise *promise) {
+void armd__promise_increment_reference_count(ARMD__Promise *promise) {
     assert(promise->reference_count >= 1);
 
     ++promise->reference_count;
 }
 
-int
-armd__promise_decrement_reference_count(ARMD__Promise *promise) {
+int armd__promise_decrement_reference_count(ARMD__Promise *promise) {
     assert(promise->reference_count >= 1);
 
     --promise->reference_count;
