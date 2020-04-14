@@ -25,6 +25,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - run: scripts/format.sh
+      - run: git diff --exit-code
       - run: scripts/tidy.sh
   Linux:
     runs-on: ubuntu-18.04
