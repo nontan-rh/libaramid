@@ -199,4 +199,43 @@ TEST_F(PromiseTest, CallbackSleepProcedureAfterAwait) {
     ASSERT_EQ(res, 0);
 }
 
+TEST_F(PromiseTest, SynchronizeAfterDetach) {
+    int res;
+
+    ARMD_Procedure *sleep_procedure;
+    {
+        ARMD_ProcedureBuilder *builder =
+            armd_procedure_builder_create(&memory_allocator, 0, 0);
+        armd_then_single(builder, single_sleep_continuation);
+        sleep_procedure = armd_procedure_builder_build_and_destroy(builder);
+    }
+
+    CallbackContext callback_context;
+    callback_context.is_called = false;
+
+    ARMD_Handle dependencies[1] = {0};
+    ARMD_Handle promise =
+        armd_invoke(context, sleep_procedure, nullptr, 0, dependencies);
+    ASSERT_NE(promise, 0u);
+    res = armd_detach(context, promise);
+    ASSERT_EQ(res, 0);
+
+    res = armd_add_promise_callback(context, promise, &callback_context, cb);
+    ASSERT_NE(res, 0); // Error
+    dependencies[0] = promise;
+    ARMD_Handle error_handle =
+        armd_invoke(context, sleep_procedure, nullptr, 1, dependencies);
+    ASSERT_EQ(error_handle, 0u); // Error
+    res = armd_await(context, promise);
+    ASSERT_NE(res, 0); // Error
+
+    res = armd_await_all(context);
+    ASSERT_EQ(res, 0);
+
+    ASSERT_FALSE(callback_context.is_called);
+
+    res = armd_procedure_destroy(sleep_procedure);
+    ASSERT_EQ(res, 0);
+}
+
 } // namespace

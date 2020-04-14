@@ -226,6 +226,11 @@ ARMD_EXTERN_C int armd_await(ARMD_Context *context, ARMD_Handle handle);
 ARMD_EXTERN_C int armd_detach(ARMD_Context *context, ARMD_Handle handle);
 
 /**
+ * @brief Await all promise
+ */ 
+ARMD_EXTERN_C int armd_await_all(ARMD_Context *context);
+
+/**
  * @brief Promise callback
  * @details The function called when promise resolved. See @ref
  * armd_add_promise_callback.

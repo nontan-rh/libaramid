@@ -18,6 +18,7 @@ typedef struct TAG_ARMD__PromiseCallback {
 } ARMD__PromiseCallback;
 
 typedef struct TAG_ARMD__Promise {
+    ARMD_Bool detached;
     ARMD_Size reference_count;
     ARMD__PromiseStatus status;
     ARMD_MemoryRegion *memory_region;
@@ -48,6 +49,7 @@ armd__promise_remove_continuation_promise(ARMD__Promise *promise,
 ARMD_EXTERN_C int armd__promise_add_promise_callback(
     ARMD__Promise *promise, const ARMD__PromiseCallback *promise_callback);
 
+ARMD_EXTERN_C void armd__promise_detach(ARMD__Promise *promise);
 ARMD_EXTERN_C void
 armd__promise_increment_reference_count(ARMD__Promise *promise);
 ARMD_EXTERN_C int
