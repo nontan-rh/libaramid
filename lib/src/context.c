@@ -559,6 +559,10 @@ int armd__context_complete_promise(ARMD_Context *context,
         assert(continuation_promise->num_ended_waiting_promises <=
                continuation_promise->num_all_waiting_promises);
 
+        if (has_error) {
+            continuation_promise->error_in_waiting_promises = 1;
+        }
+
         if (continuation_promise->num_ended_waiting_promises >=
             continuation_promise->num_all_waiting_promises) {
             ARMD_Job *job = continuation_promise->pending_job;
