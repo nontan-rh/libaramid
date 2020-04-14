@@ -4,6 +4,7 @@ var searchData=
   ['aramid_2eh',['aramid.h',['../aramid_8h.html',1,'']]],
   ['armd_5fadd_5fpromise_5fcallback',['armd_add_promise_callback',['../aramid_8h.html#afde584bd092b40b3069b90a2cad6fef7',1,'aramid.h']]],
   ['armd_5fawait',['armd_await',['../aramid_8h.html#a1d2bca6ad9df4ea6e91740b66b24fb05',1,'aramid.h']]],
+  ['armd_5fawait_5fall',['armd_await_all',['../aramid_8h.html#a61f79c0169f1794169327dc4351b4cac',1,'aramid.h']]],
   ['armd_5fbool',['ARMD_Bool',['../aramid_8h.html#a9fe823805bc775c80c1ddc3782ec5881',1,'aramid.h']]],
   ['armd_5fcontext',['ARMD_Context',['../aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2',1,'aramid.h']]],
   ['armd_5fcontext_5fcreate',['armd_context_create',['../aramid_8h.html#a94621573f40d43bf5c7a3b533a2a707b',1,'aramid.h']]],
