@@ -8,7 +8,8 @@ mkdir -p "$proj_dir/build"
 cd "$proj_dir/build"
 
 cmake "$proj_dir" \
-    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+    -DTIDY_MODE=ON
 cmake --build .
 
 clang-tidy-9 -p . \
