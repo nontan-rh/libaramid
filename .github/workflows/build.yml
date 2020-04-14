@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Test debug build
-        run: scripts/test.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_ASAN=ON
+        run: scripts/test.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_ASAN=ON -DDISABLE_MEMORY_REGION=ON
       - name: Test release build
         run: scripts/test.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
   Windows_MSVC:
@@ -64,7 +64,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Test debug build
-        run: scripts/test.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_ASAN=ON
+        run: scripts/test.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_ASAN=ON -DDISABLE_MEMORY_REGION=ON
       - name: Test release build
         run: scripts/test.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
   Android:

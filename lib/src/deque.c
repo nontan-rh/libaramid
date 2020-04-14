@@ -30,12 +30,14 @@ ARMD__Deque *armd__deque_create(ARMD_MemoryRegion *memory_region,
 }
 
 int armd__deque_destroy(ARMD__Deque *deque) {
+    int status = 0;
+
     if (deque == NULL) {
         return -1;
     }
 
     if (deque->head_index != deque->tail_index) {
-        return -1;
+        status = -1;
     }
 
     armd_memory_region_free(deque->memory_region, deque->buffer);
@@ -43,7 +45,7 @@ int armd__deque_destroy(ARMD__Deque *deque) {
 
     armd_memory_region_free(deque->memory_region, deque);
 
-    return 0;
+    return status;
 }
 
 static ARMD_Size prev_index(ARMD_Size i, ARMD_Size m) {

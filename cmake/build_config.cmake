@@ -16,6 +16,7 @@ endif()
 # Options
 
 option(ENABLE_ASAN "Build with ASAN support (GCC/clang and *nix required)")
+option(DISABLE_MEMORY_REGION "Disable memory region feature")
 set(SPINLOCK_IMPLEMENTATION ${DEFAULT_SPINLOCK_IMPLEMENTATION} CACHE STRING "Spinlock implementation (GCCIntrinsic|MSVCIntrinsic)")
 set(THREAD_IMPLEMENTATION ${DEFAULT_THREAD_IMPLEMENTATION} CACHE STRING "Thread implementation (pthread|win32)")
 
@@ -34,6 +35,10 @@ if(ENABLE_ASAN)
     # list(APPEND ARAMID_COMPILE_OPTIONS -fsanitize=address)
     list(APPEND CMAKE_C_FLAGS -fsanitize=address)
     list(APPEND CMAKE_CXX_FLAGS -fsanitize=address)
+endif()
+
+if(DISABLE_MEMORY_REGION)
+    list(APPEND ARAMID_COMPILE_DEFINITIONS ARAMID_DISABLE_MEMORY_REGION)
 endif()
 
 if(MSVC)

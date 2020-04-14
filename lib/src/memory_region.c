@@ -4,6 +4,45 @@
 #include "memory_region.h"
 #include "spinlock.h"
 
+#ifdef ARAMID_DISABLE_MEMORY_REGION
+
+ARMD_MemoryRegion *
+armd_memory_region_create(const ARMD_MemoryAllocator *memory_allocator) {
+    ARMD_MemoryRegion *memory_region = armd_memory_allocator_allocate(
+        memory_allocator, sizeof(ARMD_MemoryRegion));
+
+    memory_region->memory_allocator = *memory_allocator;
+
+    return memory_region;
+}
+
+ARMD_Size armd_memory_region_destroy(ARMD_MemoryRegion *memory_region) {
+    int res = 0;
+    (void)res;
+
+    if (memory_region == NULL) {
+        return 0;
+    }
+
+    ARMD_MemoryAllocator memory_allocator = memory_region->memory_allocator;
+
+    armd_memory_allocator_free(&memory_allocator, memory_region);
+
+    return 0;
+}
+
+void *armd_memory_region_allocate(ARMD_MemoryRegion *memory_region,
+                                  ARMD_Size size) {
+    return armd_memory_allocator_allocate(&memory_region->memory_allocator,
+                                          size);
+}
+
+void armd_memory_region_free(ARMD_MemoryRegion *memory_region, void *buf) {
+    armd_memory_allocator_free(&memory_region->memory_allocator, buf);
+}
+
+#else
+
 static const ARMD_Size header_alignment = 16;
 
 static ARMD_Size get_header_size() {
@@ -154,3 +193,5 @@ void armd_memory_region_free(ARMD_MemoryRegion *memory_region, void *buf) {
     header->prev = NULL;
     free_by_header(&memory_region->memory_allocator, header);
 }
+
+#endif

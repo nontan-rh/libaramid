@@ -54,11 +54,15 @@ TEST_F(PromiseTest, ChainEmptyProcedure) {
     }
 
     ARMD_Handle dependencies[1] = {0};
-    ARMD_Handle promise;
+    ARMD_Handle promise = 0;
     for (int count = 0; count < 100; count++) {
         promise =
             armd_invoke(context, empty_procedure, nullptr, 1, dependencies);
         ASSERT_NE(promise, 0u);
+        if (dependencies[0] != 0) {
+            res = armd_detach(context, dependencies[0]);
+            ASSERT_EQ(res, 0);
+        }
         dependencies[0] = promise;
     }
     res = armd_await(context, promise);
