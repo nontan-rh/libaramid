@@ -176,6 +176,11 @@ int armd_context_destroy(ARMD_Context *context) {
     armd_memory_allocator_free(&memory_allocator, context->executors);
     context->executors = NULL;
 
+    if (armd__hash_table_get_num_entries(context->promise_manager.promises) !=
+        0) {
+        status = -1;
+    }
+
     res = armd__hash_table_destroy(context->promise_manager.promises);
     assert(res == 0);
 
@@ -286,11 +291,15 @@ static void cleanup_dependency_graph(ARMD_Context *context,
         }
         assert(promise != NULL);
 
-        armd__promise_remove_continuation_promise(promise, target);
-        if (armd__promise_decrement_reference_count(promise)) {
-            armd__hash_table_remove(context->promise_manager.promises,
-                                    dependency);
-            armd__promise_destroy(promise);
+        ARMD_Size num_removed =
+            armd__promise_remove_continuation_promise(promise, target);
+        assert(num_removed <= 1);
+        if (num_removed != 0) {
+            if (armd__promise_decrement_reference_count(promise)) {
+                armd__hash_table_remove(context->promise_manager.promises,
+                                        dependency);
+                armd__promise_destroy(promise);
+            }
         }
     }
 }
@@ -318,6 +327,12 @@ static int check_and_build_dependency_graph(ARMD_Context *context,
             return -1;
         }
         assert(promise != NULL);
+
+        if (promise->detached) {
+            cleanup_dependency_graph(context, num_dependencies, dependencies,
+                                     target);
+            return -1;
+        }
 
         if (promise->status != ARMD__PromiseStatus_NotFinished) {
             continue;
@@ -403,6 +418,9 @@ ARMD_Handle armd_invoke(ARMD_Context *context, ARMD_Procedure *procedure,
         goto error;
     }
     promise_initialized = 1;
+
+    armd__promise_increment_reference_count(promise); // For internal job
+    // The reference count is 2 here
 
     int insert_res = armd__hash_table_insert(context->promise_manager.promises,
                                              new_handle, promise);
@@ -500,6 +518,9 @@ int armd__context_complete_promise(ARMD_Context *context,
     } else {
         promise->status = ARMD__PromiseStatus_Success;
     }
+
+    promise_to_destroy |=
+        armd__promise_decrement_reference_count(promise); // For internal job
 
     for (ARMD_Size i = 0; i < promise->num_promise_callbacks; i++) {
         ARMD__PromiseCallback *promise_callback =
@@ -601,6 +622,12 @@ int armd_await(ARMD_Context *context, ARMD_Handle handle) {
         return -1;
     }
 
+    if (promise->detached) {
+        res = armd__mutex_unlock(&context->promise_manager.mutex);
+        assert(res == 0);
+        return -1;
+    }
+
     ARMD__PromiseStatus status;
     while (1) {
         status = promise->status;
@@ -643,9 +670,37 @@ int armd_detach(ARMD_Context *context, ARMD_Handle handle) {
         return -1;
     }
 
+    if (promise->detached) {
+        res = armd__mutex_unlock(&context->promise_manager.mutex);
+        assert(res == 0);
+        return -1;
+    }
+
+    armd__promise_detach(promise);
+
     if (armd__promise_decrement_reference_count(promise)) {
         armd__hash_table_remove(context->promise_manager.promises, handle);
         armd__promise_destroy(promise);
+    }
+
+    res = armd__mutex_unlock(&context->promise_manager.mutex);
+    assert(res == 0);
+
+    return 0;
+}
+
+int armd_await_all(ARMD_Context *context) {
+    int res = 0;
+    (void)res;
+
+    res = armd__mutex_lock(&context->promise_manager.mutex);
+    assert(res == 0);
+
+    while (armd__hash_table_get_num_entries(
+               context->promise_manager.promises) != 0) {
+        res = armd__condvar_wait(&context->promise_manager.condvar,
+                                 &context->promise_manager.mutex);
+        assert(res == 0);
     }
 
     res = armd__mutex_unlock(&context->promise_manager.mutex);
@@ -674,6 +729,14 @@ int armd_add_promise_callback(ARMD_Context *context, ARMD_Handle handle,
                              (void **)&promise) != 0) {
         // Promise is not found
         res = armd__mutex_unlock(&context->promise_manager.mutex);
+        assert(res == 0);
+        return -1;
+    }
+
+    if (promise->detached) {
+        // Promise is already detached
+        res = armd__mutex_unlock(&context->promise_manager.mutex);
+        assert(res == 0);
         return -1;
     }
 

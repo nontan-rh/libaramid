@@ -23,7 +23,10 @@ protected:
         context = armd_context_create(&memory_allocator, 1);
     }
 
-    void TearDown() override { armd_context_destroy(context); }
+    void TearDown() override {
+        int res = armd_context_destroy(context);
+        ASSERT_EQ(res, 0);
+    }
 };
 
 typedef struct TAG_CommonArgs {
