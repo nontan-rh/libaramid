@@ -42,9 +42,6 @@ inline int get_num_executors() {
         const auto num_executors_str =
             get_environment_variable("ARAMID_TEST_NUM_EXECUTORS");
 
-        std::cout << "ARAMID_TEST_NUM_EXECUTORS: " << num_executors_str
-                  << std::endl;
-
         auto num_executors = std::stoi(num_executors_str);
         if (num_executors < 1) {
             num_executors = 1;
