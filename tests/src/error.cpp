@@ -1,11 +1,13 @@
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdint>
+#include <cstdio>
 
 #include <atomic>
 
 #include <gtest/gtest.h>
 
 #include <aramid/aramid.h>
+
+#include "config.hpp"
 
 namespace {
 
@@ -20,7 +22,8 @@ protected:
 
     void SetUp() override {
         armd_memory_allocator_init_default(&memory_allocator);
-        context = armd_context_create(&memory_allocator, 1);
+        context = armd_context_create(&memory_allocator,
+                                      aramid::test::get_num_executors());
     }
 
     void TearDown() override {

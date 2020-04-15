@@ -117,6 +117,13 @@ error:
             if (context->executors[j] == NULL) {
                 continue;
             }
+            armd__executor_stop(context->executors[j]);
+        }
+
+        for (ARMD_Size j = 0; j < num_executors; j++) {
+            if (context->executors[j] == NULL) {
+                continue;
+            }
             res = armd__executor_destroy(context->executors[j]);
             assert(res == 0);
         }
@@ -165,6 +172,10 @@ int armd_context_destroy(ARMD_Context *context) {
     (void)res;
 
     ARMD_MemoryAllocator memory_allocator = context->memory_allocator;
+
+    for (ARMD_Size i = 0; i < context->num_executors; i++) {
+        armd__executor_stop(context->executors[i]);
+    }
 
     for (ARMD_Size i = 0; i < context->num_executors; i++) {
         int executor_status = armd__executor_destroy(context->executors[i]);

@@ -7,6 +7,11 @@ const argv = yargs
     type: 'boolean',
     default: true,
   })
+  .option('num_executors', {
+    description: 'Number of executors',
+    type: 'number',
+    default: 1,
+  })
   .help()
   .alias('help', 'h')
   .argv;
@@ -21,7 +26,7 @@ chromeCapabilities.set('chromeOptions', { args: ['--headless', '--disable-gpu', 
     .build();
   let statusCode = 1;
   try {
-    await driver.get('http://localhost:8080/');
+    await driver.get(`http://localhost:8080/index.html?ARAMID_TEST_NUM_EXECUTORS=${argv.num_executors}`);
     const statusElement = await driver.findElement({ id: 'status' });
     const outputElement = await driver.findElement({ id: 'output' });
     await driver.wait(async function () {

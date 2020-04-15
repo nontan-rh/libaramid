@@ -18,6 +18,7 @@ clang-tidy-9 -p . \
     "$proj_dir"/lib/src/*.h \
     "$proj_dir"/lib/include/aramid/*.h \
     "$proj_dir"/tests/src/*.cpp \
+    "$proj_dir"/tests/src/*.hpp \
     "$proj_dir"/test_executable/src/*.cpp \
     "$proj_dir"/test_library/include/aramid/*.hpp \
     "$proj_dir"/test_library/src/*.cpp

@@ -351,6 +351,8 @@ ARMD__Executor *armd__executor_create(ARMD_Context *context, ARMD_Size id) {
     }
     thread_initialized = 1; // NOLINT(clang-analyzer-deadcode.DeadStores)
 
+    executor->stopped = 0;
+
     return executor;
 
 error:
@@ -387,16 +389,12 @@ error:
     return NULL;
 }
 
-int armd__executor_destroy(ARMD__Executor *executor) {
-    int status = 0;
+void armd__executor_stop(ARMD__Executor *executor) {
     int res = 0;
     (void)res;
 
-    if (executor == NULL) {
-        return -1;
-    }
-
-    ARMD_MemoryRegion *memory_region = executor->context->memory_region;
+    assert(executor != NULL);
+    assert(!executor->stopped);
 
     res = armd__mutex_lock(&executor->context->executor_mutex);
     assert(res == 0);
@@ -411,6 +409,19 @@ int armd__executor_destroy(ARMD__Executor *executor) {
     void *result;
     res = armd__thread_join(&executor->thread, &result);
     assert(res == 0);
+
+    executor->stopped = 1;
+}
+
+int armd__executor_destroy(ARMD__Executor *executor) {
+    int status = 0;
+    int res = 0;
+    (void)res;
+
+    assert(executor != NULL);
+    assert(executor->stopped);
+
+    ARMD_MemoryRegion *memory_region = executor->context->memory_region;
 
     status = armd__deque_destroy(executor->deque);
     executor->deque = NULL;

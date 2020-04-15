@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
-	<body style="background-color: black;">
+  <body style="background-color: black;">
     <p id="output" style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace!important; font-size: 8pt; line-height: 1.2; color: white;" />
     <div id="status" style="position: fixed; top:0; right: 0; width: auto; height: auto; font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace!important; font-size: 8pt; line-height: 1.2; background-color: lightgray; color: black;">Running</div>
-		<script>
+    <script>
       const output = document.getElementById('output');
       const status = document.getElementById('status');
       function print(text) {
@@ -22,13 +22,22 @@
         status.innerHTML = `abort: ${result}`;
         status.style['background-color'] = 'red';
       }
-			var Module = {
-				print: print,
+      function setupEnvironmentVariables() {
+        var searchParams = new URLSearchParams(window.location.search.substring(1));
+        var envObject = {};
+        for (var pair of searchParams.entries()) {
+          envObject[pair[0]] = pair[1];
+        }
+        Object.assign(ENV, envObject);
+      }
+      var Module = {
+        print: print,
         printErr: print,
         onExit: onExit,
         onAbort: onAbort,
-			};
-		</script>
+        preRun: [ setupEnvironmentVariables ],
+      };
+    </script>
     {{{ SCRIPT }}}
-	</body>
+  </body>
 </html>
