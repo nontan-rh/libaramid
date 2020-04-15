@@ -39,10 +39,8 @@ inline std::string get_environment_variable(const std::string &key) {
 
 inline int get_num_executors() {
     try {
-        const auto num_executors_str = getenv("ARAMID_TEST_NUM_EXECUTORS");
-        if (num_executors_str == nullptr) {
-            return 1;
-        }
+        const auto num_executors_str =
+            get_environment_variable("ARAMID_TEST_NUM_EXECUTORS");
 
         std::cout << "ARAMID_TEST_NUM_EXECUTORS: " << num_executors_str
                   << std::endl;
