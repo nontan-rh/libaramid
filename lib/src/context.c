@@ -567,6 +567,10 @@ int armd__context_complete_promise(ARMD_Context *context,
             continuation_promise->num_all_waiting_promises) {
             ARMD_Job *job = continuation_promise->pending_job;
 
+            if (promise->error_in_waiting_promises) {
+                job->dependency_has_error = 1;
+            }
+
             res = armd__spinlock_lock(&job->executor->lock);
             assert(res == 0);
             int enqueue_res =

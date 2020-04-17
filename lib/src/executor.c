@@ -185,6 +185,40 @@ static int move_to_next(ARMD_Job *job) {
     return should_abort;
 }
 
+static ARMD_Job *propagate_error(ARMD_Context *context,
+                                 ARMD__Executor *executor, ARMD_Job *job) {
+    int res = 0;
+    (void)res;
+
+    switch (job->awaiter.type) {
+    case JobAwaiterType_ParentJob: {
+        ARMD_Job *next_job;
+        ARMD_Bool stole =
+            armd__job_notify_to_parent_and_steal(job, executor, &next_job);
+        armd__job_destroy(job);
+
+        if (stole) {
+            job = next_job;
+        } else {
+            job = NULL;
+        }
+    } break;
+    case JobAwaiterType_Promise: {
+        ARMD_Handle handle = job->awaiter.body.promise.handle;
+        res = armd__context_complete_promise(context, handle, 1);
+        assert(res == 0);
+
+        armd__job_destroy(job);
+        job = NULL;
+    } break;
+    default:
+        assert(0);
+        break;
+    }
+
+    return job;
+}
+
 static ARMD_Job *move_to_next_and_propagate_error(ARMD_Context *context,
                                                   ARMD__Executor *executor,
                                                   ARMD_Job *job) {
@@ -198,32 +232,7 @@ static ARMD_Job *move_to_next_and_propagate_error(ARMD_Context *context,
         }
 
         unwind(job);
-
-        switch (job->awaiter.type) {
-        case JobAwaiterType_ParentJob: {
-            ARMD_Job *next_job;
-            ARMD_Bool stole =
-                armd__job_notify_to_parent_and_steal(job, executor, &next_job);
-            armd__job_destroy(job);
-
-            if (stole) {
-                job = next_job;
-            } else {
-                job = NULL;
-            }
-        } break;
-        case JobAwaiterType_Promise: {
-            ARMD_Handle handle = job->awaiter.body.promise.handle;
-            res = armd__context_complete_promise(context, handle, 1);
-            assert(res == 0);
-
-            armd__job_destroy(job);
-            job = NULL;
-        } break;
-        default:
-            assert(0);
-            break;
-        }
+        job = propagate_error(context, executor, job);
     }
 
     return job;
@@ -253,6 +262,15 @@ static void *executor_thread_main(void *args) {
         while (job != NULL) {
             if (!executor->thread_should_continue_running) {
                 return NULL;
+            }
+
+            if (!job->setup_executed) {
+                if (armd__job_execute_setup(job, executor)) {
+                    unwind(job);
+                    job = propagate_error(context, executor, job);
+                }
+
+                continue;
             }
 
             ARMD__JobExecuteStepStatus job_execute_step_status =
