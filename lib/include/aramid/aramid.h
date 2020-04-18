@@ -496,4 +496,53 @@ ARMD_EXTERN_C int armd_procedure_destroy(ARMD_Procedure *procedure);
  */
 ARMD_EXTERN_C void *armd_procedure_get_constants(ARMD_Procedure *procedure);
 
+/* Time */
+
+typedef struct TAG_ARMD_Timespec {
+    int64_t seconds;
+    int64_t nanoseconds;
+} ARMD_Timespec;
+
+ARMD_EXTERN_C int armd_get_time(ARMD_Timespec *result);
+
+/* Logger */
+
+typedef enum TAG_ARMD_LogLevel {
+    ARMD_LogLevel_Fatal,
+    ARMD_LogLevel_Error,
+    ARMD_LogLevel_Warn,
+    ARMD_LogLevel_Info,
+    ARMD_LogLevel_Debug,
+    ARMD_LogLevel_Trace,
+} ARMD_LogLevel;
+
+typedef struct TAG_ARMD_Logger ARMD_Logger;
+
+typedef struct TAG_ARMD_LogElement {
+    ARMD_Timespec timespec;
+    ARMD_LogLevel level;
+    char *message;
+} ARMD_LogElement;
+
+ARMD_EXTERN_C ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region);
+ARMD_EXTERN_C void armd_logger_destroy(ARMD_Logger *logger);
+
+ARMD_EXTERN_C ARMD_MemoryRegion *
+armd_logger_get_memory_region(ARMD_Logger *logger);
+ARMD_EXTERN_C int armd_logger_get_log_element(ARMD_Logger *logger,
+                                              ARMD_LogElement **log_element);
+ARMD_EXTERN_C void
+armd_logger_destroy_log_element(ARMD_Logger *logger,
+                                ARMD_LogElement *log_element);
+
+ARMD_EXTERN_C void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level,
+                                   char *message);
+
+ARMD_EXTERN_C void armd_log_fatal(ARMD_Logger *logger, char *message);
+ARMD_EXTERN_C void armd_log_error(ARMD_Logger *logger, char *message);
+ARMD_EXTERN_C void armd_log_warn(ARMD_Logger *logger, char *message);
+ARMD_EXTERN_C void armd_log_info(ARMD_Logger *logger, char *message);
+ARMD_EXTERN_C void armd_log_debug(ARMD_Logger *logger, char *message);
+ARMD_EXTERN_C void armd_log_trace(ARMD_Logger *logger, char *message);
+
 #endif
