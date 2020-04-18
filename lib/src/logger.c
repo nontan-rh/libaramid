@@ -198,7 +198,8 @@ static void file_output_callback(void *context, ARMD_Logger *logger) {
             break;
         }
 
-        fprintf((FILE *)context, "%s %s %s\n", timestamp, level, elem->message);
+        fprintf((FILE *)context, "%s %s %s:%lu %s\n", timestamp, level,
+                elem->filename, (unsigned long)elem->lineno, elem->message);
 
         armd_memory_region_free(memory_region, timestamp);
 
@@ -270,7 +271,8 @@ void armd_logger_destroy_log_element(ARMD_Logger *logger,
     destroy_element(logger->memory_region, log_element);
 }
 
-void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level, char *message) {
+void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level,
+                     const char *filename, ARMD_Size lineno, char *message) {
     int res = 0;
     (void)res;
 
@@ -299,6 +301,8 @@ void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level, char *message) {
 
     armd_get_time(&log_element->timespec);
     log_element->level = level;
+    log_element->filename = filename;
+    log_element->lineno = lineno;
     log_element->message = message;
 
     ARMD__LogNode *log_node = armd_memory_region_allocate(
@@ -318,28 +322,4 @@ void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level, char *message) {
         callback_func(callback_context, logger);
         armd_logger_decrement_reference_count(logger); // For callback
     }
-}
-
-void armd_log_fatal(ARMD_Logger *logger, char *message) {
-    armd_logger_log(logger, ARMD_LogLevel_Fatal, message);
-}
-
-void armd_log_error(ARMD_Logger *logger, char *message) {
-    armd_logger_log(logger, ARMD_LogLevel_Error, message);
-}
-
-void armd_log_warn(ARMD_Logger *logger, char *message) {
-    armd_logger_log(logger, ARMD_LogLevel_Warn, message);
-}
-
-void armd_log_info(ARMD_Logger *logger, char *message) {
-    armd_logger_log(logger, ARMD_LogLevel_Info, message);
-}
-
-void armd_log_debug(ARMD_Logger *logger, char *message) {
-    armd_logger_log(logger, ARMD_LogLevel_Debug, message);
-}
-
-void armd_log_trace(ARMD_Logger *logger, char *message) {
-    armd_logger_log(logger, ARMD_LogLevel_Trace, message);
 }

@@ -35,7 +35,7 @@ TEST_F(LoggerCreationTest, DestroyNonEmptyLogger) {
     ARMD_Logger *logger =
         armd_logger_create(memory_region, ARMD_LogLevel_Trace);
     ASSERT_NE(logger, nullptr);
-    armd_logger_log(logger, ARMD_LogLevel_Debug,
+    armd_logger_log(logger, ARMD_LogLevel_Debug, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "a"));
     ARMD_Bool destroyed = armd_logger_decrement_reference_count(logger);
     ASSERT_TRUE(destroyed);
@@ -93,7 +93,7 @@ protected:
 TEST_F(LoggerTest, LogAndGetSingle) {
     int res;
     ARMD_LogElement *elem;
-    armd_logger_log(logger, ARMD_LogLevel_Debug,
+    armd_logger_log(logger, ARMD_LogLevel_Debug, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "a"));
     res = armd_logger_get_log_element(logger, &elem);
     ASSERT_EQ(res, 0);
@@ -106,9 +106,9 @@ TEST_F(LoggerTest, LogAndGetSingle) {
 TEST_F(LoggerTest, LogAndGetTwo) {
     int res;
     ARMD_LogElement *elem;
-    armd_logger_log(logger, ARMD_LogLevel_Debug,
+    armd_logger_log(logger, ARMD_LogLevel_Debug, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "a"));
-    armd_logger_log(logger, ARMD_LogLevel_Info,
+    armd_logger_log(logger, ARMD_LogLevel_Info, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "b"));
     res = armd_logger_get_log_element(logger, &elem);
     ASSERT_EQ(res, 0);
@@ -127,7 +127,7 @@ TEST_F(LoggerTest, LogAndGetTwo) {
 TEST_F(LoggerTest, LogAndGetAlternative) {
     int res;
     ARMD_LogElement *elem;
-    armd_logger_log(logger, ARMD_LogLevel_Debug,
+    armd_logger_log(logger, ARMD_LogLevel_Debug, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "a"));
     res = armd_logger_get_log_element(logger, &elem);
     ASSERT_EQ(res, 0);
@@ -135,7 +135,7 @@ TEST_F(LoggerTest, LogAndGetAlternative) {
     ASSERT_NE(elem->timespec.seconds, 0);
     ASSERT_STREQ(elem->message, "a");
     armd_logger_destroy_log_element(logger, elem);
-    armd_logger_log(logger, ARMD_LogLevel_Info,
+    armd_logger_log(logger, ARMD_LogLevel_Info, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "b"));
     res = armd_logger_get_log_element(logger, &elem);
     ASSERT_EQ(res, 0);
@@ -165,7 +165,7 @@ TEST_F(LoggerTest, LogAndGetInCallback) {
     context.ok = false;
     armd_logger_set_callback(logger, callback, &context);
 
-    armd_logger_log(logger, ARMD_LogLevel_Debug,
+    armd_logger_log(logger, ARMD_LogLevel_Debug, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "a"));
 
     ASSERT_TRUE(context.ok);
@@ -174,7 +174,7 @@ TEST_F(LoggerTest, LogAndGetInCallback) {
 TEST_F(LoggerTest, LogLevel) {
     int res;
     ARMD_LogElement *elem;
-    armd_logger_log(logger, ARMD_LogLevel_Debug,
+    armd_logger_log(logger, ARMD_LogLevel_Debug, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "a"));
     res = armd_logger_get_log_element(logger, &elem);
     ASSERT_EQ(res, 0);
@@ -182,7 +182,7 @@ TEST_F(LoggerTest, LogLevel) {
     ASSERT_NE(elem->timespec.seconds, 0);
     ASSERT_STREQ(elem->message, "a");
     armd_logger_destroy_log_element(logger, elem);
-    armd_logger_log(logger, ARMD_LogLevel_Trace,
+    armd_logger_log(logger, ARMD_LogLevel_Trace, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "b"));
     res = armd_logger_get_log_element(logger, &elem);
     ASSERT_NE(res, 0);
@@ -191,11 +191,11 @@ TEST_F(LoggerTest, LogLevel) {
 
 TEST_F(LoggerTest, LogToFile) {
     armd_logger_set_stderr_callback(logger);
-    armd_logger_log(logger, ARMD_LogLevel_Debug,
+    armd_logger_log(logger, ARMD_LogLevel_Debug, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "a"));
-    armd_logger_log(logger, ARMD_LogLevel_Info,
+    armd_logger_log(logger, ARMD_LogLevel_Info, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "b"));
-    armd_logger_log(logger, ARMD_LogLevel_Error,
+    armd_logger_log(logger, ARMD_LogLevel_Error, __FILE__, __LINE__,
                     armd_memory_region_strdup(memory_region, "b"));
 }
 

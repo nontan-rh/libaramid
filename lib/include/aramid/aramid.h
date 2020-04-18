@@ -530,6 +530,8 @@ typedef struct TAG_ARMD_Logger ARMD_Logger;
 typedef struct TAG_ARMD_LogElement {
     ARMD_Timespec timespec;
     ARMD_LogLevel level;
+    const char *filename;
+    ARMD_Size lineno;
     char *message;
 } ARMD_LogElement;
 
@@ -556,14 +558,8 @@ ARMD_EXTERN_C void
 armd_logger_destroy_log_element(ARMD_Logger *logger,
                                 ARMD_LogElement *log_element);
 
-ARMD_EXTERN_C void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level,
-                                   char *message);
-
-ARMD_EXTERN_C void armd_log_fatal(ARMD_Logger *logger, char *message);
-ARMD_EXTERN_C void armd_log_error(ARMD_Logger *logger, char *message);
-ARMD_EXTERN_C void armd_log_warn(ARMD_Logger *logger, char *message);
-ARMD_EXTERN_C void armd_log_info(ARMD_Logger *logger, char *message);
-ARMD_EXTERN_C void armd_log_debug(ARMD_Logger *logger, char *message);
-ARMD_EXTERN_C void armd_log_trace(ARMD_Logger *logger, char *message);
+ARMD_EXTERN_C
+void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level,
+                     const char *filename, ARMD_Size lineno, char *message);
 
 #endif
