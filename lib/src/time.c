@@ -2,6 +2,9 @@
 
 #if defined(_WIN32)
 
+#include <stdio.h>
+#include <time.h>
+
 #include <windows.h>
 
 int armd_get_time(ARMD_Timespec *result) {
@@ -18,9 +21,25 @@ int armd_get_time(ARMD_Timespec *result) {
     return 0;
 }
 
+char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
+                              const ARMD_Timespec *timespec) {
+    time_t time = timespec->seconds;
+    struct tm *tm = gmtime(&time);
+
+    char secstr[128];
+    strftime(secstr, sizeof(secstr), "%Y-%m-%dT%H:%M:%S", &tm);
+
+    char buf[128];
+    snprintf(buf, sizeof(buf), "%s.%03dZ", secstr,
+             (int)(timespec->nanoseconds / 1000000ll));
+
+    return armd_memory_region_strdup(memory_region, buf);
+}
+
 #elif defined(unix) || defined(__unix__) || defined(__unix) ||                 \
     defined(__APPLE__)
 
+#include <stdio.h>
 #include <time.h>
 
 int armd_get_time(ARMD_Timespec *result) {
@@ -31,6 +50,22 @@ int armd_get_time(ARMD_Timespec *result) {
     result->nanoseconds = ts.tv_nsec;
 
     return 0;
+}
+
+char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
+                              const ARMD_Timespec *timespec) {
+    time_t time = timespec->seconds;
+    struct tm tm;
+    gmtime_r(&time, &tm);
+
+    char secstr[128];
+    strftime(secstr, sizeof(secstr), "%Y-%m-%dT%H:%M:%S", &tm);
+
+    char buf[128];
+    snprintf(buf, sizeof(buf), "%s.%03dZ", secstr,
+             (int)(timespec->nanoseconds / 1000000ll));
+
+    return armd_memory_region_strdup(memory_region, buf);
 }
 
 #elif ARAMID_EDITOR

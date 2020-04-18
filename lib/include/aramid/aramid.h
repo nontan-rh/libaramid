@@ -511,6 +511,8 @@ typedef struct TAG_ARMD_Timespec {
 } ARMD_Timespec;
 
 ARMD_EXTERN_C int armd_get_time(ARMD_Timespec *result);
+ARMD_EXTERN_C char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
+                                            const ARMD_Timespec *timespec);
 
 /* Logger */
 
