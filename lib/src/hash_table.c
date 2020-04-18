@@ -77,7 +77,7 @@ int armd__hash_table_destroy(ARMD__HashTable *hash_table) {
             ARMD__HashTableNode *next_node = node->next;
 
             armd_memory_region_free(memory_region, node);
-            node_destroyed = 1;
+            ++node_destroyed;
 
             node = next_node;
         }

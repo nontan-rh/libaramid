@@ -52,6 +52,8 @@ ARMD_EXTERN_C int armd__promise_add_promise_callback(
 ARMD_EXTERN_C void armd__promise_detach(ARMD__Promise *promise);
 ARMD_EXTERN_C void
 armd__promise_increment_reference_count(ARMD__Promise *promise);
+ARMD_EXTERN_C void armd__promise_add_reference_count(ARMD__Promise *promise,
+                                                     ARMD_Size value);
 ARMD_EXTERN_C int
 armd__promise_decrement_reference_count(ARMD__Promise *promise);
 

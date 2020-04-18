@@ -237,6 +237,13 @@ void armd__promise_increment_reference_count(ARMD__Promise *promise) {
     ++promise->reference_count;
 }
 
+void armd__promise_add_reference_count(ARMD__Promise *promise,
+                                       ARMD_Size value) {
+    assert(promise->reference_count >= 1);
+
+    promise->reference_count += value;
+}
+
 int armd__promise_decrement_reference_count(ARMD__Promise *promise) {
     assert(promise->reference_count >= 1);
 

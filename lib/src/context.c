@@ -305,13 +305,6 @@ static void cleanup_dependency_graph(ARMD_Context *context,
         ARMD_Size num_removed =
             armd__promise_remove_continuation_promise(promise, target);
         assert(num_removed <= 1);
-        if (num_removed != 0) {
-            if (armd__promise_decrement_reference_count(promise)) {
-                armd__hash_table_remove(context->promise_manager.promises,
-                                        dependency);
-                armd__promise_destroy(promise);
-            }
-        }
     }
 }
 
@@ -355,7 +348,6 @@ static int check_and_build_dependency_graph(ARMD_Context *context,
                                      target);
             return -1;
         }
-        armd__promise_increment_reference_count(promise);
 
         ++num_waiting_promises;
     }
@@ -424,6 +416,8 @@ ARMD_Handle armd_invoke(ARMD_Context *context, ARMD_Procedure *procedure,
     } else {
         promise = armd__promise_create_with_pending_job(
             context->memory_region, dependency_graph_res, job);
+        armd__promise_add_reference_count(
+            promise, dependency_graph_res); // For dependency graph
     }
     if (promise == NULL) {
         goto error;
@@ -567,7 +561,7 @@ int armd__context_complete_promise(ARMD_Context *context,
             continuation_promise->num_all_waiting_promises) {
             ARMD_Job *job = continuation_promise->pending_job;
 
-            if (promise->error_in_waiting_promises) {
+            if (continuation_promise->error_in_waiting_promises) {
                 job->dependency_has_error = 1;
             }
 
@@ -595,9 +589,12 @@ int armd__context_complete_promise(ARMD_Context *context,
             }
 
             continuation_promise->pending_job = NULL;
+        }
 
-            promise_to_destroy |=
-                armd__promise_decrement_reference_count(promise);
+        if (armd__promise_decrement_reference_count(continuation_promise)) {
+            armd__hash_table_remove(context->promise_manager.promises,
+                                    continuation_promise_handle);
+            armd__promise_destroy(continuation_promise);
         }
     }
 
