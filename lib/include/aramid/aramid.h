@@ -512,7 +512,7 @@ typedef struct TAG_ARMD_Timespec {
 
 ARMD_EXTERN_C int armd_get_time(ARMD_Timespec *result);
 ARMD_EXTERN_C char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
-                                            const ARMD_Timespec *timespec);
+                                             const ARMD_Timespec *timespec);
 
 /* Logger */
 
@@ -545,6 +545,8 @@ ARMD_EXTERN_C void
 armd_logger_set_callback(ARMD_Logger *logger,
                          ARMD_LoggerCallbackFunc callback_func,
                          void *callback_context);
+ARMD_EXTERN_C void armd_logger_set_stdout_callback(ARMD_Logger *logger);
+ARMD_EXTERN_C void armd_logger_set_stderr_callback(ARMD_Logger *logger);
 
 ARMD_EXTERN_C ARMD_MemoryRegion *
 armd_logger_get_memory_region(ARMD_Logger *logger);

@@ -189,4 +189,14 @@ TEST_F(LoggerTest, LogLevel) {
     ASSERT_EQ(elem, nullptr);
 }
 
+TEST_F(LoggerTest, LogToFile) {
+    armd_logger_set_stderr_callback(logger);
+    armd_logger_log(logger, ARMD_LogLevel_Debug,
+                    armd_memory_region_strdup(memory_region, "a"));
+    armd_logger_log(logger, ARMD_LogLevel_Info,
+                    armd_memory_region_strdup(memory_region, "b"));
+    armd_logger_log(logger, ARMD_LogLevel_Error,
+                    armd_memory_region_strdup(memory_region, "b"));
+}
+
 } // namespace

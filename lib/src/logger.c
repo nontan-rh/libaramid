@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdio.h>
 
 #include <aramid/aramid.h>
 
@@ -158,6 +159,59 @@ void armd_logger_set_callback(ARMD_Logger *logger,
 
     res = armd__mutex_unlock(&logger->mutex);
     assert(res == 0);
+}
+
+static void file_output_callback(void *context, ARMD_Logger *logger) {
+    ARMD_MemoryRegion *memory_region = armd_logger_get_memory_region(logger);
+
+    while (1) {
+        ARMD_LogElement *elem;
+        if (armd_logger_get_log_element(logger, &elem)) {
+            break;
+        }
+
+        char *timestamp =
+            armd_format_time_iso8601(memory_region, &elem->timespec);
+
+        const char *level;
+        switch (elem->level) {
+        case ARMD_LogLevel_Fatal:
+            level = "FATAL";
+            break;
+        case ARMD_LogLevel_Error:
+            level = "ERROR";
+            break;
+        case ARMD_LogLevel_Warn:
+            level = "WARN ";
+            break;
+        case ARMD_LogLevel_Info:
+            level = "INFO ";
+            break;
+        case ARMD_LogLevel_Debug:
+            level = "DEBUG";
+            break;
+        case ARMD_LogLevel_Trace:
+            level = "TRACE";
+            break;
+        default:
+            level = "UNK  ";
+            break;
+        }
+
+        fprintf((FILE *)context, "%s %s %s\n", timestamp, level, elem->message);
+
+        armd_memory_region_free(memory_region, timestamp);
+
+        armd_logger_destroy_log_element(logger, elem);
+    }
+}
+
+void armd_logger_set_stdout_callback(ARMD_Logger *logger) {
+    armd_logger_set_callback(logger, file_output_callback, stdout);
+}
+
+void armd_logger_set_stderr_callback(ARMD_Logger *logger) {
+    armd_logger_set_callback(logger, file_output_callback, stderr);
 }
 
 ARMD_MemoryRegion *armd_logger_get_memory_region(ARMD_Logger *logger) {
