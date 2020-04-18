@@ -157,6 +157,7 @@ armd_memory_region_destroy(ARMD_MemoryRegion *memory_region);
  */
 ARMD_EXTERN_C void *
 armd_memory_region_allocate(ARMD_MemoryRegion *memory_region, ARMD_Size size);
+
 /**
  * @brief Free memory area allocated with @ref ARMD_MemoryRegion
  * @param allocator The memory region. It must be the same region used on
@@ -166,6 +167,12 @@ armd_memory_region_allocate(ARMD_MemoryRegion *memory_region, ARMD_Size size);
  */
 ARMD_EXTERN_C void armd_memory_region_free(ARMD_MemoryRegion *memory_region,
                                            void *buf);
+
+/**
+ * @brief strdup for memory_region
+ */
+ARMD_EXTERN_C char *armd_memory_region_strdup(ARMD_MemoryRegion *memory_region,
+                                              const char *str);
 
 /**
  * @brief The execution engine
@@ -525,7 +532,9 @@ typedef struct TAG_ARMD_LogElement {
 } ARMD_LogElement;
 
 ARMD_EXTERN_C ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region);
-ARMD_EXTERN_C void armd_logger_destroy(ARMD_Logger *logger);
+ARMD_EXTERN_C void armd_logger_increment_reference_count(ARMD_Logger *logger);
+ARMD_EXTERN_C ARMD_Bool
+armd_logger_decrement_reference_count(ARMD_Logger *logger);
 
 ARMD_EXTERN_C ARMD_MemoryRegion *
 armd_logger_get_memory_region(ARMD_Logger *logger);

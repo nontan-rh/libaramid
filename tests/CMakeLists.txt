@@ -2,6 +2,7 @@
 add_library(aramid_integration_test_object OBJECT
     src/error.cpp
     src/execution.cpp
+    src/logger.cpp
     src/promise.cpp
     )
 aramid_target_setup_compile_options(aramid_integration_test_object)

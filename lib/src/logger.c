@@ -26,7 +26,6 @@ ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region) {
 
     int ring_initialized = 0;
     int mutex_initialized = 0;
-    int condvar_initialized = 0;
 
     ARMD_Logger *logger =
         armd_memory_region_allocate(memory_region, sizeof(ARMD_Logger));
@@ -36,8 +35,7 @@ ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region) {
 
     logger->memory_region = memory_region;
 
-    logger->is_destroying = 0;
-    logger->awaiter_count = 0;
+    logger->reference_count = 1;
     logger->ring =
         armd_memory_region_allocate(memory_region, sizeof(ARMD__LogNode));
     if (logger->ring == NULL) {
@@ -54,18 +52,9 @@ ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region) {
     }
     mutex_initialized = 1;
 
-    res = armd__condvar_init(&logger->condvar);
-    if (res != 0) {
-        goto error;
-    }
-    condvar_initialized = 1;
-
     return logger;
 
 error:
-    if (condvar_initialized) {
-        armd__condvar_deinit(&logger->condvar);
-    }
 
     if (mutex_initialized) {
         armd__mutex_deinit(&logger->mutex);
@@ -81,34 +70,18 @@ error:
     return NULL;
 }
 
-void armd_logger_destroy(ARMD_Logger *logger) {
+static void destroy_logger(ARMD_Logger *logger) {
     int res = 0;
     (void)res;
 
     assert(logger != NULL);
+    assert(logger->reference_count == 0);
 
     /* Notify all awaiters to stop awaiting */
 
     ARMD_MemoryRegion *memory_region = logger->memory_region;
 
-    res = armd__mutex_lock(&logger->mutex);
-    assert(res == 0);
-
-    logger->is_destroying = 1;
-    armd__condvar_broadcast(&logger->condvar);
-
-    while (logger->awaiter_count != 0) {
-        res = armd__condvar_wait(&logger->condvar, &logger->mutex);
-        assert(res == 0);
-    }
-
-    res = armd__mutex_unlock(&logger->mutex);
-    assert(res == 0);
-
     /* Destroy */
-
-    res = armd__condvar_deinit(&logger->condvar);
-    assert(res == 0);
 
     res = armd__mutex_deinit(&logger->mutex);
     assert(res == 0);
@@ -126,9 +99,43 @@ void armd_logger_destroy(ARMD_Logger *logger) {
     armd_memory_region_free(memory_region, logger);
 }
 
-ARMD_MemoryRegion *armd_logger_get_memory_region(ARMD_Logger *logger) {
-    assert(!logger->is_destroying);
+void armd_logger_increment_reference_count(ARMD_Logger *logger) {
+    int res = 0;
+    (void)res;
 
+    res = armd__mutex_lock(&logger->mutex);
+    assert(res == 0);
+
+    assert(logger->reference_count >= 1);
+    ++logger->reference_count;
+
+    res = armd__mutex_unlock(&logger->mutex);
+    assert(res == 0);
+}
+
+ARMD_Bool armd_logger_decrement_reference_count(ARMD_Logger *logger) {
+    int res = 0;
+    (void)res;
+
+    res = armd__mutex_lock(&logger->mutex);
+    assert(res == 0);
+
+    assert(logger->reference_count >= 1);
+    --logger->reference_count;
+
+    ARMD_Bool to_destroy = logger->reference_count == 0;
+
+    res = armd__mutex_unlock(&logger->mutex);
+    assert(res == 0);
+
+    if (to_destroy) {
+        destroy_logger(logger);
+    }
+
+    return to_destroy;
+}
+
+ARMD_MemoryRegion *armd_logger_get_memory_region(ARMD_Logger *logger) {
     return logger->memory_region;
 }
 
@@ -137,58 +144,39 @@ int armd_logger_get_log_element(ARMD_Logger *logger,
     int res = 0;
     (void)res;
 
-    assert(!logger->is_destroying);
-
     res = armd__mutex_lock(&logger->mutex);
     assert(res == 0);
 
-    ++logger->awaiter_count;
+    assert(logger->reference_count >= 1);
 
-    ARMD_Bool is_destroying = 0;
     ARMD__LogNode *node = NULL;
-    while (1) {
-        if (logger->is_destroying) {
-            is_destroying = 1;
 
-            break;
-        }
+    if (logger->ring->prev != logger->ring) {
+        node = logger->ring->prev;
 
-        if (logger->ring->prev != logger->ring) {
-            node = logger->ring->prev;
+        ARMD__LogNode *next = node->next;
+        ARMD__LogNode *prev = node->prev;
 
-            ARMD__LogNode *next = node->next;
-            ARMD__LogNode *prev = node->prev;
+        node->prev->next = next;
+        node->next->prev = prev;
 
-            node->prev->next = next;
-            node->next->prev = prev;
-
-            node->next = NULL;
-            node->prev = NULL;
-
-            break;
-        }
-
-        armd__condvar_wait(&logger->condvar, &logger->mutex);
+        node->next = NULL;
+        node->prev = NULL;
     }
 
     if (node != NULL) {
-        assert(!is_destroying);
         assert(node->log_element != NULL);
 
         *log_element = node->log_element;
         armd_memory_region_free(logger->memory_region, node);
     } else {
-        assert(is_destroying);
-
         *log_element = NULL;
     }
-
-    --logger->awaiter_count;
 
     res = armd__mutex_unlock(&logger->mutex);
     assert(res == 0);
 
-    if (is_destroying) {
+    if (node == NULL) {
         return -1;
     } else {
         return 0;
@@ -199,7 +187,6 @@ void armd_logger_destroy_log_element(ARMD_Logger *logger,
                                      ARMD_LogElement *log_element) {
     assert(logger != NULL);
     assert(log_element != NULL);
-    assert(!logger->is_destroying);
 
     destroy_element(logger->memory_region, log_element);
 }
@@ -208,10 +195,10 @@ void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level, char *message) {
     int res = 0;
     (void)res;
 
-    assert(!logger->is_destroying);
-
     res = armd__mutex_lock(&logger->mutex);
     assert(res == 0);
+
+    assert(logger->reference_count >= 1);
 
     ARMD_LogElement *log_element = armd_memory_region_allocate(
         logger->memory_region, sizeof(ARMD_LogElement));
