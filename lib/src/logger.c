@@ -20,7 +20,8 @@ static void destroy_node(ARMD_MemoryRegion *memory_region,
     armd_memory_region_free(memory_region, node);
 }
 
-ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region) {
+ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region,
+                                ARMD_LogLevel level) {
     int res = 0;
     (void)res;
 
@@ -34,6 +35,7 @@ ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region) {
     }
 
     logger->memory_region = memory_region;
+    logger->level = level;
 
     logger->reference_count = 1;
     logger->ring =
@@ -222,6 +224,14 @@ void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level, char *message) {
     assert(res == 0);
 
     assert(logger->reference_count >= 1);
+
+    if (level > logger->level) {
+        armd_memory_region_free(logger->memory_region, message);
+
+        res = armd__mutex_unlock(&logger->mutex);
+        assert(res == 0);
+        return;
+    }
 
     ARMD_LoggerCallbackFunc callback_func = logger->callback.func;
     void *callback_context = logger->callback.context;

@@ -24,14 +24,16 @@ protected:
 };
 
 TEST_F(LoggerCreationTest, CreateAndDestroyLogger) {
-    ARMD_Logger *logger = armd_logger_create(memory_region);
+    ARMD_Logger *logger =
+        armd_logger_create(memory_region, ARMD_LogLevel_Trace);
     ASSERT_NE(logger, nullptr);
     ARMD_Bool destroyed = armd_logger_decrement_reference_count(logger);
     ASSERT_TRUE(destroyed);
 }
 
 TEST_F(LoggerCreationTest, DestroyNonEmptyLogger) {
-    ARMD_Logger *logger = armd_logger_create(memory_region);
+    ARMD_Logger *logger =
+        armd_logger_create(memory_region, ARMD_LogLevel_Trace);
     ASSERT_NE(logger, nullptr);
     armd_logger_log(logger, ARMD_LogLevel_Debug,
                     armd_memory_region_strdup(memory_region, "a"));
@@ -40,7 +42,8 @@ TEST_F(LoggerCreationTest, DestroyNonEmptyLogger) {
 }
 
 TEST_F(LoggerCreationTest, DestroyWithMultithreadAwaiter) {
-    ARMD_Logger *logger = armd_logger_create(memory_region);
+    ARMD_Logger *logger =
+        armd_logger_create(memory_region, ARMD_LogLevel_Trace);
     ASSERT_NE(logger, nullptr);
 
     ARMD_Bool destroyed_in_parent = 0;
@@ -77,7 +80,7 @@ protected:
     void SetUp() override {
         armd_memory_allocator_init_default(&memory_allocator);
         memory_region = armd_memory_region_create(&memory_allocator);
-        logger = armd_logger_create(memory_region);
+        logger = armd_logger_create(memory_region, ARMD_LogLevel_Debug);
     }
 
     void TearDown() override {
@@ -166,6 +169,24 @@ TEST_F(LoggerTest, LogAndGetInCallback) {
                     armd_memory_region_strdup(memory_region, "a"));
 
     ASSERT_TRUE(context.ok);
+}
+
+TEST_F(LoggerTest, LogLevel) {
+    int res;
+    ARMD_LogElement *elem;
+    armd_logger_log(logger, ARMD_LogLevel_Debug,
+                    armd_memory_region_strdup(memory_region, "a"));
+    res = armd_logger_get_log_element(logger, &elem);
+    ASSERT_EQ(res, 0);
+    ASSERT_EQ(elem->level, ARMD_LogLevel_Debug);
+    ASSERT_NE(elem->timespec.seconds, 0);
+    ASSERT_STREQ(elem->message, "a");
+    armd_logger_destroy_log_element(logger, elem);
+    armd_logger_log(logger, ARMD_LogLevel_Trace,
+                    armd_memory_region_strdup(memory_region, "b"));
+    res = armd_logger_get_log_element(logger, &elem);
+    ASSERT_NE(res, 0);
+    ASSERT_EQ(elem, nullptr);
 }
 
 } // namespace

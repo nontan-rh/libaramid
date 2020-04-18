@@ -14,6 +14,7 @@ typedef struct TAG_ARMD__LogNode {
 
 struct TAG_ARMD_Logger {
     ARMD_MemoryRegion *memory_region;
+    ARMD_LogLevel level;
     ARMD__Mutex mutex;
     ARMD_Size reference_count;
     ARMD__LogNode *ring;
