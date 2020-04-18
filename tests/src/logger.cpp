@@ -1,5 +1,3 @@
-#include <condition_variable>
-#include <mutex>
 #include <thread>
 
 #include <gtest/gtest.h>
@@ -42,8 +40,6 @@ TEST_F(LoggerCreationTest, DestroyNonEmptyLogger) {
 }
 
 TEST_F(LoggerCreationTest, DestroyWithMultithreadAwaiter) {
-    std::mutex mutex;
-    std::condition_variable condvar;
     ARMD_Logger *logger = armd_logger_create(memory_region);
     ASSERT_NE(logger, nullptr);
 
