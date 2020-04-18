@@ -142,4 +142,30 @@ TEST_F(LoggerTest, LogAndGetAlternative) {
     armd_logger_destroy_log_element(logger, elem);
 }
 
+struct CallbackContext {
+    bool ok;
+};
+
+static void callback(void *context, ARMD_Logger *logger) {
+    ARMD_LogElement *elem;
+    int res = armd_logger_get_log_element(logger, &elem);
+
+    reinterpret_cast<CallbackContext *>(context)->ok =
+        (res == 0) && (elem->level == ARMD_LogLevel_Debug) &&
+        (elem->timespec.seconds != 0) && (strcmp(elem->message, "a") == 0);
+
+    armd_logger_destroy_log_element(logger, elem);
+}
+
+TEST_F(LoggerTest, LogAndGetInCallback) {
+    CallbackContext context;
+    context.ok = false;
+    armd_logger_set_callback(logger, callback, &context);
+
+    armd_logger_log(logger, ARMD_LogLevel_Debug,
+                    armd_memory_region_strdup(memory_region, "a"));
+
+    ASSERT_TRUE(context.ok);
+}
+
 } // namespace

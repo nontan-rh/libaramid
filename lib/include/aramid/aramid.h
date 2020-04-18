@@ -531,10 +531,17 @@ typedef struct TAG_ARMD_LogElement {
     char *message;
 } ARMD_LogElement;
 
+typedef void (*ARMD_LoggerCallbackFunc)(void *context, ARMD_Logger *logger);
+
 ARMD_EXTERN_C ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region);
 ARMD_EXTERN_C void armd_logger_increment_reference_count(ARMD_Logger *logger);
 ARMD_EXTERN_C ARMD_Bool
 armd_logger_decrement_reference_count(ARMD_Logger *logger);
+
+ARMD_EXTERN_C void
+armd_logger_set_callback(ARMD_Logger *logger,
+                         ARMD_LoggerCallbackFunc callback_func,
+                         void *callback_context);
 
 ARMD_EXTERN_C ARMD_MemoryRegion *
 armd_logger_get_memory_region(ARMD_Logger *logger);

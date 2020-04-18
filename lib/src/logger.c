@@ -46,6 +46,9 @@ ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region) {
     logger->ring->log_element = NULL;
     ring_initialized = 1;
 
+    logger->callback.func = NULL;
+    logger->callback.context = NULL;
+
     res = armd__mutex_init(&logger->mutex);
     if (res != 0) {
         goto error;
@@ -135,6 +138,26 @@ ARMD_Bool armd_logger_decrement_reference_count(ARMD_Logger *logger) {
     return to_destroy;
 }
 
+void armd_logger_set_callback(ARMD_Logger *logger,
+                              ARMD_LoggerCallbackFunc callback_func,
+                              void *callback_context) {
+    int res = 0;
+    (void)res;
+
+    res = armd__mutex_lock(&logger->mutex);
+    assert(res == 0);
+
+    assert(logger->reference_count >= 1);
+    assert(logger->callback.func == NULL);
+    assert(logger->callback.context == NULL);
+
+    logger->callback.func = callback_func;
+    logger->callback.context = callback_context;
+
+    res = armd__mutex_unlock(&logger->mutex);
+    assert(res == 0);
+}
+
 ARMD_MemoryRegion *armd_logger_get_memory_region(ARMD_Logger *logger) {
     return logger->memory_region;
 }
@@ -200,6 +223,13 @@ void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level, char *message) {
 
     assert(logger->reference_count >= 1);
 
+    ARMD_LoggerCallbackFunc callback_func = logger->callback.func;
+    void *callback_context = logger->callback.context;
+
+    if (callback_func != NULL) {
+        ++logger->reference_count; // For callback
+    }
+
     ARMD_LogElement *log_element = armd_memory_region_allocate(
         logger->memory_region, sizeof(ARMD_LogElement));
 
@@ -219,6 +249,11 @@ void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level, char *message) {
 
     res = armd__mutex_unlock(&logger->mutex);
     assert(res == 0);
+
+    if (callback_func != NULL) {
+        callback_func(callback_context, logger);
+        armd_logger_decrement_reference_count(logger); // For callback
+    }
 }
 
 void armd_log_fatal(ARMD_Logger *logger, char *message) {
