@@ -94,10 +94,10 @@ TEST_F(LoggerTest, LogAndGetSingle) {
                     armd_memory_region_strdup(memory_region, "a"));
     res = armd_logger_get_log_element(logger, &elem);
     ASSERT_EQ(res, 0);
-
     ASSERT_EQ(elem->level, ARMD_LogLevel_Debug);
     ASSERT_NE(elem->timespec.seconds, 0);
     ASSERT_STREQ(elem->message, "a");
+    armd_logger_destroy_log_element(logger, elem);
 }
 
 TEST_F(LoggerTest, LogAndGetTwo) {
