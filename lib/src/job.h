@@ -30,6 +30,10 @@ struct TAG_ARMD_Job {
     volatile ARMD_ContinuationResult continuation_result;
     // executor
     ARMD__Executor *executor;
+    // setup
+    ARMD_Bool setup_executed;
+    // dependency promise
+    ARMD_Bool dependency_has_error;
 };
 
 typedef enum TAG_ARMD__JobExecuteStepStatus {
@@ -50,6 +54,8 @@ ARMD_EXTERN_C void armd__job_cleanup_continuation_frame(ARMD_Job *job);
 ARMD_EXTERN_C void armd__job_increment_continuation_index(ARMD_Job *job);
 ARMD_EXTERN_C ARMD_Bool armd__job_notify_to_parent_and_steal(
     ARMD_Job *job, ARMD__Executor *executor, ARMD_Job **next_job);
+ARMD_EXTERN_C ARMD_Bool armd__job_execute_setup(ARMD_Job *job,
+                                                ARMD__Executor *executor);
 ARMD_EXTERN_C ARMD__JobExecuteStepStatus
 armd__job_execute_step(ARMD_Job *job, ARMD__Executor *executor);
 

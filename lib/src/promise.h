@@ -24,6 +24,7 @@ typedef struct TAG_ARMD__Promise {
     ARMD_MemoryRegion *memory_region;
     ARMD_Size num_all_waiting_promises;
     ARMD_Size num_ended_waiting_promises;
+    ARMD_Bool error_in_waiting_promises;
     ARMD_Job *pending_job;
     ARMD_Size num_continuation_promises;
     ARMD_Handle *continuation_promises;
@@ -51,6 +52,8 @@ ARMD_EXTERN_C int armd__promise_add_promise_callback(
 ARMD_EXTERN_C void armd__promise_detach(ARMD__Promise *promise);
 ARMD_EXTERN_C void
 armd__promise_increment_reference_count(ARMD__Promise *promise);
+ARMD_EXTERN_C void armd__promise_add_reference_count(ARMD__Promise *promise,
+                                                     ARMD_Size value);
 ARMD_EXTERN_C int
 armd__promise_decrement_reference_count(ARMD__Promise *promise);
 

@@ -172,6 +172,22 @@ int armd_then(ARMD_ProcedureBuilder *builder,
     return 0;
 }
 
+int armd_setup(ARMD_ProcedureBuilder *builder, ARMD_SetupFunc setup_func) {
+    assert(builder != NULL);
+
+    if (setup_func == NULL) {
+        return -1;
+    }
+
+    if (builder->setup_func != NULL) {
+        return -1;
+    }
+
+    builder->setup_func = setup_func;
+
+    return 0;
+}
+
 int armd_unwind(ARMD_ProcedureBuilder *builder, ARMD_UnwindFunc unwind_func) {
     assert(builder != NULL);
 

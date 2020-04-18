@@ -34,10 +34,7 @@ ARMD_Job *armd__job_create(ARMD_MemoryRegion *memory_region,
     job->memory_region = memory_region;
     job->procedure = procedure;
     job->awaiter = *awaiter;
-    job->frame = armd_memory_region_allocate(
-        memory_region, procedure->frame_size == 0 ? 1 : procedure->frame_size);
-    if (job->frame == NULL) {
-    }
+    job->frame = NULL;
     frame_initialized = 1;
     job->args = args;
     job->continuation_index = 0;
@@ -46,6 +43,8 @@ ARMD_Job *armd__job_create(ARMD_MemoryRegion *memory_region,
     if (armd__spinlock_init(&job->lock)) {
         goto error;
     }
+    job->setup_executed = 0;
+    job->dependency_has_error = 0;
     spinlock_initialized = 1; // NOLINT(clang-analyzer-deadcode.DeadStores)
 
     return job;
@@ -143,6 +142,41 @@ ARMD_Bool armd__job_notify_to_parent_and_steal(ARMD_Job *job,
     return parent_enabled;
 }
 
+ARMD_Bool armd__job_execute_setup(ARMD_Job *job, ARMD__Executor *executor) {
+    (void)executor;
+
+    assert(!job->setup_executed);
+    assert(job->continuation_index == 0);
+    assert(job->frame == NULL);
+
+    const ARMD_Procedure *procedure = job->procedure;
+
+    job->frame = armd_memory_region_allocate(
+        job->memory_region,
+        procedure->frame_size == 0 ? 1 : procedure->frame_size);
+    if (job->frame == NULL) {
+        job->has_error = 1;
+        return 1;
+    }
+
+    ARMD_Bool setup_result;
+    if (procedure->setup_func != NULL) {
+        setup_result =
+            procedure->setup_func(job, procedure->constants, job->args,
+                                  job->frame, job->dependency_has_error);
+    } else {
+        setup_result = job->dependency_has_error;
+    }
+
+    if (setup_result) {
+        job->has_error = 1;
+    }
+
+    job->setup_executed = 1;
+
+    return setup_result;
+}
+
 ARMD__JobExecuteStepStatus armd__job_execute_step(ARMD_Job *job,
                                                   ARMD__Executor *executor) {
     (void)executor;
@@ -150,6 +184,7 @@ ARMD__JobExecuteStepStatus armd__job_execute_step(ARMD_Job *job,
     int res = 0;
     (void)res;
 
+    assert(job->setup_executed);
     assert(job->continuation_index <= job->procedure->num_continuations);
     assert(job->num_all_waiting_jobs <=
            job->num_ended_waiting_jobs); // Other jobs are already ended

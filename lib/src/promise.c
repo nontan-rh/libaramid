@@ -27,6 +27,7 @@ armd__promise_create_no_pending_job(ARMD_MemoryRegion *memory_region) {
 
     promise->num_all_waiting_promises = 0;
     promise->num_ended_waiting_promises = 0;
+    promise->error_in_waiting_promises = 0;
     promise->pending_job = NULL;
 
     promise->num_continuation_promises = 0;
@@ -92,6 +93,7 @@ armd__promise_create_with_pending_job(ARMD_MemoryRegion *memory_region,
 
     promise->num_all_waiting_promises = num_waiting_promises;
     promise->num_ended_waiting_promises = 0;
+    promise->error_in_waiting_promises = 0;
     promise->pending_job = pending_job;
 
     promise->num_continuation_promises = 0;
@@ -233,6 +235,13 @@ void armd__promise_increment_reference_count(ARMD__Promise *promise) {
     assert(promise->reference_count >= 1);
 
     ++promise->reference_count;
+}
+
+void armd__promise_add_reference_count(ARMD__Promise *promise,
+                                       ARMD_Size value) {
+    assert(promise->reference_count >= 1);
+
+    promise->reference_count += value;
 }
 
 int armd__promise_decrement_reference_count(ARMD__Promise *promise) {
