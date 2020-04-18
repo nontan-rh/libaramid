@@ -19,6 +19,7 @@ var searchData=
   ['armd_5freal',['ARMD_Real',['../aramid_8h.html#ad623ad89bed10a13552092d5465c53dd',1,'aramid.h']]],
   ['armd_5fsequentialforcontinuationfunc',['ARMD_SequentialForContinuationFunc',['../aramid_8h.html#a29accb9b83aab2f2de16c47f2a06cf79',1,'aramid.h']]],
   ['armd_5fsequentialforcountfunc',['ARMD_SequentialForCountFunc',['../aramid_8h.html#a618a42c9f38496f3a45ade5993689474',1,'aramid.h']]],
+  ['armd_5fsetupfunc',['ARMD_SetupFunc',['../aramid_8h.html#a0d40db045d31e8ca2e8971ae29f4db44',1,'aramid.h']]],
   ['armd_5fsinglecontinuationfunc',['ARMD_SingleContinuationFunc',['../aramid_8h.html#a18b8741a700c03989a5d4e0a47edd009',1,'aramid.h']]],
   ['armd_5fsize',['ARMD_Size',['../aramid_8h.html#ab567330e3455809dba02e229d0d7bd41',1,'aramid.h']]],
   ['armd_5funwindfunc',['ARMD_UnwindFunc',['../aramid_8h.html#a936cdd3cc0c13f3f6bfb0c858b2ff7c4',1,'aramid.h']]]
