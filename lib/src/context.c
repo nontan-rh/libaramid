@@ -304,6 +304,7 @@ static void cleanup_dependency_graph(ARMD_Context *context,
 
         ARMD_Size num_removed =
             armd__promise_remove_continuation_promise(promise, target);
+        (void)num_removed;
         assert(num_removed <= 1);
     }
 }
