@@ -161,8 +161,9 @@ ARMD_Bool armd__job_execute_setup(ARMD_Job *job, ARMD__Executor *executor) {
 
     ARMD_Bool setup_result;
     if (procedure->setup_func != NULL) {
-        setup_result = procedure->setup_func(job, procedure->constants,
-                                             job->dependency_has_error);
+        setup_result =
+            procedure->setup_func(job, procedure->constants, job->args,
+                                  job->frame, job->dependency_has_error);
     } else {
         setup_result = job->dependency_has_error;
     }

@@ -372,6 +372,7 @@ typedef int (*ARMD_SequentialForContinuationFunc)(ARMD_Job *job,
  * continuation_frame and it receives the repetition counter as @ref index.
  */
 typedef ARMD_Bool (*ARMD_SetupFunc)(ARMD_Job *job, const void *constants,
+                                    void *args, void *frame,
                                     int dependency_has_error);
 
 /**
