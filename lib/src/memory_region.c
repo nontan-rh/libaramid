@@ -201,6 +201,7 @@ char *armd_memory_region_strdup(ARMD_MemoryRegion *memory_region,
                                 const char *str) {
     size_t length = strlen(str);
     char *result = armd_memory_region_allocate(memory_region, length + 1);
-    strncpy(result, str, length + 1);
+    memcpy(result, str, length);
+    result[length] = 0;
     return result;
 }
