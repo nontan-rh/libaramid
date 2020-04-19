@@ -24,7 +24,8 @@ int armd_get_time(ARMD_Timespec *result) {
 char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
                                const ARMD_Timespec *timespec) {
     time_t time = timespec->seconds;
-    struct tm *tm = gmtime(&time);
+    struct tm tm;
+    gmtime_s(&time, &tm);
 
     char secstr[128];
     strftime(secstr, sizeof(secstr), "%Y-%m-%dT%H:%M:%S", &tm);
