@@ -8,7 +8,7 @@ typedef enum TAG_ARMD__JobAwaiterType {
     JobAwaiterType_ParentJob,
 } ARMD__JobAwaiterType;
 
-typedef struct ARMD__TAG_JobAwaiter {
+typedef struct TAG_ARMD__JobAwaiter {
     ARMD__JobAwaiterType type;
     union {
         struct {
