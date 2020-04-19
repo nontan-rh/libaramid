@@ -86,6 +86,31 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_t_a_g___a_r_m_d___memory_allocator.html">TAG_ARMD_MemoryAllocator</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract memory allocator.  <a href="struct_t_a_g___a_r_m_d___memory_allocator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_t_a_g___a_r_m_d___timespec.html">TAG_ARMD_Timespec</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_t_a_g___a_r_m_d___log_element.html">TAG_ARMD_LogElement</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a0388cccc593cd59db0caae5e22980906"><td class="memItemLeft" align="right" valign="top"><a id="a0388cccc593cd59db0caae5e22980906"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ARMD_EXTERN_C</b></td></tr>
+<tr class="separator:a0388cccc593cd59db0caae5e22980906"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5314d80879a6dab0ccea6d3c42a5d9bf"><td class="memItemLeft" align="right" valign="top"><a id="a5314d80879a6dab0ccea6d3c42a5d9bf"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE</b></td></tr>
+<tr class="separator:a5314d80879a6dab0ccea6d3c42a5d9bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a409864ec397245c25f1112f97d26fe5e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>armd_log_fatal</b>(logger,  format, ...)</td></tr>
+<tr class="separator:a409864ec397245c25f1112f97d26fe5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0ec6fd8005785c8df5643faf79c305e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>armd_log_error</b>(logger,  format, ...)</td></tr>
+<tr class="separator:ae0ec6fd8005785c8df5643faf79c305e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa044ac666970784a12f7a81aef9bc943"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>armd_log_warn</b>(logger,  format, ...)</td></tr>
+<tr class="separator:aa044ac666970784a12f7a81aef9bc943"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18993b87239cb332422c5a4b18d42ac9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>armd_log_info</b>(logger,  format, ...)</td></tr>
+<tr class="separator:a18993b87239cb332422c5a4b18d42ac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1bd99b41c27fb7d06cb7d7f3dbbc52c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>armd_log_debug</b>(logger,  format, ...)</td></tr>
+<tr class="separator:aa1bd99b41c27fb7d06cb7d7f3dbbc52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfafb386f8453877884f3549d71f63fa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>armd_log_trace</b>(logger,  format, ...)</td></tr>
+<tr class="separator:acfafb386f8453877884f3549d71f63fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -165,6 +190,21 @@ typedef <a class="el" href="aramid_8h.html#a92d235c895627ab452d754e82074247e">AR
 typedef struct TAG_ARMD_ProcedureBuilder&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff">ARMD_ProcedureBuilder</a></td></tr>
 <tr class="memdesc:a0c45f3d01f00e9b9494135d2078663ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builder object for <a class="el" href="aramid_8h.html#a6ea50de4b5862d2e2412188eefc31741">ARMD_Procedure</a>. <br /></td></tr>
 <tr class="separator:a0c45f3d01f00e9b9494135d2078663ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af609aa06967051119597c1d8f2deab3b"><td class="memItemLeft" align="right" valign="top"><a id="af609aa06967051119597c1d8f2deab3b"></a>
+typedef struct <a class="el" href="struct_t_a_g___a_r_m_d___timespec.html">TAG_ARMD_Timespec</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ARMD_Timespec</b></td></tr>
+<tr class="separator:af609aa06967051119597c1d8f2deab3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08995b1eeab16b3b9b4fd0b1bce30f17"><td class="memItemLeft" align="right" valign="top"><a id="a08995b1eeab16b3b9b4fd0b1bce30f17"></a>
+typedef enum TAG_ARMD_LogLevel&#160;</td><td class="memItemRight" valign="bottom"><b>ARMD_LogLevel</b></td></tr>
+<tr class="separator:a08995b1eeab16b3b9b4fd0b1bce30f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e64e7024629ecc8e3aac559323729d9"><td class="memItemLeft" align="right" valign="top"><a id="a7e64e7024629ecc8e3aac559323729d9"></a>
+typedef struct TAG_ARMD_Logger&#160;</td><td class="memItemRight" valign="bottom"><b>ARMD_Logger</b></td></tr>
+<tr class="separator:a7e64e7024629ecc8e3aac559323729d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2aa2cfacb049454f67b56e053410d0a3"><td class="memItemLeft" align="right" valign="top"><a id="a2aa2cfacb049454f67b56e053410d0a3"></a>
+typedef struct <a class="el" href="struct_t_a_g___a_r_m_d___log_element.html">TAG_ARMD_LogElement</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ARMD_LogElement</b></td></tr>
+<tr class="separator:a2aa2cfacb049454f67b56e053410d0a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a041bdcecda585e95284dde08430abb2f"><td class="memItemLeft" align="right" valign="top"><a id="a041bdcecda585e95284dde08430abb2f"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>ARMD_LoggerCallbackFunc</b>) (void *context, ARMD_Logger *logger)</td></tr>
+<tr class="separator:a041bdcecda585e95284dde08430abb2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -174,6 +214,17 @@ Enumerations</h2></td></tr>
  }<tr class="memdesc:a38fdc113269494eb53d9b49df603cbce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Continuation Status. <br /></td></tr>
 </td></tr>
 <tr class="separator:a38fdc113269494eb53d9b49df603cbce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad71990e9d9371571024e68ce84867a6d"><td class="memItemLeft" align="right" valign="top"><a id="ad71990e9d9371571024e68ce84867a6d"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>TAG_ARMD_LogLevel</b> { <br />
+&#160;&#160;<b>ARMD_LogLevel_Fatal</b>, 
+<b>ARMD_LogLevel_Error</b>, 
+<b>ARMD_LogLevel_Warn</b>, 
+<b>ARMD_LogLevel_Info</b>, 
+<br />
+&#160;&#160;<b>ARMD_LogLevel_Debug</b>, 
+<b>ARMD_LogLevel_Trace</b>
+<br />
+ }</td></tr>
+<tr class="separator:ad71990e9d9371571024e68ce84867a6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -198,6 +249,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a5425215acab0b071977506551fae2b8d"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a5425215acab0b071977506551fae2b8d">armd_memory_region_free</a> (<a class="el" href="aramid_8h.html#ad68e5396c3bcb10a274388f032b30145">ARMD_MemoryRegion</a> *memory_region, void *buf)</td></tr>
 <tr class="memdesc:a5425215acab0b071977506551fae2b8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free memory area allocated with <a class="el" href="aramid_8h.html#ad68e5396c3bcb10a274388f032b30145">ARMD_MemoryRegion</a>.  <a href="#a5425215acab0b071977506551fae2b8d">More...</a><br /></td></tr>
 <tr class="separator:a5425215acab0b071977506551fae2b8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfedb6821ea10243a9c7be44721d405f"><td class="memItemLeft" align="right" valign="top"><a id="acfedb6821ea10243a9c7be44721d405f"></a>
+ARMD_EXTERN_C char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#acfedb6821ea10243a9c7be44721d405f">armd_memory_region_strdup</a> (<a class="el" href="aramid_8h.html#ad68e5396c3bcb10a274388f032b30145">ARMD_MemoryRegion</a> *memory_region, const char *str)</td></tr>
+<tr class="memdesc:acfedb6821ea10243a9c7be44721d405f"><td class="mdescLeft">&#160;</td><td class="mdescRight">strdup for memory_region <br /></td></tr>
+<tr class="separator:acfedb6821ea10243a9c7be44721d405f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94621573f40d43bf5c7a3b533a2a707b"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C <a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a94621573f40d43bf5c7a3b533a2a707b">armd_context_create</a> (const <a class="el" href="aramid_8h.html#ad42cd9847f4b6c82434b9cfd08d9dc5d">ARMD_MemoryAllocator</a> *memory_allocator, <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a> num_executors)</td></tr>
 <tr class="memdesc:a94621573f40d43bf5c7a3b533a2a707b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create <a class="el" href="aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2">ARMD_Context</a>.  <a href="#a94621573f40d43bf5c7a3b533a2a707b">More...</a><br /></td></tr>
 <tr class="separator:a94621573f40d43bf5c7a3b533a2a707b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -268,10 +323,254 @@ ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 <tr class="memitem:a03bf6dcce0e6525e55a306fd5992f555"><td class="memItemLeft" align="right" valign="top">ARMD_EXTERN_C void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aramid_8h.html#a03bf6dcce0e6525e55a306fd5992f555">armd_procedure_get_constants</a> (<a class="el" href="aramid_8h.html#a6ea50de4b5862d2e2412188eefc31741">ARMD_Procedure</a> *procedure)</td></tr>
 <tr class="memdesc:a03bf6dcce0e6525e55a306fd5992f555"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the pointer to constant table.  <a href="#a03bf6dcce0e6525e55a306fd5992f555">More...</a><br /></td></tr>
 <tr class="separator:a03bf6dcce0e6525e55a306fd5992f555"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac916ece90822e3fe0170dca0701b1f2f"><td class="memItemLeft" align="right" valign="top"><a id="ac916ece90822e3fe0170dca0701b1f2f"></a>
+ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><b>armd_get_time</b> (<a class="el" href="struct_t_a_g___a_r_m_d___timespec.html">ARMD_Timespec</a> *result)</td></tr>
+<tr class="separator:ac916ece90822e3fe0170dca0701b1f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca4bd04d0a6d187877c71d309daecab3"><td class="memItemLeft" align="right" valign="top"><a id="aca4bd04d0a6d187877c71d309daecab3"></a>
+ARMD_EXTERN_C char *&#160;</td><td class="memItemRight" valign="bottom"><b>armd_format_time_iso8601</b> (<a class="el" href="aramid_8h.html#ad68e5396c3bcb10a274388f032b30145">ARMD_MemoryRegion</a> *memory_region, const <a class="el" href="struct_t_a_g___a_r_m_d___timespec.html">ARMD_Timespec</a> *timespec)</td></tr>
+<tr class="separator:aca4bd04d0a6d187877c71d309daecab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7df51ff2233fa0ca9a2941ed92fb6d67"><td class="memItemLeft" align="right" valign="top"><a id="a7df51ff2233fa0ca9a2941ed92fb6d67"></a>
+ARMD_EXTERN_C ARMD_Logger *&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_create</b> (<a class="el" href="aramid_8h.html#ad68e5396c3bcb10a274388f032b30145">ARMD_MemoryRegion</a> *memory_region, ARMD_LogLevel level)</td></tr>
+<tr class="separator:a7df51ff2233fa0ca9a2941ed92fb6d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1942e788190744f914213cef9e0f750"><td class="memItemLeft" align="right" valign="top"><a id="ac1942e788190744f914213cef9e0f750"></a>
+ARMD_EXTERN_C void&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_increment_reference_count</b> (ARMD_Logger *logger)</td></tr>
+<tr class="separator:ac1942e788190744f914213cef9e0f750"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade5c6d677d96ee66dea6b78d79572861"><td class="memItemLeft" align="right" valign="top"><a id="ade5c6d677d96ee66dea6b78d79572861"></a>
+ARMD_EXTERN_C <a class="el" href="aramid_8h.html#a9fe823805bc775c80c1ddc3782ec5881">ARMD_Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_decrement_reference_count</b> (ARMD_Logger *logger)</td></tr>
+<tr class="separator:ade5c6d677d96ee66dea6b78d79572861"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a123bfd33158e79ec05c61ef33db4a2ea"><td class="memItemLeft" align="right" valign="top"><a id="a123bfd33158e79ec05c61ef33db4a2ea"></a>
+ARMD_EXTERN_C void&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_set_callback</b> (ARMD_Logger *logger, ARMD_LoggerCallbackFunc callback_func, void *callback_context)</td></tr>
+<tr class="separator:a123bfd33158e79ec05c61ef33db4a2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16078302088a82f016d9e5d4ad543a40"><td class="memItemLeft" align="right" valign="top"><a id="a16078302088a82f016d9e5d4ad543a40"></a>
+ARMD_EXTERN_C void&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_set_stdout_callback</b> (ARMD_Logger *logger)</td></tr>
+<tr class="separator:a16078302088a82f016d9e5d4ad543a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a918b5d00b4419109482564dfff763bff"><td class="memItemLeft" align="right" valign="top"><a id="a918b5d00b4419109482564dfff763bff"></a>
+ARMD_EXTERN_C void&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_set_stderr_callback</b> (ARMD_Logger *logger)</td></tr>
+<tr class="separator:a918b5d00b4419109482564dfff763bff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a908d1a638ba5075eac525cee155713c8"><td class="memItemLeft" align="right" valign="top"><a id="a908d1a638ba5075eac525cee155713c8"></a>
+ARMD_EXTERN_C <a class="el" href="aramid_8h.html#ad68e5396c3bcb10a274388f032b30145">ARMD_MemoryRegion</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_get_memory_region</b> (ARMD_Logger *logger)</td></tr>
+<tr class="separator:a908d1a638ba5075eac525cee155713c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07785e93724c1d20e7d976a0183fdd38"><td class="memItemLeft" align="right" valign="top"><a id="a07785e93724c1d20e7d976a0183fdd38"></a>
+ARMD_EXTERN_C int&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_get_log_element</b> (ARMD_Logger *logger, <a class="el" href="struct_t_a_g___a_r_m_d___log_element.html">ARMD_LogElement</a> **log_element)</td></tr>
+<tr class="separator:a07785e93724c1d20e7d976a0183fdd38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40ccf037a5c26f56038042f899acf1b2"><td class="memItemLeft" align="right" valign="top"><a id="a40ccf037a5c26f56038042f899acf1b2"></a>
+ARMD_EXTERN_C void&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_destroy_log_element</b> (ARMD_Logger *logger, <a class="el" href="struct_t_a_g___a_r_m_d___log_element.html">ARMD_LogElement</a> *log_element)</td></tr>
+<tr class="separator:a40ccf037a5c26f56038042f899acf1b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d797679d33512438adec6716dd1e6ba"><td class="memItemLeft" align="right" valign="top"><a id="a9d797679d33512438adec6716dd1e6ba"></a>
+ARMD_EXTERN_C void&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_log_string</b> (ARMD_Logger *logger, ARMD_LogLevel level, const char *filename, <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a> lineno, char *message)</td></tr>
+<tr class="separator:a9d797679d33512438adec6716dd1e6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2c74fb33071becee3aa3d539d962fab"><td class="memItemLeft" align="right" valign="top"><a id="af2c74fb33071becee3aa3d539d962fab"></a>
+ARMD_EXTERN_C void&#160;</td><td class="memItemRight" valign="bottom"><b>armd_logger_log_format</b> (ARMD_Logger *logger, ARMD_LogLevel level, const char *filename, <a class="el" href="aramid_8h.html#ab567330e3455809dba02e229d0d7bd41">ARMD_Size</a> lineno, const char *format,...) ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE</td></tr>
+<tr class="separator:af2c74fb33071becee3aa3d539d962fab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>libaramid public API header </p>
-</div><h2 class="groupheader">Typedef Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="aa1bd99b41c27fb7d06cb7d7f3dbbc52c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1bd99b41c27fb7d06cb7d7f3dbbc52c">&#9670;&nbsp;</a></span>armd_log_debug</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define armd_log_debug</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">logger, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">format, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">armd_logger_log_format(logger, ARMD_LogLevel_Debug, __FILE__, __LINE__,    \</div><div class="line">                           format, __VA_ARGS__)</div></div><!-- fragment -->
+</div>
+</div>
+<a id="ae0ec6fd8005785c8df5643faf79c305e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0ec6fd8005785c8df5643faf79c305e">&#9670;&nbsp;</a></span>armd_log_error</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define armd_log_error</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">logger, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">format, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">armd_logger_log_format(logger, ARMD_LogLevel_Error, __FILE__, __LINE__,    \</div><div class="line">                           format, __VA_ARGS__)</div></div><!-- fragment -->
+</div>
+</div>
+<a id="a409864ec397245c25f1112f97d26fe5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a409864ec397245c25f1112f97d26fe5e">&#9670;&nbsp;</a></span>armd_log_fatal</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define armd_log_fatal</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">logger, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">format, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">armd_logger_log_format(logger, ARMD_LogLevel_Fatal, __FILE__, __LINE__,    \</div><div class="line">                           format, __VA_ARGS__)</div></div><!-- fragment -->
+</div>
+</div>
+<a id="a18993b87239cb332422c5a4b18d42ac9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18993b87239cb332422c5a4b18d42ac9">&#9670;&nbsp;</a></span>armd_log_info</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define armd_log_info</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">logger, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">format, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">armd_logger_log_format(logger, ARMD_LogLevel_Info, __FILE__, __LINE__,     \</div><div class="line">                           format, __VA_ARGS__)</div></div><!-- fragment -->
+</div>
+</div>
+<a id="acfafb386f8453877884f3549d71f63fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfafb386f8453877884f3549d71f63fa">&#9670;&nbsp;</a></span>armd_log_trace</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define armd_log_trace</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">logger, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">format, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">armd_logger_log_format(logger, ARMD_LogLevel_Trace, __FILE__, __LINE__,    \</div><div class="line">                           format, __VA_ARGS__)</div></div><!-- fragment -->
+</div>
+</div>
+<a id="aa044ac666970784a12f7a81aef9bc943"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa044ac666970784a12f7a81aef9bc943">&#9670;&nbsp;</a></span>armd_log_warn</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define armd_log_warn</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">logger, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">format, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">armd_logger_log_format(logger, ARMD_LogLevel_Warn, __FILE__, __LINE__,     \</div><div class="line">                           format, __VA_ARGS__)</div></div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
 <a id="ad959d8db61728e008f7dad39ba490fa2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad959d8db61728e008f7dad39ba490fa2">&#9670;&nbsp;</a></span>ARMD_Context</h2>
 

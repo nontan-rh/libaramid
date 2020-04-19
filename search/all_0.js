@@ -29,6 +29,7 @@ var searchData=
   ['armd_5fmemory_5fregion_5fcreate',['armd_memory_region_create',['../aramid_8h.html#afe5863a281348e40c77a3167589b4127',1,'aramid.h']]],
   ['armd_5fmemory_5fregion_5fdestroy',['armd_memory_region_destroy',['../aramid_8h.html#aeda209d3fac31cbc6f5a7b57b15ed8e3',1,'aramid.h']]],
   ['armd_5fmemory_5fregion_5ffree',['armd_memory_region_free',['../aramid_8h.html#a5425215acab0b071977506551fae2b8d',1,'aramid.h']]],
+  ['armd_5fmemory_5fregion_5fstrdup',['armd_memory_region_strdup',['../aramid_8h.html#acfedb6821ea10243a9c7be44721d405f',1,'aramid.h']]],
   ['armd_5fmemoryallocator',['ARMD_MemoryAllocator',['../aramid_8h.html#ad42cd9847f4b6c82434b9cfd08d9dc5d',1,'aramid.h']]],
   ['armd_5fmemoryallocatorallocatefunc',['ARMD_MemoryAllocatorAllocateFunc',['../aramid_8h.html#ade364288cf40f3ed701092700e6ff594',1,'aramid.h']]],
   ['armd_5fmemoryallocatorfreefunc',['ARMD_MemoryAllocatorFreeFunc',['../aramid_8h.html#a88e9d1fdc59f754365c3b134d5d9e948',1,'aramid.h']]],

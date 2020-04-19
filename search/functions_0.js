@@ -18,6 +18,7 @@ var searchData=
   ['armd_5fmemory_5fregion_5fcreate',['armd_memory_region_create',['../aramid_8h.html#afe5863a281348e40c77a3167589b4127',1,'aramid.h']]],
   ['armd_5fmemory_5fregion_5fdestroy',['armd_memory_region_destroy',['../aramid_8h.html#aeda209d3fac31cbc6f5a7b57b15ed8e3',1,'aramid.h']]],
   ['armd_5fmemory_5fregion_5ffree',['armd_memory_region_free',['../aramid_8h.html#a5425215acab0b071977506551fae2b8d',1,'aramid.h']]],
+  ['armd_5fmemory_5fregion_5fstrdup',['armd_memory_region_strdup',['../aramid_8h.html#acfedb6821ea10243a9c7be44721d405f',1,'aramid.h']]],
   ['armd_5fprocedure_5fbuilder_5fbuild_5fand_5fdestroy',['armd_procedure_builder_build_and_destroy',['../aramid_8h.html#aec47a6c9c15efbfbdc2dd92d19ef432c',1,'aramid.h']]],
   ['armd_5fprocedure_5fbuilder_5fcreate',['armd_procedure_builder_create',['../aramid_8h.html#a35a05ea81ec3e7d9d146149eff91907e',1,'aramid.h']]],
   ['armd_5fprocedure_5fbuilder_5fdestroy',['armd_procedure_builder_destroy',['../aramid_8h.html#a0fc45947a28b47a709ba0a2f1d40cc11',1,'aramid.h']]],
