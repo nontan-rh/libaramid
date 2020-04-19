@@ -562,9 +562,19 @@ ARMD_EXTERN_C
 void armd_logger_log_string(ARMD_Logger *logger, ARMD_LogLevel level,
                             const char *filename, ARMD_Size lineno,
                             char *message);
+
+#if defined(__GNUC__) || defined(__clang__)
+#define ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE __attribute__((format(printf, 5, 6)))
+#else
+#define ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE
+#endif
+
 ARMD_EXTERN_C
 void armd_logger_log_format(ARMD_Logger *logger, ARMD_LogLevel level,
                             const char *filename, ARMD_Size lineno,
-                            const char *format, ...);
+                            const char *format,
+                            ...) ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE;
+
+#undef ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE
 
 #endif
