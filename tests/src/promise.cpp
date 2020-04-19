@@ -91,9 +91,8 @@ TEST_F(PromiseTest, CallbackEmptyProcedure) {
     CallbackContext callback_context;
     callback_context.is_called = false;
 
-    ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
-        armd_invoke(context, empty_procedure, nullptr, 0, dependencies);
+        armd_invoke(context, empty_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_add_promise_callback(context, promise, &callback_context, cb);
     ASSERT_EQ(res, 0);
@@ -158,9 +157,8 @@ TEST_F(PromiseTest, CallbackSleepProcedureBeforeAwait) {
     CallbackContext callback_context;
     callback_context.is_called = false;
 
-    ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
-        armd_invoke(context, sleep_procedure, nullptr, 0, dependencies);
+        armd_invoke(context, sleep_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_add_promise_callback(context, promise, &callback_context, cb);
     ASSERT_EQ(res, 0);
@@ -187,9 +185,8 @@ TEST_F(PromiseTest, CallbackSleepProcedureAfterAwait) {
     CallbackContext callback_context;
     callback_context.is_called = false;
 
-    ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
-        armd_invoke(context, sleep_procedure, nullptr, 0, dependencies);
+        armd_invoke(context, sleep_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_EQ(res, 0);
@@ -216,9 +213,8 @@ TEST_F(PromiseTest, SynchronizeAfterDetach) {
     CallbackContext callback_context;
     callback_context.is_called = false;
 
-    ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
-        armd_invoke(context, sleep_procedure, nullptr, 0, dependencies);
+        armd_invoke(context, sleep_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_detach(context, promise);
     ASSERT_EQ(res, 0);

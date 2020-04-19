@@ -361,7 +361,7 @@ ARMD_Handle armd_invoke(ARMD_Context *context, ARMD_Procedure *procedure,
                         const ARMD_Handle *dependencies) {
     assert(context != NULL);
     assert(procedure != NULL);
-    assert(dependencies != NULL);
+    assert(num_dependencies == 0 || dependencies != NULL);
 
     int res = 0;
     (void)res;
@@ -386,8 +386,14 @@ ARMD_Handle armd_invoke(ARMD_Context *context, ARMD_Procedure *procedure,
 
     /* dependency graph */
 
-    int dependency_graph_res = check_and_build_dependency_graph(
-        context, num_dependencies, dependencies, new_handle);
+    int dependency_graph_res;
+    if (num_dependencies == 0) {
+        dependency_graph_res = 0;
+    } else {
+        dependency_graph_res = check_and_build_dependency_graph(
+            context, num_dependencies, dependencies, new_handle);
+    }
+
     if (dependency_graph_res < 0) {
         goto error;
     }
@@ -480,8 +486,10 @@ error:
     }
 
     if (dependency_graph_initialized) {
-        cleanup_dependency_graph(context, num_dependencies, dependencies,
-                                 new_handle);
+        if (num_dependencies != 0) {
+            cleanup_dependency_graph(context, num_dependencies, dependencies,
+                                     new_handle);
+        }
     }
 
     if (promise_initialized) {

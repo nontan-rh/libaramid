@@ -105,7 +105,7 @@ build_error_procedure(const ARMD_MemoryAllocator *memory_allocator,
 
     void *continuation_constants =
         armd_memory_allocator_allocate(memory_allocator, 1);
-    armd_then(builder, error_continuation, continuation_constants, NULL,
+    armd_then(builder, error_continuation, continuation_constants, nullptr,
               error_continuation_frame_creator,
               error_continuation_frame_destroyer);
     if (unwind) {
@@ -219,9 +219,8 @@ TEST_F(ErrorTest, Error) {
     ARMD_Procedure *error_procedure =
         build_error_procedure(&memory_allocator, false);
 
-    ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
-        armd_invoke(context, error_procedure, nullptr, 0, dependencies);
+        armd_invoke(context, error_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_NE(res, 0); // error
@@ -236,9 +235,8 @@ TEST_F(ErrorTest, SingleError) {
     ARMD_Procedure *single_error_procedure =
         build_single_error_procedure(&memory_allocator, false);
 
-    ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
-        armd_invoke(context, single_error_procedure, nullptr, 0, dependencies);
+        armd_invoke(context, single_error_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_NE(res, 0); // error
@@ -253,9 +251,8 @@ TEST_F(ErrorTest, SequentialForError) {
     ARMD_Procedure *sequential_for_error_procedure =
         build_sequential_for_error_procedure(&memory_allocator);
 
-    ARMD_Handle dependencies[1];
     ARMD_Handle promise = armd_invoke(context, sequential_for_error_procedure,
-                                      nullptr, 0, dependencies);
+                                      nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_NE(res, 0); // ERROR
@@ -272,9 +269,8 @@ TEST_F(ErrorTest, SingleErrorChain2) {
     ARMD_Procedure *single_call_error_procedure = build_caller_procedure(
         &memory_allocator, single_error_procedure, false);
 
-    ARMD_Handle dependencies[1] = {0};
-    ARMD_Handle promise = armd_invoke(context, single_call_error_procedure,
-                                      nullptr, 0, dependencies);
+    ARMD_Handle promise =
+        armd_invoke(context, single_call_error_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_NE(res, 0); // error
@@ -295,9 +291,8 @@ TEST_F(ErrorTest, SingleErrorChain3) {
     ARMD_Procedure *single_call_error_procedure2 = build_caller_procedure(
         &memory_allocator, single_call_error_procedure, false);
 
-    ARMD_Handle dependencies[1] = {0};
-    ARMD_Handle promise = armd_invoke(context, single_call_error_procedure2,
-                                      nullptr, 0, dependencies);
+    ARMD_Handle promise =
+        armd_invoke(context, single_call_error_procedure2, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_NE(res, 0); // error
@@ -318,9 +313,8 @@ TEST_F(ErrorTest, SingleErrorUnwind) {
 
     CommonArgs args;
     args.unwind = 0;
-    ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
-        armd_invoke(context, single_error_procedure, &args, 0, dependencies);
+        armd_invoke(context, single_error_procedure, &args, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_NE(res, 0); // error
@@ -340,9 +334,8 @@ TEST_F(ErrorTest, SingleErrorChain2Unwind) {
 
     CommonArgs args;
     args.unwind = 0;
-    ARMD_Handle dependencies[1] = {0};
-    ARMD_Handle promise = armd_invoke(context, single_call_error_procedure,
-                                      &args, 0, dependencies);
+    ARMD_Handle promise =
+        armd_invoke(context, single_call_error_procedure, &args, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_NE(res, 0); // error
@@ -366,9 +359,8 @@ TEST_F(ErrorTest, SingleErrorChain3Unwind) {
     ARMD_Procedure *single_call_error_procedure2 = build_caller_procedure(
         &memory_allocator, single_call_error_procedure, true);
 
-    ARMD_Handle dependencies[1] = {0};
-    ARMD_Handle promise = armd_invoke(context, single_call_error_procedure2,
-                                      &args, 0, dependencies);
+    ARMD_Handle promise =
+        armd_invoke(context, single_call_error_procedure2, &args, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_NE(res, 0); // error
@@ -399,9 +391,8 @@ TEST_F(ErrorTest, ErrorTrapRecover) {
         error_procedure = armd_procedure_builder_build_and_destroy(builder);
     }
 
-    ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
-        armd_invoke(context, error_procedure, nullptr, 0, dependencies);
+        armd_invoke(context, error_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_EQ(res, 0);
@@ -427,9 +418,8 @@ TEST_F(ErrorTest, ErrorTrapRethrow) {
         error_procedure = armd_procedure_builder_build_and_destroy(builder);
     }
 
-    ARMD_Handle dependencies[1] = {0};
     ARMD_Handle promise =
-        armd_invoke(context, error_procedure, nullptr, 0, dependencies);
+        armd_invoke(context, error_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_NE(res, 0); // error
@@ -449,11 +439,10 @@ TEST_F(ErrorTest, ErrorPromise) {
     ARMD_Procedure *success_procedure =
         build_single_success_procedure(&memory_allocator, true);
 
-    ARMD_Handle no_dependencies[1] = {0};
     ARMD_Handle success_promise =
-        armd_invoke(context, success_procedure, &args, 0, no_dependencies);
+        armd_invoke(context, success_procedure, &args, 0, nullptr);
     ARMD_Handle error_promise =
-        armd_invoke(context, error_procedure, &args, 0, no_dependencies);
+        armd_invoke(context, error_procedure, &args, 0, nullptr);
     ASSERT_NE(success_promise, 0u);
     ASSERT_NE(error_promise, 0u);
 
