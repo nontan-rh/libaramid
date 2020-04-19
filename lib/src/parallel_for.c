@@ -19,7 +19,7 @@ process(ARMD_Job *job,
                                __ATOMIC_RELAXED);
 #elif defined(_MSC_VER)
 #pragma warning(push)
-#pragma warning(disable: 4127)
+#pragma warning(disable : 4127)
     if (sizeof(ARMD_Size) == 4) {
         index = InterlockedIncrement(
                     (LONG *)&child_args->parent_continuation_frame->index) -
