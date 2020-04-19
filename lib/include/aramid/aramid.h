@@ -577,4 +577,28 @@ void armd_logger_log_format(ARMD_Logger *logger, ARMD_LogLevel level,
 
 #undef ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE
 
+#define armd_log_fatal(logger, format, ...)                                    \
+    armd_logger_log_format(logger, ARMD_LogLevel_Fatal, __FILE__, __LINE__,    \
+                           format, __VA_ARGS__)
+
+#define armd_log_error(logger, format, ...)                                    \
+    armd_logger_log_format(logger, ARMD_LogLevel_Error, __FILE__, __LINE__,    \
+                           format, __VA_ARGS__)
+
+#define armd_log_warn(logger, format, ...)                                     \
+    armd_logger_log_format(logger, ARMD_LogLevel_Warn, __FILE__, __LINE__,     \
+                           format, __VA_ARGS__)
+
+#define armd_log_info(logger, format, ...)                                     \
+    armd_logger_log_format(logger, ARMD_LogLevel_Info, __FILE__, __LINE__,     \
+                           format, __VA_ARGS__)
+
+#define armd_log_debug(logger, format, ...)                                    \
+    armd_logger_log_format(logger, ARMD_LogLevel_Debug, __FILE__, __LINE__,    \
+                           format, __VA_ARGS__)
+
+#define armd_log_trace(logger, format, ...)                                    \
+    armd_logger_log_format(logger, ARMD_LogLevel_Trace, __FILE__, __LINE__,    \
+                           format, __VA_ARGS__)
+
 #endif

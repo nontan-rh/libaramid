@@ -209,4 +209,14 @@ TEST_F(LoggerTest, LogFormatToFile) {
                            "c: %s, %d", "def", 2);
 }
 
+TEST_F(LoggerTest, Macros) {
+    armd_logger_set_stderr_callback(logger);
+    armd_log_fatal(logger, "fatal: %d", 1);
+    armd_log_error(logger, "error: %d", 2);
+    armd_log_warn(logger, "warn: %d", 3);
+    armd_log_info(logger, "info: %d", 4);
+    armd_log_debug(logger, "debug: %d", 5);
+    armd_log_trace(logger, "trace: %d", 6);
+}
+
 } // namespace
