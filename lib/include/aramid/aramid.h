@@ -559,7 +559,12 @@ armd_logger_destroy_log_element(ARMD_Logger *logger,
                                 ARMD_LogElement *log_element);
 
 ARMD_EXTERN_C
-void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level,
-                     const char *filename, ARMD_Size lineno, char *message);
+void armd_logger_log_string(ARMD_Logger *logger, ARMD_LogLevel level,
+                            const char *filename, ARMD_Size lineno,
+                            char *message);
+ARMD_EXTERN_C
+void armd_logger_log_format(ARMD_Logger *logger, ARMD_LogLevel level,
+                            const char *filename, ARMD_Size lineno,
+                            const char *format, ...);
 
 #endif

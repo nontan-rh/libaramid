@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdarg.h>
 #include <stdio.h>
 
 #include <aramid/aramid.h>
@@ -271,8 +272,9 @@ void armd_logger_destroy_log_element(ARMD_Logger *logger,
     destroy_element(logger->memory_region, log_element);
 }
 
-void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level,
-                     const char *filename, ARMD_Size lineno, char *message) {
+void armd_logger_log_string(ARMD_Logger *logger, ARMD_LogLevel level,
+                            const char *filename, ARMD_Size lineno,
+                            char *message) {
     int res = 0;
     (void)res;
 
@@ -322,4 +324,55 @@ void armd_logger_log(ARMD_Logger *logger, ARMD_LogLevel level,
         callback_func(callback_context, logger);
         armd_logger_decrement_reference_count(logger); // For callback
     }
+}
+
+void armd_logger_log_format(ARMD_Logger *logger, ARMD_LogLevel level,
+                            const char *filename, ARMD_Size lineno,
+                            const char *format, ...) {
+    int res = 0;
+    (void)res;
+
+    // Check log level
+
+    res = armd__mutex_lock(&logger->mutex);
+    assert(res == 0);
+
+    assert(logger->reference_count >= 1);
+
+    if (level > logger->level) {
+        res = armd__mutex_unlock(&logger->mutex);
+        assert(res == 0);
+        return;
+    }
+
+    res = armd__mutex_unlock(&logger->mutex);
+    assert(res == 0);
+
+    // Format
+
+    va_list args;
+
+    va_start(args, format);
+    int length = vsnprintf(NULL, 0, format, args);
+    va_end(args);
+
+    if (length < 0) {
+        return;
+    }
+
+    char *message =
+        armd_memory_region_allocate(logger->memory_region, length + 1);
+    if (message == NULL) {
+        return;
+    }
+
+    va_start(args, format);
+    int result = vsnprintf(message, length + 1, format, args);
+    va_end(args);
+    if (result < 0) {
+        armd_memory_region_free(logger->memory_region, message);
+        return;
+    }
+
+    armd_logger_log_string(logger, level, filename, lineno, message);
 }
