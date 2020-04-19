@@ -18,17 +18,20 @@ process(ARMD_Job *job,
     index = __atomic_fetch_add(&child_args->parent_continuation_frame->index, 1,
                                __ATOMIC_RELAXED);
 #elif defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable: 4127)
     if (sizeof(ARMD_Size) == 4) {
         index = InterlockedIncrement(
-                    &child_args->parent_continuation_frame->index) -
+                    (LONG *)&child_args->parent_continuation_frame->index) -
                 1;
     } else if (sizeof(ARMD_Size) == 8) {
         index = InterlockedIncrement64(
-                    &child_args->parent_continuation_frame->index) -
+                    (LONG64 *)&child_args->parent_continuation_frame->index) -
                 1;
     } else {
         assert(0);
     }
+#pragma warning(pop)
 #else
 #error Spinlock implementation is not specified
 #endif
