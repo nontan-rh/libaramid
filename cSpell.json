@@ -44,6 +44,7 @@
     "nvmrc",
     "stackless",
     "stoi",
+    "STREQ",
     "toolchain",
     "wasm",
     "webassembly",

@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <string.h>
 
 #include "memory_allocator.h"
 #include "memory_region.h"
@@ -195,3 +196,12 @@ void armd_memory_region_free(ARMD_MemoryRegion *memory_region, void *buf) {
 }
 
 #endif
+
+char *armd_memory_region_strdup(ARMD_MemoryRegion *memory_region,
+                                const char *str) {
+    size_t length = strlen(str);
+    char *result = armd_memory_region_allocate(memory_region, length + 1);
+    memcpy(result, str, length);
+    result[length] = 0;
+    return result;
+}

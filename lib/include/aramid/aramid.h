@@ -157,6 +157,7 @@ armd_memory_region_destroy(ARMD_MemoryRegion *memory_region);
  */
 ARMD_EXTERN_C void *
 armd_memory_region_allocate(ARMD_MemoryRegion *memory_region, ARMD_Size size);
+
 /**
  * @brief Free memory area allocated with @ref ARMD_MemoryRegion
  * @param allocator The memory region. It must be the same region used on
@@ -166,6 +167,12 @@ armd_memory_region_allocate(ARMD_MemoryRegion *memory_region, ARMD_Size size);
  */
 ARMD_EXTERN_C void armd_memory_region_free(ARMD_MemoryRegion *memory_region,
                                            void *buf);
+
+/**
+ * @brief strdup for memory_region
+ */
+ARMD_EXTERN_C char *armd_memory_region_strdup(ARMD_MemoryRegion *memory_region,
+                                              const char *str);
 
 /**
  * @brief The execution engine
@@ -495,5 +502,103 @@ ARMD_EXTERN_C int armd_procedure_destroy(ARMD_Procedure *procedure);
  * @return The pointer to constant table. Always non-NULL.
  */
 ARMD_EXTERN_C void *armd_procedure_get_constants(ARMD_Procedure *procedure);
+
+/* Time */
+
+typedef struct TAG_ARMD_Timespec {
+    int64_t seconds;
+    int64_t nanoseconds;
+} ARMD_Timespec;
+
+ARMD_EXTERN_C int armd_get_time(ARMD_Timespec *result);
+ARMD_EXTERN_C char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
+                                             const ARMD_Timespec *timespec);
+
+/* Logger */
+
+typedef enum TAG_ARMD_LogLevel {
+    ARMD_LogLevel_Fatal,
+    ARMD_LogLevel_Error,
+    ARMD_LogLevel_Warn,
+    ARMD_LogLevel_Info,
+    ARMD_LogLevel_Debug,
+    ARMD_LogLevel_Trace,
+} ARMD_LogLevel;
+
+typedef struct TAG_ARMD_Logger ARMD_Logger;
+
+typedef struct TAG_ARMD_LogElement {
+    ARMD_Timespec timespec;
+    ARMD_LogLevel level;
+    const char *filename;
+    ARMD_Size lineno;
+    char *message;
+} ARMD_LogElement;
+
+typedef void (*ARMD_LoggerCallbackFunc)(void *context, ARMD_Logger *logger);
+
+ARMD_EXTERN_C ARMD_Logger *armd_logger_create(ARMD_MemoryRegion *memory_region,
+                                              ARMD_LogLevel level);
+ARMD_EXTERN_C void armd_logger_increment_reference_count(ARMD_Logger *logger);
+ARMD_EXTERN_C ARMD_Bool
+armd_logger_decrement_reference_count(ARMD_Logger *logger);
+
+ARMD_EXTERN_C void
+armd_logger_set_callback(ARMD_Logger *logger,
+                         ARMD_LoggerCallbackFunc callback_func,
+                         void *callback_context);
+ARMD_EXTERN_C void armd_logger_set_stdout_callback(ARMD_Logger *logger);
+ARMD_EXTERN_C void armd_logger_set_stderr_callback(ARMD_Logger *logger);
+
+ARMD_EXTERN_C ARMD_MemoryRegion *
+armd_logger_get_memory_region(ARMD_Logger *logger);
+ARMD_EXTERN_C int armd_logger_get_log_element(ARMD_Logger *logger,
+                                              ARMD_LogElement **log_element);
+ARMD_EXTERN_C void
+armd_logger_destroy_log_element(ARMD_Logger *logger,
+                                ARMD_LogElement *log_element);
+
+ARMD_EXTERN_C
+void armd_logger_log_string(ARMD_Logger *logger, ARMD_LogLevel level,
+                            const char *filename, ARMD_Size lineno,
+                            char *message);
+
+#if defined(__GNUC__) || defined(__clang__)
+#define ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE __attribute__((format(printf, 5, 6)))
+#else
+#define ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE
+#endif
+
+ARMD_EXTERN_C
+void armd_logger_log_format(ARMD_Logger *logger, ARMD_LogLevel level,
+                            const char *filename, ARMD_Size lineno,
+                            const char *format,
+                            ...) ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE;
+
+#undef ARMD_LOGGER_LOG_FORMAT_ATTRIBUTE
+
+#define armd_log_fatal(logger, format, ...)                                    \
+    armd_logger_log_format(logger, ARMD_LogLevel_Fatal, __FILE__, __LINE__,    \
+                           format, __VA_ARGS__)
+
+#define armd_log_error(logger, format, ...)                                    \
+    armd_logger_log_format(logger, ARMD_LogLevel_Error, __FILE__, __LINE__,    \
+                           format, __VA_ARGS__)
+
+#define armd_log_warn(logger, format, ...)                                     \
+    armd_logger_log_format(logger, ARMD_LogLevel_Warn, __FILE__, __LINE__,     \
+                           format, __VA_ARGS__)
+
+#define armd_log_info(logger, format, ...)                                     \
+    armd_logger_log_format(logger, ARMD_LogLevel_Info, __FILE__, __LINE__,     \
+                           format, __VA_ARGS__)
+
+#define armd_log_debug(logger, format, ...)                                    \
+    armd_logger_log_format(logger, ARMD_LogLevel_Debug, __FILE__, __LINE__,    \
+                           format, __VA_ARGS__)
+
+#define armd_log_trace(logger, format, ...)                                    \
+    armd_logger_log_format(logger, ARMD_LogLevel_Trace, __FILE__, __LINE__,    \
+                           format, __VA_ARGS__)
 
 #endif
