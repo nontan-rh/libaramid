@@ -2,6 +2,7 @@ var searchData=
 [
   ['armd_5fbool',['ARMD_Bool',['../aramid_8h.html#a9fe823805bc775c80c1ddc3782ec5881',1,'aramid.h']]],
   ['armd_5fcontext',['ARMD_Context',['../aramid_8h.html#ad959d8db61728e008f7dad39ba490fa2',1,'aramid.h']]],
+  ['armd_5fcontinuationconstantsdestroyer',['ARMD_ContinuationConstantsDestroyer',['../aramid_8h.html#abf7d5637388440e523487a1c224f7986',1,'aramid.h']]],
   ['armd_5fcontinuationframecreator',['ARMD_ContinuationFrameCreator',['../aramid_8h.html#aa13582fc4275d4acd0498dc63ad2fbf8',1,'aramid.h']]],
   ['armd_5fcontinuationframedestroyer',['ARMD_ContinuationFrameDestroyer',['../aramid_8h.html#a0b0241566d595e615670b5986f6fbccd',1,'aramid.h']]],
   ['armd_5fcontinuationfunc',['ARMD_ContinuationFunc',['../aramid_8h.html#af82ce78becd9d13c30afa32c0f6cad4e',1,'aramid.h']]],
@@ -13,6 +14,8 @@ var searchData=
   ['armd_5fmemoryallocatorallocatefunc',['ARMD_MemoryAllocatorAllocateFunc',['../aramid_8h.html#ade364288cf40f3ed701092700e6ff594',1,'aramid.h']]],
   ['armd_5fmemoryallocatorfreefunc',['ARMD_MemoryAllocatorFreeFunc',['../aramid_8h.html#a88e9d1fdc59f754365c3b134d5d9e948',1,'aramid.h']]],
   ['armd_5fmemoryregion',['ARMD_MemoryRegion',['../aramid_8h.html#ad68e5396c3bcb10a274388f032b30145',1,'aramid.h']]],
+  ['armd_5fparallelforcontinuationfunc',['ARMD_ParallelForContinuationFunc',['../aramid_8h.html#a4363e1d9717414b973d0f6f949a5d18d',1,'aramid.h']]],
+  ['armd_5fparallelforcountfunc',['ARMD_ParallelForCountFunc',['../aramid_8h.html#a690cd2de5a064373cfbe4fbe729b1e43',1,'aramid.h']]],
   ['armd_5fprocedure',['ARMD_Procedure',['../aramid_8h.html#a6ea50de4b5862d2e2412188eefc31741',1,'aramid.h']]],
   ['armd_5fprocedurebuilder',['ARMD_ProcedureBuilder',['../aramid_8h.html#a0c45f3d01f00e9b9494135d2078663ff',1,'aramid.h']]],
   ['armd_5fpromisecallbackfunc',['ARMD_PromiseCallbackFunc',['../aramid_8h.html#a285d624fe4acb6d5b60948b1b0e3fe4f',1,'aramid.h']]],
