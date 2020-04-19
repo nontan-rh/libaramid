@@ -24,7 +24,7 @@ typedef struct TAG_ARMD__Promise {
     ARMD_MemoryRegion *memory_region;
     ARMD_Size num_all_waiting_promises;
     ARMD_Size num_ended_waiting_promises;
-    ARMD_Bool error_in_waiting_promises;
+    ARMD_Bool dependency_has_error;
     ARMD_Job *pending_job;
     ARMD_Size num_continuation_promises;
     ARMD_Handle *continuation_promises;

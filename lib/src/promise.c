@@ -27,7 +27,7 @@ armd__promise_create_no_pending_job(ARMD_MemoryRegion *memory_region) {
 
     promise->num_all_waiting_promises = 0;
     promise->num_ended_waiting_promises = 0;
-    promise->error_in_waiting_promises = 0;
+    promise->dependency_has_error = 0;
     promise->pending_job = NULL;
 
     promise->num_continuation_promises = 0;
@@ -93,7 +93,7 @@ armd__promise_create_with_pending_job(ARMD_MemoryRegion *memory_region,
 
     promise->num_all_waiting_promises = num_waiting_promises;
     promise->num_ended_waiting_promises = 0;
-    promise->error_in_waiting_promises = 0;
+    promise->dependency_has_error = 0;
     promise->pending_job = pending_job;
 
     promise->num_continuation_promises = 0;

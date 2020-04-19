@@ -312,11 +312,13 @@ static void cleanup_dependency_graph(ARMD_Context *context,
 static int check_and_build_dependency_graph(ARMD_Context *context,
                                             ARMD_Size num_dependencies,
                                             const ARMD_Handle *dependencies,
-                                            ARMD_Handle target) {
+                                            ARMD_Handle target,
+                                            int *dependency_has_error) {
     int res;
 
     int num_waiting_promises = 0;
 
+    *dependency_has_error = 0;
     for (ARMD_Size i = 0; i < num_dependencies; i++) {
         ARMD_Handle dependency = dependencies[i];
         if (dependency == 0) {
@@ -337,6 +339,19 @@ static int check_and_build_dependency_graph(ARMD_Context *context,
             cleanup_dependency_graph(context, num_dependencies, dependencies,
                                      target);
             return -1;
+        }
+
+        switch (promise->status) {
+        case ARMD__PromiseStatus_NotFinished:
+            break;
+        case ARMD__PromiseStatus_Success:
+            continue;
+        case ARMD__PromiseStatus_Error:
+            *dependency_has_error = 1;
+            continue;
+        default:
+            assert(0);
+            break;
         }
 
         if (promise->status != ARMD__PromiseStatus_NotFinished) {
@@ -386,12 +401,14 @@ ARMD_Handle armd_invoke(ARMD_Context *context, ARMD_Procedure *procedure,
 
     /* dependency graph */
 
+    int ended_dependency_has_error = 0;
     int dependency_graph_res;
     if (num_dependencies == 0) {
         dependency_graph_res = 0;
     } else {
         dependency_graph_res = check_and_build_dependency_graph(
-            context, num_dependencies, dependencies, new_handle);
+            context, num_dependencies, dependencies, new_handle,
+            &ended_dependency_has_error);
     }
 
     if (dependency_graph_res < 0) {
@@ -416,6 +433,10 @@ ARMD_Handle armd_invoke(ARMD_Context *context, ARMD_Procedure *procedure,
     }
     job_initialized = 1;
 
+    if (ended_dependency_has_error) {
+        job->dependency_has_error = 1;
+    }
+
     /* promise */
 
     if (dependency_graph_res == 0) {
@@ -433,6 +454,10 @@ ARMD_Handle armd_invoke(ARMD_Context *context, ARMD_Procedure *procedure,
 
     armd__promise_increment_reference_count(promise); // For internal job
     // The reference count is 2 here
+
+    if (ended_dependency_has_error) {
+        promise->dependency_has_error = 1;
+    }
 
     int insert_res = armd__hash_table_insert(context->promise_manager.promises,
                                              new_handle, promise);
@@ -563,14 +588,14 @@ int armd__context_complete_promise(ARMD_Context *context,
                continuation_promise->num_all_waiting_promises);
 
         if (has_error) {
-            continuation_promise->error_in_waiting_promises = 1;
+            continuation_promise->dependency_has_error = 1;
         }
 
         if (continuation_promise->num_ended_waiting_promises >=
             continuation_promise->num_all_waiting_promises) {
             ARMD_Job *job = continuation_promise->pending_job;
 
-            if (continuation_promise->error_in_waiting_promises) {
+            if (continuation_promise->dependency_has_error) {
                 job->dependency_has_error = 1;
             }
 
