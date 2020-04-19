@@ -15,8 +15,8 @@ int armd_procedure_destroy(ARMD_Procedure *procedure) {
 
     for (ARMD_Size i = 0; i < procedure->num_continuations; i++) {
         ARMD__Continuation continuation = procedure->continuations[i];
-        armd_memory_allocator_free(&memory_allocator,
-                                   continuation.continuation_constants);
+        continuation.continuation_constants_destroyer(
+            &memory_allocator, continuation.continuation_constants);
         continuation.continuation_constants = NULL;
     }
 

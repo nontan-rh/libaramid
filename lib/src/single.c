@@ -21,6 +21,12 @@ continuation_func(ARMD_Job *job, const void *constants, void *args, void *frame,
     }
 }
 
+static void
+continuation_constants_destroyer(ARMD_MemoryAllocator *memory_region,
+                                 void *continuation_constants) {
+    armd_memory_allocator_free(memory_region, continuation_constants);
+}
+
 static void *continuation_frame_creator(ARMD_MemoryRegion *memory_region) {
     return armd_memory_region_allocate(memory_region, 1);
 }
@@ -46,6 +52,7 @@ int armd_then_single(ARMD_ProcedureBuilder *procedure_builder,
     continuation_constants->single_continuation_func = single_continuation_func;
 
     return armd_then(procedure_builder, continuation_func,
-                     continuation_constants, NULL, continuation_frame_creator,
+                     continuation_constants, continuation_constants_destroyer,
+                     NULL, continuation_frame_creator,
                      continuation_frame_destroyer);
 }

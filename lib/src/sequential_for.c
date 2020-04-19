@@ -39,6 +39,12 @@ continuation_func(ARMD_Job *job, const void *constants, void *args, void *frame,
     return ARMD_ContinuationResult_Repeat;
 }
 
+static void
+continuation_constants_destroyer(ARMD_MemoryAllocator *memory_region,
+                                 void *continuation_constants) {
+    armd_memory_allocator_free(memory_region, continuation_constants);
+}
+
 static void *continuation_frame_creator(ARMD_MemoryRegion *memory_region) {
     ARMD__SequentialForContinuationFrame *continuation_frame =
         armd_memory_region_allocate(
@@ -82,6 +88,7 @@ int armd_then_sequential_for(
         sequential_for_continuation_func;
 
     return armd_then(procedure_builder, continuation_func,
-                     continuation_constants, NULL, continuation_frame_creator,
+                     continuation_constants, continuation_constants_destroyer,
+                     NULL, continuation_frame_creator,
                      continuation_frame_destroyer);
 }

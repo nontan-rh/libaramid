@@ -97,6 +97,12 @@ ARMD_ContinuationResult error_trap_rethrow(ARMD_Job *job, const void *constants,
     return ARMD_ContinuationResult_Error;
 }
 
+static void
+continuation_constants_destroyer(ARMD_MemoryAllocator *memory_region,
+                                 void *continuation_constants) {
+    armd_memory_allocator_free(memory_region, continuation_constants);
+}
+
 ARMD_Procedure *
 build_error_procedure(const ARMD_MemoryAllocator *memory_allocator,
                       bool unwind) {
@@ -105,7 +111,8 @@ build_error_procedure(const ARMD_MemoryAllocator *memory_allocator,
 
     void *continuation_constants =
         armd_memory_allocator_allocate(memory_allocator, 1);
-    armd_then(builder, error_continuation, continuation_constants, nullptr,
+    armd_then(builder, error_continuation, continuation_constants,
+              continuation_constants_destroyer, nullptr,
               error_continuation_frame_creator,
               error_continuation_frame_destroyer);
     if (unwind) {
@@ -385,7 +392,8 @@ TEST_F(ErrorTest, ErrorTrapRecover) {
         void *continuation_constants =
             armd_memory_allocator_allocate(&memory_allocator, 1);
         armd_then(builder, error_continuation, continuation_constants,
-                  error_trap_recover, error_continuation_frame_creator,
+                  continuation_constants_destroyer, error_trap_recover,
+                  error_continuation_frame_creator,
                   error_continuation_frame_destroyer);
 
         error_procedure = armd_procedure_builder_build_and_destroy(builder);
@@ -412,7 +420,8 @@ TEST_F(ErrorTest, ErrorTrapRethrow) {
         void *continuation_constants =
             armd_memory_allocator_allocate(&memory_allocator, 1);
         armd_then(builder, error_continuation, continuation_constants,
-                  error_trap_rethrow, error_continuation_frame_creator,
+                  continuation_constants_destroyer, error_trap_rethrow,
+                  error_continuation_frame_creator,
                   error_continuation_frame_destroyer);
 
         error_procedure = armd_procedure_builder_build_and_destroy(builder);

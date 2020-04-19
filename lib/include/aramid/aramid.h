@@ -331,6 +331,12 @@ typedef ARMD_ContinuationResult (*ARMD_ErrorTrapFunc)(
     const void *continuation_constants, void *continuation_frame);
 
 /**
+ * @brief Continuation Constant Destroyer
+ */
+typedef void (*ARMD_ContinuationConstantsDestroyer)(
+    ARMD_MemoryAllocator *memory_region, void *continuation_constants);
+
+/**
  * @brief Continuation Frame Creator
  * @details This function allocates and initializes continuation frame.
  * @param memory_region The memory region for the continuation frame to live in
@@ -371,6 +377,22 @@ typedef int (*ARMD_SequentialForContinuationFunc)(ARMD_Job *job,
                                                   const void *constants,
                                                   void *args, void *frame,
                                                   ARMD_Size index);
+
+/**
+ * @brief Parallel-For Count Function
+ * @details The delegate used to get the number of times to run repeatedly
+ */
+typedef ARMD_Size (*ARMD_ParallelForCountFunc)(void *args, void *frame);
+/**
+ * @brief Parallel-For Continuation Function
+ * @details The simplified continuation function to be used in @ref
+ * armd_then_parallel_for. It omits continuation_constants and
+ * continuation_frame and it receives the repetition counter as @ref index.
+ */
+typedef int (*ARMD_ParallelForContinuationFunc)(ARMD_Job *job,
+                                                const void *constants,
+                                                void *args, void *frame,
+                                                ARMD_Size index);
 
 /**
  * @brief Setup Function
@@ -448,6 +470,7 @@ ARMD_EXTERN_C ARMD_MemoryAllocator armd_procedure_builder_get_memory_allocator(
 ARMD_EXTERN_C int
 armd_then(ARMD_ProcedureBuilder *procedure_builder,
           ARMD_ContinuationFunc continuation_func, void *continuation_constants,
+          ARMD_ContinuationConstantsDestroyer continuation_constants_destroyer,
           ARMD_ErrorTrapFunc error_trap_func,
           ARMD_ContinuationFrameCreator continuation_frame_creator,
           ARMD_ContinuationFrameDestroyer continuation_frame_destroyer);
@@ -473,6 +496,14 @@ ARMD_EXTERN_C int armd_then_sequential_for(
     ARMD_ProcedureBuilder *procedure_builder,
     ARMD_SequentialForCountFunc sequential_for_count_func,
     ARMD_SequentialForContinuationFunc sequential_for_continuation_func);
+
+/**
+ * @brief Appends a parallel-for continuation to the procedure
+ */
+ARMD_EXTERN_C int armd_then_parallel_for(
+    ARMD_ProcedureBuilder *procedure_builder,
+    ARMD_ParallelForCountFunc parallel_for_count_func,
+    ARMD_ParallelForContinuationFunc parallel_for_continuation_func);
 
 /**
  * @brief Add unwind callback to the procedure
