@@ -20,8 +20,10 @@ TEST(TimeTest, GetTimeAndFormat) {
 
     char *isotime = armd_format_time_iso8601(memory_region, &timespec);
     fprintf(stderr, "%s\n", isotime);
-    
+
     armd_memory_region_free(memory_region, isotime);
+
+    armd_memory_region_destroy(memory_region);
 }
 
 } // namespace
