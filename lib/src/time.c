@@ -22,7 +22,7 @@ int armd_get_time(ARMD_Timespec *result) {
 }
 
 char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
-                              const ARMD_Timespec *timespec) {
+                               const ARMD_Timespec *timespec) {
     time_t time = timespec->seconds;
     struct tm *tm = gmtime(&time);
 
@@ -53,7 +53,7 @@ int armd_get_time(ARMD_Timespec *result) {
 }
 
 char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
-                              const ARMD_Timespec *timespec) {
+                               const ARMD_Timespec *timespec) {
     time_t time = timespec->seconds;
     struct tm tm;
     gmtime_r(&time, &tm);
