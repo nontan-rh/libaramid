@@ -6,7 +6,7 @@
 
 namespace {
 
-TEST(TimeTest, ChainEmptyProcedure) {
+TEST(TimeTest, GetTimeAndFormat) {
     int res;
 
     ARMD_MemoryAllocator memory_allocator;
@@ -20,6 +20,8 @@ TEST(TimeTest, ChainEmptyProcedure) {
 
     char *isotime = armd_format_time_iso8601(memory_region, &timespec);
     fprintf(stderr, "%s\n", isotime);
+    
+    armd_memory_region_free(memory_region, isotime);
 }
 
 } // namespace
