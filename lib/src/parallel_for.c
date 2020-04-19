@@ -36,7 +36,7 @@ process(ARMD_Job *job,
 #error Spinlock implementation is not specified
 #endif
 
-    if (index > child_args->parent_continuation_frame->count) {
+    if (index >= child_args->parent_continuation_frame->count) {
         return ARMD_ContinuationResult_Ended;
     }
 
