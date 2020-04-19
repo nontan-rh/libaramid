@@ -169,9 +169,8 @@ TEST_F(ExecutionTest, ExecuteEmptyProcedure) {
         empty_procedure = armd_procedure_builder_build_and_destroy(builder);
     }
 
-    ARMD_Handle dependencies[1];
     ARMD_Handle promise =
-        armd_invoke(context, empty_procedure, nullptr, 0, dependencies);
+        armd_invoke(context, empty_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_EQ(res, 0);
@@ -192,9 +191,8 @@ TEST_F(ExecutionTest, ExecuteSingleNormalProcedure) {
             armd_procedure_builder_build_and_destroy(builder);
     }
 
-    ARMD_Handle dependencies[1];
     ARMD_Handle promise =
-        armd_invoke(context, single_normal_procedure, nullptr, 0, dependencies);
+        armd_invoke(context, single_normal_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_EQ(res, 0);
@@ -216,9 +214,8 @@ TEST_F(ExecutionTest, ExecuteSingleSequentialForProcedure) {
             armd_procedure_builder_build_and_destroy(builder);
     }
 
-    ARMD_Handle dependencies[1];
     ARMD_Handle promise = armd_invoke(context, single_sequential_for_procedure,
-                                      nullptr, 0, dependencies);
+                                      nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_EQ(res, 0);
@@ -255,10 +252,8 @@ TEST_F(ExecutionTest, ExecuteSpawnForProcedure) {
             armd_procedure_get_constants(single_normal_spawn_parent_procedure));
     parent_constants->child_procedure = single_normal_spawn_child_procedure;
 
-    ARMD_Handle dependencies[1];
-    ARMD_Handle promise =
-        armd_invoke(context, single_normal_spawn_parent_procedure, nullptr, 0,
-                    dependencies);
+    ARMD_Handle promise = armd_invoke(
+        context, single_normal_spawn_parent_procedure, nullptr, 0, nullptr);
     ASSERT_NE(promise, 0u);
     res = armd_await(context, promise);
     ASSERT_EQ(res, 0);
@@ -304,9 +299,8 @@ TEST_F(ExecutionTest, ExecuteFibonacci) {
     args.input = input;
     args.result = &result;
 
-    ARMD_Handle dependencies[1];
     ARMD_Handle promise =
-        armd_invoke(context, fibonacci_procedure, &args, 0, dependencies);
+        armd_invoke(context, fibonacci_procedure, &args, 0, nullptr);
     ASSERT_NE(promise, 0u);
 
     res = armd_await(context, promise);
@@ -362,9 +356,8 @@ TEST_F(ExecutionTest, ExecuteUnwind) {
 
     args.unwind = &unwind;
 
-    ARMD_Handle dependencies[1];
     ARMD_Handle promise =
-        armd_invoke(context, unwind_procedure, &args, 0, dependencies);
+        armd_invoke(context, unwind_procedure, &args, 0, nullptr);
     ASSERT_NE(promise, 0u);
 
     res = armd_await(context, promise);
