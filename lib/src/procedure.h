@@ -8,6 +8,7 @@
 typedef struct TAG_ARMD__Continuation {
     ARMD_ContinuationFunc continuation_func;
     void *continuation_constants;
+    ARMD_ContinuationConstantsDestroyer continuation_constants_destroyer;
     ARMD_ErrorTrapFunc error_trap_func;
     ARMD_ContinuationFrameCreator continuation_frame_creator;
     ARMD_ContinuationFrameDestroyer continuation_frame_destroyer;

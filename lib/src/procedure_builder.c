@@ -72,6 +72,12 @@ int armd_procedure_builder_destroy(ARMD_ProcedureBuilder *builder) {
     armd_memory_allocator_free(&memory_allocator, builder->constants);
     builder->constants = NULL;
 
+    for (ARMD_Size i = 0; i < builder->num_continuations; i++) {
+        ARMD__Continuation continuation = builder->continuation_buffer[i];
+        continuation.continuation_constants_destroyer(
+            &memory_allocator, continuation.continuation_constants);
+        continuation.continuation_constants = NULL;
+    }
     armd_memory_allocator_free(&memory_allocator, builder->continuation_buffer);
     builder->continuation_buffer = NULL;
 
@@ -132,11 +138,13 @@ static int ensure_buffer_space(ARMD_ProcedureBuilder *builder) {
     return 0;
 }
 
-int armd_then(ARMD_ProcedureBuilder *builder,
-              ARMD_ContinuationFunc continuation_func,
-              void *continuation_constants, ARMD_ErrorTrapFunc error_trap_func,
-              ARMD_ContinuationFrameCreator continuation_frame_creator,
-              ARMD_ContinuationFrameDestroyer continuation_frame_destroyer) {
+int armd_then(
+    ARMD_ProcedureBuilder *builder, ARMD_ContinuationFunc continuation_func,
+    void *continuation_constants,
+    ARMD_ContinuationConstantsDestroyer continuation_constants_destroyer,
+    ARMD_ErrorTrapFunc error_trap_func,
+    ARMD_ContinuationFrameCreator continuation_frame_creator,
+    ARMD_ContinuationFrameDestroyer continuation_frame_destroyer) {
     assert(builder != NULL);
 
     if (continuation_func == NULL) {
@@ -144,6 +152,10 @@ int armd_then(ARMD_ProcedureBuilder *builder,
     }
 
     if (continuation_constants == NULL) {
+        return -1;
+    }
+
+    if (continuation_constants_destroyer == NULL) {
         return -1;
     }
 
@@ -163,6 +175,8 @@ int armd_then(ARMD_ProcedureBuilder *builder,
     continuation.continuation_func = continuation_func;
     continuation.error_trap_func = error_trap_func;
     continuation.continuation_constants = continuation_constants;
+    continuation.continuation_constants_destroyer =
+        continuation_constants_destroyer;
     continuation.continuation_frame_creator = continuation_frame_creator;
     continuation.continuation_frame_destroyer = continuation_frame_destroyer;
 

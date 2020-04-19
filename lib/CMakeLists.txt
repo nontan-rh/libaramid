@@ -10,6 +10,7 @@ add_library(aramid_library_objects OBJECT
     src/memory_allocator.c
     src/memory_region.c
     src/mutex.c
+    src/parallel_for.c
     src/procedure_builder.c
     src/procedure.c
     src/promise.c

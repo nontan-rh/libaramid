@@ -55,6 +55,21 @@ int single_sequential_for_continuation(ARMD_Job *job, const void *constants,
     return 0;
 }
 
+ARMD_Size single_parallel_for_count(void *args, void *frame) {
+    (void)args;
+    (void)frame;
+    return 10;
+}
+
+int single_parallel_for_continuation(ARMD_Job *job, const void *constants,
+                                     void *args, void *frame, ARMD_Size index) {
+    (void)constants;
+    fprintf(stderr, "executor: %u, args: %p, frame: %p, index: %u\n",
+            (unsigned int)armd_job_get_executor_id(job), args, frame,
+            (unsigned int)index);
+    return 0;
+}
+
 typedef struct TAG_NormalSpawnParentContinuationConstants {
     ARMD_Procedure *child_procedure;
 } NormalSpawnParentContinuationConstants;
@@ -221,6 +236,29 @@ TEST_F(ExecutionTest, ExecuteSingleSequentialForProcedure) {
     ASSERT_EQ(res, 0);
 
     res = armd_procedure_destroy(single_sequential_for_procedure);
+    ASSERT_EQ(res, 0);
+}
+
+TEST_F(ExecutionTest, ExecuteSingleParallelForProcedure) {
+    int res;
+
+    ARMD_Procedure *single_parallel_for_procedure;
+    {
+        ARMD_ProcedureBuilder *builder =
+            armd_procedure_builder_create(&memory_allocator, 0, 0);
+        armd_then_parallel_for(builder, single_parallel_for_count,
+                               single_parallel_for_continuation);
+        single_parallel_for_procedure =
+            armd_procedure_builder_build_and_destroy(builder);
+    }
+
+    ARMD_Handle promise = armd_invoke(context, single_parallel_for_procedure,
+                                      nullptr, 0, nullptr);
+    ASSERT_NE(promise, 0u);
+    res = armd_await(context, promise);
+    ASSERT_EQ(res, 0);
+
+    res = armd_procedure_destroy(single_parallel_for_procedure);
     ASSERT_EQ(res, 0);
 }
 
