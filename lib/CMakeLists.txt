@@ -24,13 +24,15 @@ add_library(aramid_library_objects OBJECT
 aramid_target_setup_compile_options(aramid_library_objects)
 target_include_directories(aramid_library_objects PRIVATE include)
 
-add_library(aramid_unit_test_object OBJECT
-    src/deque.test.cpp
-    src/hash_table.test.cpp
-    src/random.test.cpp
-    )
-aramid_target_setup_compile_options(aramid_unit_test_object)
-target_include_directories(aramid_unit_test_object PRIVATE include $<TARGET_PROPERTY:gtest_main,INTERFACE_INCLUDE_DIRECTORIES>)
+if(BUILD_TESTING)
+    add_library(aramid_unit_test_object OBJECT
+        src/deque.test.cpp
+        src/hash_table.test.cpp
+        src/random.test.cpp
+        )
+    aramid_target_setup_compile_options(aramid_unit_test_object)
+    target_include_directories(aramid_unit_test_object PRIVATE include $<TARGET_PROPERTY:gtest_main,INTERFACE_INCLUDE_DIRECTORIES>)
+endif()
 
 add_library(aramid $<TARGET_OBJECTS:aramid_library_objects>)
 aramid_target_setup_compile_options(aramid)
