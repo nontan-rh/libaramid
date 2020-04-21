@@ -16,11 +16,10 @@ if(BUILD_TESTING)
 endif()
 
 add_subdirectory(lib)
-if(BUILD_TESTING)
-    add_subdirectory(tests)
-endif()
 
 if(BUILD_TESTING)
+    add_subdirectory(tests)
+
     if((${CMAKE_SYSTEM_NAME} MATCHES "Android") OR (${CMAKE_SYSTEM_NAME} MATCHES "iOS"))
         message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME} matches 'Android' or 'iOS', so it won't build the test excutable but builds a library.")
         add_subdirectory(test_library)
