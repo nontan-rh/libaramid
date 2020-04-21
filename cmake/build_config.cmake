@@ -15,6 +15,7 @@ endif()
 
 # Options
 
+option(BUILD_TESTING "Build test" ON)
 option(ENABLE_ASAN "Build with ASAN support (GCC/clang and *nix required)")
 option(DISABLE_MEMORY_REGION "Disable memory region feature")
 set(SPINLOCK_IMPLEMENTATION ${DEFAULT_SPINLOCK_IMPLEMENTATION} CACHE STRING "Spinlock implementation (GCCIntrinsic|MSVCIntrinsic)")
