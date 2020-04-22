@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.10.2)
+cmake_policy(VERSION 3.10.2...3.10.2)
 
 add_library(aramid_library_objects OBJECT
     src/condvar.c

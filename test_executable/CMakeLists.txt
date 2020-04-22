@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.10.2)
+cmake_policy(VERSION 3.10.2...3.10.2)
 
 add_executable(aramid_test_executable
     src/executable_main.cpp
