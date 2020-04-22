@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.10.2)
+cmake_policy(VERSION 3.10.2...3.10.2)
 
 add_library(aramid_library_objects OBJECT
     src/condvar.c
@@ -37,3 +39,5 @@ endif()
 add_library(aramid $<TARGET_OBJECTS:aramid_library_objects>)
 aramid_target_setup_compile_options(aramid)
 target_include_directories(aramid INTERFACE include)
+install(TARGETS aramid DESTINATION lib)
+install(DIRECTORY include/ DESTINATION include)

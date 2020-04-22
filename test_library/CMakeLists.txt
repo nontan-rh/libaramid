@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.10.2)
+cmake_policy(VERSION 3.10.2...3.10.2)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Android")
     message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME} matches 'Android', so it will build the library as shared library.")
