@@ -7,6 +7,7 @@ proj_dir=$(cd "$(dirname "$0")/.."; pwd)
 /emsdk/emsdk activate latest
 . /emsdk/emsdk_env.sh
 
+rm -fr "$proj_dir/build"
 mkdir -p "$proj_dir"/build
 cd "$proj_dir"/build
 
