@@ -51,11 +51,15 @@
 !/etc/wasm/test_driver/package-lock.json
 !/etc/wasm/test_driver/index.js
 
+!/etc/consumer/
+!/etc/consumer/main.c
+!/etc/consumer/CMakeLists.txt
+
 !/lib/
 !/lib/include/
 !/lib/include/aramid/
 !/lib/src/
-!/lib/**.CMakeLists.txt
+!/lib/**/CMakeLists.txt
 !/lib/**/*.c
 !/lib/**/*.cpp
 !/lib/**/*.h
