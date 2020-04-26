@@ -40,6 +40,10 @@ add_library(aramid $<TARGET_OBJECTS:aramid_library_objects>)
 add_library(aramid::aramid ALIAS aramid)
 aramid_target_setup_compile_options(aramid)
 
+if(THREAD_IMPLEMENTATION STREQUAL "pthread")
+    target_compile_options(aramid INTERFACE -pthread)
+endif()
+
 target_include_directories(aramid
     INTERFACE 
     $<INSTALL_INTERFACE:include>    
