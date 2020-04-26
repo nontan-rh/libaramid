@@ -41,7 +41,7 @@ add_library(aramid::aramid ALIAS aramid)
 aramid_target_setup_compile_options(aramid)
 
 if(THREAD_IMPLEMENTATION STREQUAL "pthread")
-    target_compile_options(aramid INTERFACE -pthread)
+    target_link_libraries(aramid INTERFACE pthread)
 endif()
 
 target_include_directories(aramid
