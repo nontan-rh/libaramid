@@ -37,7 +37,25 @@ if(BUILD_TESTING)
 endif()
 
 add_library(aramid $<TARGET_OBJECTS:aramid_library_objects>)
+add_library(aramid::aramid ALIAS aramid)
 aramid_target_setup_compile_options(aramid)
-target_include_directories(aramid INTERFACE include)
-install(TARGETS aramid DESTINATION lib)
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND THREAD_IMPLEMENTATION STREQUAL "pthread")
+    target_link_libraries(aramid INTERFACE pthread)
+endif()
+
+target_include_directories(aramid
+    INTERFACE 
+    $<INSTALL_INTERFACE:include>    
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    )
+
+install(
+    TARGETS aramid
+    EXPORT aramid_targets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
+    )
 install(DIRECTORY include/ DESTINATION include)

@@ -38,6 +38,8 @@ jobs:
         run: scripts/test.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_ASAN=ON -DDISABLE_MEMORY_REGION=ON
       - name: Test release build
         run: scripts/test.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+      - name: Test build consumer
+        run: scripts/build_consumer.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
   Windows_MSVC:
     runs-on: windows-2019
     timeout-minutes: 10
@@ -48,6 +50,9 @@ jobs:
         shell: bash
       - name: Test release build
         run: scripts/test.sh -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release
+        shell: bash
+      - name: Test build consumer
+        run: scripts/build_consumer.sh -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release
         shell: bash
   Windows_MinGW:
     runs-on: windows-2019
@@ -60,6 +65,9 @@ jobs:
       - name: Test release build
         run: scripts/test.sh -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
         shell: bash
+      - name: Test build consumer
+        run: scripts/build_consumer.sh -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
+        shell: bash
   macOS:
     runs-on: macos-10.15
     timeout-minutes: 10
@@ -69,6 +77,8 @@ jobs:
         run: scripts/test.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_ASAN=ON -DDISABLE_MEMORY_REGION=ON
       - name: Test release build
         run: scripts/test.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+      - name: Test build consumer
+        run: scripts/build_consumer.sh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
   Android:
     runs-on: ubuntu-18.04
     container: nontanrh/libaramid-ci-android:2020_03_22_2

@@ -5,8 +5,9 @@ project(aramid)
 
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 
-include(cmake/load_external_project.cmake)
-include(cmake/build_config.cmake)
+include(CMakePackageConfigHelpers)
+include(cmake/load-external-project.cmake)
+include(cmake/build-config.cmake)
 
 if(BUILD_TESTING)
     enable_testing()
@@ -30,3 +31,36 @@ if(BUILD_TESTING)
         add_subdirectory(test_executable)
     endif()
 endif()
+
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/aramid/aramid-config-version.cmake"
+    VERSION 0.0.1
+    COMPATIBILITY AnyNewerVersion
+    )
+
+export(
+    EXPORT aramid_targets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/aramid/aramid-targets.cmake"
+    NAMESPACE aramid::
+    )
+configure_file(cmake/aramid-config.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/aramid/aramid-config.cmake"
+    COPYONLY
+    )
+
+set(config_package_location lib/cmake/aramid)
+install(EXPORT aramid_targets
+    FILE
+    aramid-targets.cmake
+    NAMESPACE
+    aramid::
+    DESTINATION
+    ${config_package_location}
+    )
+install(
+    FILES
+    cmake/aramid-config.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/aramid/aramid-config-version.cmake"
+    DESTINATION
+    ${config_package_location}
+    )
