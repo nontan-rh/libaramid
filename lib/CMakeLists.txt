@@ -40,7 +40,7 @@ add_library(aramid $<TARGET_OBJECTS:aramid_library_objects>)
 add_library(aramid::aramid ALIAS aramid)
 aramid_target_setup_compile_options(aramid)
 
-if(THREAD_IMPLEMENTATION STREQUAL "pthread")
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND THREAD_IMPLEMENTATION STREQUAL "pthread")
     target_link_libraries(aramid INTERFACE pthread)
 endif()
 
