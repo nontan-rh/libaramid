@@ -64,7 +64,7 @@ char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
 
     char buf[128];
     snprintf(buf, sizeof(buf), "%s.%03uZ", secstr,
-             (unsigned int)(timespec->nanoseconds / 1000000ll % 1000ull));
+             (unsigned int)(timespec->nanoseconds / 1000000ull % 1000ull));
 
     return armd_memory_region_strdup(memory_region, buf);
 }
