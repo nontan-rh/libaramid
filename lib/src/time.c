@@ -31,8 +31,8 @@ char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
     strftime(secstr, sizeof(secstr), "%Y-%m-%dT%H:%M:%S", &tm);
 
     char buf[128];
-    snprintf(buf, sizeof(buf), "%s.%03dZ", secstr,
-             (int)(timespec->nanoseconds / 1000000ll));
+    snprintf(buf, sizeof(buf), "%s.%03uZ", secstr,
+             (unsigned int)(timespec->nanoseconds / 1000000ull % 1000ull));
 
     return armd_memory_region_strdup(memory_region, buf);
 }
@@ -63,8 +63,8 @@ char *armd_format_time_iso8601(ARMD_MemoryRegion *memory_region,
     strftime(secstr, sizeof(secstr), "%Y-%m-%dT%H:%M:%S", &tm);
 
     char buf[128];
-    snprintf(buf, sizeof(buf), "%s.%03dZ", secstr,
-             (int)(timespec->nanoseconds / 1000000ll));
+    snprintf(buf, sizeof(buf), "%s.%03uZ", secstr,
+             (unsigned int)(timespec->nanoseconds / 1000000ll % 1000ull));
 
     return armd_memory_region_strdup(memory_region, buf);
 }
