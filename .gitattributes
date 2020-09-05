@@ -1,7 +1,8 @@
 * text eol=lf
-*.cpp text diff=cpp eol=lf
-*.c text diff=cpp eol=lf
-*.h text diff=cpp eol=lf
+*.cpp text diff=cpp eol=lf linguist-language=C++
+*.hpp text diff=cpp eol=lf linguist-language=C++
+*.c text diff=cpp eol=lf linguist-language=C
+*.h text diff=cpp eol=lf linguist-language=C
 *.java text diff=java eol=lf
 *.jar binary
 *.bat text eol=crlf
